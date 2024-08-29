@@ -1,4 +1,6 @@
+/**
 #include "systemc.h"
+#include "ModuleSingle.h"
 
 SC_MODULE(Hello_SystemC) {  // declare module class
 
@@ -24,3 +26,4 @@ int sc_main(int sc_argc, char* sc_argv[]) {
     sc_start();
     return 0;
 }
+**/
