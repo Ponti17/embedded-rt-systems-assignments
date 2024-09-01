@@ -13,7 +13,10 @@
 class ModuleDouble : public sc_module {
 
 public:
-    // Constructor
+    /* Events */
+    sc_event event_A, event_B, event_Aack, event_Back;
+
+    /* Constructor */
     ModuleDouble(sc_module_name name);
 
     // Destructor
@@ -21,7 +24,9 @@ public:
 
 private:
     std::string moduleName;
-    void moduleDoubleThread();  // Thread function declaration
+    void thread_A();
+    void thread_B();
+    void method_A();
 };
 
 #endif // MODULE_DOUBLE_HPP
