@@ -1,7 +1,7 @@
 #include "systemc.h"
 #include "ModuleDouble.hpp"
 
-#define SIMULATION_TIME 200
+#define SIMULATION_TIME 20
 #define SIMULATION_TIME_UNIT SC_MS
 
 int sc_main(int sc_argc, char* sc_argv[])
