@@ -43,28 +43,28 @@ void TCP_Producer::mainThread()
 void TCP_Producer::transmit() 
 {
     /* Allocate TCPHeader on heap and create a pointer, package, to it */
-    TCPHeader* package = new TCPHeader();
-    package->SourcePort         = 0;
-    package->DestinationPort    = 0;
-    package->SequenceNumber     = 0;    
-    package->Acknowledge        = 0;
-    package->StatusBits         = 0;
-    package->WindowSize         = 0;
-    package->Checksum           = 0;
-    package->UrgentPointer      = 0;
-    memset(package->Data, 0, DATA_SIZE);
+    TCPHeader* packet = new TCPHeader();
+    packet->SourcePort         = 0;
+    packet->DestinationPort    = 0;
+    packet->SequenceNumber     = 0;    
+    packet->Acknowledge        = 0;
+    packet->StatusBits         = 0;
+    packet->WindowSize         = 0;
+    packet->Checksum           = 0;
+    packet->UrgentPointer      = 0;
+    memset(packet->Data, 0, DATA_SIZE);
 
     /**
      * Transmit to all FIFO channels.
      */
     for (int i = 0; i < out.size(); i++)
     {
-        TCPHeader* package_copy = new TCPHeader(*package);
-        package_copy->DestinationPort = i;
-        out[i]->write(package_copy);
+        TCPHeader* packet_copy = new TCPHeader(*packet);
+        packet_copy->DestinationPort = i;
+        out[i]->write(packet_copy);
+        std::cout << moduleName << ": transmitting packet to port " << packet_copy->DestinationPort
+                  << " - time: " << sc_time_stamp() << '\n';
     }
 
-    delete package;
-
-    std::cout << "Time: " << sc_time_stamp() << " - Transmitting..." << std::endl;
+    delete packet;
 }

@@ -26,7 +26,8 @@ void TCP_Consumer::mainThread()
     {
         TCPHeader* packet = in->read();
 
-        std::cout << "Received TCP packet at " << sc_time_stamp() << '\n';
+        std::cout << moduleName << ": received packet from port " << packet->SourcePort
+                  << " - time: " << sc_time_stamp() << '\n';
 
         /* Free memory allocated for the packet */
         delete packet;
