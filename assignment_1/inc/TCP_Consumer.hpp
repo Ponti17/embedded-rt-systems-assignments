@@ -10,9 +10,14 @@
 #include <iostream>
 #include <string>
 
-class TCP_Consumer : public sc_module {
+/* Including this for the TCPHeader typedef. */
+#include "TCP_Producer.hpp"
 
+class TCP_Consumer : public sc_module {
 public:
+    /* Port */
+    sc_fifo_in<TCPHeader *> in;
+    
     /* Constructor */
     TCP_Consumer(sc_module_name name);
 
