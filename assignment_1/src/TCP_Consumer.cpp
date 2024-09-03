@@ -16,7 +16,7 @@ TCP_Consumer::TCP_Consumer(sc_module_name name)
 /* Destructor */
 TCP_Consumer::~TCP_Consumer() 
 {
-    std::cout << std::flush;  // Flush the output buffer
+    std::cout << std::flush;
 }
 
 /* Thread */

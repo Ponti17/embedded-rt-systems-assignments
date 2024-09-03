@@ -56,6 +56,10 @@ void TCP_Producer::transmit()
 
     /**
      * Transmit to all FIFO channels.
+     * Instead of transmitting the whole TCP header through the FIFOs,
+     * we send a significantly smaller pointer, after which the consumer can
+     * read the header itself from memory. 
+     * TODO: It occured to me that this is actually retarded, and we really should just send the entire TCP header.
      */
     for (int i = 0; i < out.size(); i++)
     {
