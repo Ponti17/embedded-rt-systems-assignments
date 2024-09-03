@@ -58,7 +58,7 @@ void TCP_Producer::transmit()
      * Transmit to all FIFO channels.
      * TODO: We are somehow not entering this loop. Likely out.size() returns 0.
      */
-    for (int i = 0; i < out.size(), i++;)
+    for (int i = 0; i < out.size(); i++)
     {
         out[i]->write(package);
     }
