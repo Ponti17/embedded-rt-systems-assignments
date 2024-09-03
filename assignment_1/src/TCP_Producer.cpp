@@ -56,12 +56,15 @@ void TCP_Producer::transmit()
 
     /**
      * Transmit to all FIFO channels.
-     * TODO: We are somehow not entering this loop. Likely out.size() returns 0.
      */
     for (int i = 0; i < out.size(); i++)
     {
-        out[i]->write(package);
+        TCPHeader* package_copy = new TCPHeader(*package);
+        package_copy->DestinationPort = i;
+        out[i]->write(package_copy);
     }
+
+    delete package;
 
     std::cout << "Time: " << sc_time_stamp() << " - Transmitting..." << std::endl;
 }

@@ -24,7 +24,7 @@ void TCP_Consumer::mainThread()
 {
     while (true) 
     {
-        TCPHeader* packet = in.read();
+        TCPHeader* packet = in->read();
 
         std::cout << "Received TCP packet at " << sc_time_stamp() << '\n';
 
