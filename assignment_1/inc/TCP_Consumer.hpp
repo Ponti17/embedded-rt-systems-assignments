@@ -7,11 +7,7 @@
 #define TCP_CONSUMER_HPP
 
 #include "systemc.h"
-#include <iostream>
-#include <string>
-
-/* Including this for the TCPHeader typedef. */
-#include "TCP_Producer.hpp"
+#include "TCP.hpp"
 
 class TCP_Consumer : public sc_module {
 public:

@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\inc\TCP.hpp" />
     <ClInclude Include="..\inc\TCP_Consumer.hpp" />
     <ClInclude Include="..\inc\TCP_Producer.hpp" />
   </ItemGroup>

@@ -7,28 +7,7 @@
 #define TCP_PRODUCER_HPP
 
 #include "systemc.h"
-#include <iostream>
-#include <string>
-#include <ctime>
-
-/**
- * TCP typedef and defines 
- * TODO: This typedef and its defines should maybe live in its own header?
-*/
-#define PACKET_SIZE 512
-#define DATA_SIZE (PACKET_SIZE-20)
-typedef struct
-{
-sc_uint<16> SourcePort;
-sc_uint<16> DestinationPort;
-sc_uint<32> SequenceNumber;
-sc_uint<32> Acknowledge;
-sc_uint<16> StatusBits;
-sc_uint<16> WindowSize;
-sc_uint<16> Checksum;
-sc_uint<16> UrgentPointer;
-char Data[DATA_SIZE];
-} TCPHeader;
+#include "TCP.hpp"
 
 /* Class definition */
 class TCP_Producer : public sc_module {

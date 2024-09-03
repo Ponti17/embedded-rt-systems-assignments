@@ -21,6 +21,9 @@
     <ClInclude Include="..\inc\TCP_Producer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\inc\TCP.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\TCP_Consumer.cpp">
