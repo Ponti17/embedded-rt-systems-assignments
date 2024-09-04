@@ -18,12 +18,18 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\ModuleDouble.cpp">
+    <ClCompile Include="..\src\AvalonMaster.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\AvalonSlave.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\inc\ModuleDouble.hpp">
+    <ClInclude Include="..\inc\AvalonMaster.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\AvalonSlave.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

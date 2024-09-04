@@ -19,11 +19,13 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\ModuleDouble.cpp" />
+    <ClCompile Include="..\src\AvalonMaster.cpp" />
+    <ClCompile Include="..\src\AvalonSlave.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\inc\ModuleDouble.hpp" />
+    <ClInclude Include="..\inc\AvalonMaster.hpp" />
+    <ClInclude Include="..\inc\AvalonSlave.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
@@ -31,7 +33,7 @@
     <ProjectGuid>{24C39CB3-4FA5-4C4B-8807-DD53AB2D31F3}</ProjectGuid>
     <RootNamespace>systemctemplate</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>a1_32</ProjectName>
+    <ProjectName>a1_34</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
