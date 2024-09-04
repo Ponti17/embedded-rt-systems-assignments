@@ -10,9 +10,17 @@
 #include <iostream>
 #include <string>
 
+#define DATA_BITS 16
+
 class AvalonMaster : public sc_module {
 
 public:
+    sc_in<bool>               ready;
+    sc_out<bool>              valid;
+    sc_out<bool>              error;
+    sc_out<bool>              channel;
+    sc_out<sc_int<DATA_BITS>> data;
+
     // Constructor
     AvalonMaster(sc_module_name name);
 
