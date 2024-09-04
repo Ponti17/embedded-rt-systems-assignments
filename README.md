@@ -53,3 +53,5 @@ For new assignments we should copy `systemc_template` and rename it as `assignme
 ## Documentation
 
 Inside each assignment folder the respective `.pdf` detailing the assignment should be included.
+
+--- :) ---
