@@ -9,8 +9,7 @@
 #include "systemc.h"
 #include <iostream>
 #include <string>
-
-#define DATA_BITS 16
+#include "AvalonConf.hpp"
 
 class AvalonSlave : public sc_module {
 
