@@ -24,4 +24,12 @@ AvalonMaster::~AvalonMaster()
 void AvalonMaster::transmit()
 {
     std::cout << "Transmitting..." << std::endl;
+
+    if (ready.read() == 1)
+    {
+        valid.write(1);
+        data.write(0xFAFA);
+        channel.write(1);
+        error.write(0);
+    }
 }
