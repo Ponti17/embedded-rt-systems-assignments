@@ -10,7 +10,8 @@ AvalonMaster::AvalonMaster(sc_module_name name)
     : sc_module(name), moduleName(name)
 {
     /* Register a thread process */
-    SC_THREAD(mainThread);
+    SC_METHOD(transmit);
+    sensitive << clk.pos();
 }
 
 /* Destructor */
@@ -20,10 +21,7 @@ AvalonMaster::~AvalonMaster()
 }
 
 /* Thread */
-void AvalonMaster::mainThread()
+void AvalonMaster::transmit()
 {
-    while (true)
-    {
-        wait(2, SC_MS);
-    }
+    std::cout << "Transmitting..." << std::endl;
 }
