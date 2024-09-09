@@ -6,9 +6,16 @@
 #include "top.hpp"
 
 /* Constructor */
-Top::Top(sc_module_name name) : sc_module(name)
+Top::Top(sc_module_name name) : sc_module(name), clk("clk", CLK_PERIOD, SC_US)
 {
-    clock("Clk", sc_time(CLK_PERIOD, SC_US));
+    pMaster = new AvalonMaster("AvalonMaster");
+
+    pMaster->clk(clk);
+    pMaster->ready(ready);
+    pMaster->valid(valid);
+    pMaster->data(data);
+    pMaster->channel(channel);
+    pMaster->error(error);
 }
 
 /* Destructor */

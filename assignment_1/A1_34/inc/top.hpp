@@ -17,9 +17,8 @@
 class Top : public sc_module
 {
 public:
-    sc_clock clock;
+    sc_clock clk;
 
-    sc_signal<bool>                 clk;
     sc_signal<bool>                 ready;
     sc_signal<bool>                 valid;
     sc_signal<sc_int<DATA_BITS>>    data;
