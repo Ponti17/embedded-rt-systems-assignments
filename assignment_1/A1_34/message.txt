@@ -1,0 +1,3 @@
+This is a message <3
+
+Sent through the Avalon streaming interface.

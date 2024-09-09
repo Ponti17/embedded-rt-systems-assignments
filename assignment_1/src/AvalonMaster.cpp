@@ -3,12 +3,26 @@
  * Date Created: 29/08/24
 */
 
+#include <iostream>
+#include <string>
 #include "AvalonMaster.hpp"
 
 /* Constructor */
 AvalonMaster::AvalonMaster(sc_module_name name) 
     : sc_module(name), moduleName(name)
 {
+    /* Read the message to be sent through the Avalon interface */
+    ifstream ifs("C:/home/university/7-semester/embedded-rt-systems-assignments/assignment_1/A1_34/message.txt");
+
+    if (!ifs.is_open())
+    {
+        std::cerr << "Failed to read" << std::endl;
+    }
+
+    std::ostringstream oss;
+    oss << ifs.rdbuf();
+    std::string message = oss.str();
+
     /* Register a thread process */
     SC_METHOD(transmit);
     sensitive << clk.pos();
