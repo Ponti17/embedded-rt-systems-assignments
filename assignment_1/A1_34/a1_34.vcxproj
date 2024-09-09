@@ -22,10 +22,12 @@
     <ClCompile Include="..\src\AvalonMaster.cpp" />
     <ClCompile Include="..\src\AvalonSlave.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="src\top.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\inc\AvalonMaster.hpp" />
     <ClInclude Include="..\inc\AvalonSlave.hpp" />
+    <ClInclude Include="inc\top.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
@@ -114,7 +116,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)\..\systemc-3.0.0\src;$(SolutionDir)\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\..\systemc-3.0.0\src;$(SolutionDir)\inc;$(ProjectDir)\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <AdditionalOptions>/vmg %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp17</LanguageStandard>
