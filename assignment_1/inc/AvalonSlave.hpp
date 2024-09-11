@@ -29,6 +29,8 @@ public:
 
 private:
     std::string moduleName;
+    std::string message;
+    binMessageType binaryPacket;
     void receive();
 };
 
