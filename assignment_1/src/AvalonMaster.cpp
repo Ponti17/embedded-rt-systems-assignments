@@ -11,7 +11,9 @@
 AvalonMaster::AvalonMaster(sc_module_name name) 
     : sc_module(name), moduleName(name)
 {
-    /* Register a thread process */
+    binaryPacket = 0;
+    message = "Hello, World!\nThis is transmitted over the Avalon Streaming Interface!";
+
     SC_METHOD(transmit);
     sensitive << clk.pos();
 }
@@ -22,39 +24,29 @@ AvalonMaster::~AvalonMaster()
     std::cout << std::flush;
 }
 
-#if DATA_BITS == 16
-typedef uint16_t messageType;
-#elif DATA_BITS == 32
-typedef uint32_t messageType;
-#elif DATA_BITS == 64
-typedef uint64_t messageType;
-#endif
-
-const uint8_t message_len = 13;
-char message[] = "Hello, World!";
-uint8_t idx = 0;
+static uint32_t idx = 0;
+static bool readyDelay = false;
 void AvalonMaster::transmit()
 {
-    std::cout << "Transmitting..." << std::endl;
-
-    if (idx < message_len)
+    if (ready.read() == 1 && !readyDelay)
     {
+        readyDelay = true;
+    }
+    else if (readyDelay && idx < message.length())
+    {
+        std::cout << "Transmitting..." << std::endl;
         valid.write(1);
-
-        messageType bin_data = message[idx];  // First character (low byte)
-
-        if (idx + 1 < message_len)         // Ensure there's another char for the high byte
+        binaryPacket = 0;
+        for (int i = 0; i < DATA_BITS / 8; ++i)
         {
-            bin_data |= (message[idx + 1] << 8); // Second character (high byte)
+            binaryPacket |= (message[idx + i] << 8 * i);
         }
-
-        data.write(bin_data);  // Transmit the combined data as uint16_t
-        channel.write(1);
-        error.write(0);
-        idx += 2;  // Move to the next two characters
+        data.write(binaryPacket);
+        idx += DATA_BITS / 8;
     }
     else
     {
         valid.write(0);
+        readyDelay = false;
     }
 }

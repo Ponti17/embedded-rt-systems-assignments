@@ -25,6 +25,7 @@ uint16_t buf[120];
 uint8_t buf_idx = 0;
 void AvalonSlave::receive()
 {
+    ready.write(1);
     if (valid.read() == 1)
     {
         std::cout << "RECEIVING" << std::endl;
