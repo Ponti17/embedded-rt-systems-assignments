@@ -21,7 +21,7 @@ AvalonSlave::~AvalonSlave()
 }
 
 /* Thread */
-char buf[120];
+uint16_t buf[120];
 uint8_t buf_idx = 0;
 void AvalonSlave::receive()
 {
@@ -35,7 +35,11 @@ void AvalonSlave::receive()
     {
         for (uint8_t i = 0; i < buf_idx; i++)
         {
-            std::cout << buf[i];
+            // Extract and print two chars from each uint16_t
+            char high_byte = (buf[i] >> 8) & 0xFF; // Upper 8 bits
+            char low_byte = buf[i] & 0xFF;         // Lower 8 bits
+
+            std::cout << low_byte << high_byte;
         }
         std::cout << std::endl;
     }
