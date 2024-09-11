@@ -9,10 +9,13 @@
 
 /* Constructor */
 AvalonMaster::AvalonMaster(sc_module_name name) 
-    : sc_module(name), moduleName(name)
-{
+    : sc_module(name), moduleName(name) {
     binaryPacket = 0;
     message = "Hello, World!\nThis is transmitted over the Avalon Streaming Interface!";
+
+    while (message.length() % (DATA_BITS / 8) != 0) {
+        message += '\0';
+    }
 
     SC_METHOD(transmit);
     sensitive << clk.pos();
@@ -28,24 +31,22 @@ static uint32_t idx = 0;
 static bool readyDelay = false;
 void AvalonMaster::transmit()
 {
-    if (ready.read() == 1 && !readyDelay)
-    {
+    if (ready.read() == 1 && !readyDelay) {
         readyDelay = true;
     }
-    else if (readyDelay && idx < message.length())
-    {
+
+    else if (readyDelay && idx < message.length()) {
         std::cout << "Transmitting..." << std::endl;
         valid.write(1);
         binaryPacket = 0;
-        for (int i = 0; i < DATA_BITS / 8; ++i)
-        {
+        for (int i = 0; i < DATA_BITS / 8; ++i) {
             binaryPacket |= (message[idx + i] << 8 * i);
         }
         data.write(binaryPacket);
         idx += DATA_BITS / 8;
     }
-    else
-    {
+
+    else {
         valid.write(0);
         readyDelay = false;
     }
