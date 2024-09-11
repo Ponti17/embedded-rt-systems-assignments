@@ -22,7 +22,14 @@ AvalonMaster::~AvalonMaster()
     std::cout << std::flush;
 }
 
-/* Thread */
+#if DATA_BITS == 16
+typedef uint16_t messageType;
+#elif DATA_BITS == 32
+typedef uint32_t messageType;
+#elif DATA_BITS == 64
+typedef uint64_t messageType;
+#endif
+
 const uint8_t message_len = 13;
 char message[] = "Hello, World!";
 uint8_t idx = 0;
@@ -34,7 +41,7 @@ void AvalonMaster::transmit()
     {
         valid.write(1);
 
-        uint16_t bin_data = message[idx];  // First character (low byte)
+        messageType bin_data = message[idx];  // First character (low byte)
 
         if (idx + 1 < message_len)         // Ensure there's another char for the high byte
         {
