@@ -27,6 +27,7 @@ public:
 
 private:
     std::string moduleName;
+    sc_trace_file *tracefile;
 };
 
 #endif // MONITOR_HPP

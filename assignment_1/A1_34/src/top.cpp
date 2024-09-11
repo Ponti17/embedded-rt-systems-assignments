@@ -38,4 +38,5 @@ Top::Top(sc_module_name name) : sc_module(name), clk("clk", CLK_PERIOD, SC_US)
 Top::~Top()
 {
     std::cout << std::flush;
+    delete pMonitor;
 }

@@ -1,27 +1,29 @@
 /*
- * AvalonMaster.cpp
+ * monitor.cpp
  * Date Created: 29/08/24
 */
 
 #include <iostream>
 #include <string>
-#include "AvalonMaster.hpp"
+#include "monitor.hpp"
 
 /* Constructor */
-sc_trace_file *file_handler = sc_create_vcd_trace_file("avalonTrace");
-AvalonMaster::AvalonMaster(sc_module_name name) 
+Monitor::Monitor(sc_module_name name) 
     : sc_module(name), moduleName(name)
 {
-    sc_trace(file_handler, clk, "clk");
-    sc_trace(file_handler, ready, "ready");
-    sc_trace(file_handler, valid, "valid");
-    sc_trace(file_handler, data, "data");
-    sc_trace(file_handler, channel, "channel");
-    sc_trace(file_handler, error, "error");
+    tracefile = sc_create_vcd_trace_file("tracefile");
+    tracefile->set_time_unit(1, SC_NS);
+    sc_trace(tracefile, clk,    "clk");
+    sc_trace(tracefile, ready,  "ready");
+    sc_trace(tracefile, valid,  "valid");
+    sc_trace(tracefile, data,   "data");
+    sc_trace(tracefile, channel,"channel");
+    sc_trace(tracefile, error,  "error");
 }
 
 /* Destructor */
-AvalonMaster::~AvalonMaster()
+Monitor::~Monitor()
 {
-    sc_close_vcd_trace_file(file_handler);
+    sc_close_vcd_trace_file(tracefile);
+    std::cout << "Saved vcd..." << std::endl;
 }
