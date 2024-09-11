@@ -13,9 +13,10 @@
 #define ERROR_BITS      2   /* Number of error wires        */
 #define DATA_BITS       16  /* Number of data wires         */
 #define MAX_CHANNEL     2   /* Maxinum number of channels   */
-#define CLK_PERIO       20  /* Clock period in ns           */
 
-#if DATA_BITS == 16
+#if DATA_BITS == 8
+typedef uint8_t binMessageType;
+#elif DATA_BITS == 16
 typedef uint16_t binMessageType;
 #elif DATA_BITS == 32
 typedef uint32_t binMessageType;
