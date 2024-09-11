@@ -10,9 +10,10 @@
 /* Constructor */
 AvalonMaster::AvalonMaster(sc_module_name name) 
     : sc_module(name), moduleName(name) {
-    binaryPacket = 0;
     message = "Hello, World!\nThis is transmitted over the Avalon Streaming Interface!";
+    binaryPacket = 0;
 
+    /* Zero pad the message to ensure it fits nicely in a DATA bus sized packet */
     while (message.length() % (DATA_BITS / 8) != 0) {
         message += '\0';
     }
