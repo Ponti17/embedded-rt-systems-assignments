@@ -29,14 +29,9 @@ AvalonMaster::~AvalonMaster()
 }
 
 static uint32_t idx = 0;
-static bool readyDelay = false;
 void AvalonMaster::transmit()
 {
-    if (ready.read() == 1 && !readyDelay) {
-        readyDelay = true;
-    }
-
-    else if (readyDelay && idx < message.length()) {
+    if (ready.read() == 1 && idx < message.length()) {
         std::cout << "Transmitting..." << std::endl;
         valid.write(1);
         binaryPacket = 0;
@@ -51,6 +46,5 @@ void AvalonMaster::transmit()
 
     else {
         valid.write(0);
-        readyDelay = false;
     }
 }
