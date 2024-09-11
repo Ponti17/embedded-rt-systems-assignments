@@ -11,7 +11,6 @@
 AvalonMaster::AvalonMaster(sc_module_name name) 
     : sc_module(name), moduleName(name)
 {
-    const char message[14] = "Hello, World!";
     /* Register a thread process */
     SC_METHOD(transmit);
     sensitive << clk.pos();
@@ -24,15 +23,23 @@ AvalonMaster::~AvalonMaster()
 }
 
 /* Thread */
+const uint8_t message_len = 14;
+const char message[message_len] = "Hello, World!";
+uint8_t idx = 0;
 void AvalonMaster::transmit()
 {
     std::cout << "Transmitting..." << std::endl;
 
-    if (ready.read() == 1)
+    if (idx < message_len)
     {
         valid.write(1);
-        data.write(0xFAFA);
+        data.write(message[idx]);
         channel.write(1);
         error.write(0);
+        ++idx;
+    }
+    else
+    {
+        valid.write(0);
     }
 }
