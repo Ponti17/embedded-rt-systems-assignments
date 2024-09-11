@@ -11,14 +11,6 @@
 #include <string>
 #include "AvalonConf.hpp"
 
-#if DATA_BITS == 16
-typedef uint16_t binMessageType;
-#elif DATA_BITS == 32
-typedef uint32_t binMessageType;
-#elif DATA_BITS == 64
-typedef uint64_t binMessageType;
-#endif
-
 class AvalonMaster : public sc_module
 {
 public:

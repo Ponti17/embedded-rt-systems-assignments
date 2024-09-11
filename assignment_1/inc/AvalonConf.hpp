@@ -15,4 +15,12 @@
 #define MAX_CHANNEL     2   /* Maxinum number of channels   */
 #define CLK_PERIO       20  /* Clock period in ns           */
 
+#if DATA_BITS == 16
+typedef uint16_t binMessageType;
+#elif DATA_BITS == 32
+typedef uint32_t binMessageType;
+#elif DATA_BITS == 64
+typedef uint64_t binMessageType;
+#endif
+
 #endif // AVALON_CONF_HPP
