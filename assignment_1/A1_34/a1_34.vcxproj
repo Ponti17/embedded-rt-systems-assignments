@@ -22,11 +22,14 @@
     <ClCompile Include="..\src\AvalonMaster.cpp" />
     <ClCompile Include="..\src\AvalonSlave.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="src\monitor.cpp" />
     <ClCompile Include="src\top.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\inc\AvalonConf.hpp" />
     <ClInclude Include="..\inc\AvalonMaster.hpp" />
     <ClInclude Include="..\inc\AvalonSlave.hpp" />
+    <ClInclude Include="inc\monitor.hpp" />
     <ClInclude Include="inc\top.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

@@ -27,6 +27,9 @@
     <ClCompile Include="src\top.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\monitor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\inc\AvalonMaster.hpp">
@@ -36,6 +39,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="inc\top.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\AvalonConf.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\monitor.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
