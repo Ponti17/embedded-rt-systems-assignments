@@ -40,9 +40,11 @@ void AvalonMaster::transmit()
         std::cout << "Transmitting..." << std::endl;
         valid.write(1);
         binaryPacket = 0;
+
         for (int i = 0; i < DATA_BITS / 8; ++i) {
-            binaryPacket |= (message[idx + i] << 8 * i);
+            binaryPacket |= (static_cast<binMessageType>(message[idx + i]) << (8 * i));
         }
+
         data.write(binaryPacket);
         idx += DATA_BITS / 8;
     }
