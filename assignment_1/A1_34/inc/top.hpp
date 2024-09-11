@@ -13,7 +13,7 @@
 #include "AvalonSlave.hpp"
 #include "monitor.hpp"
 
-#define CLK_PERIOD 10000 /* Clock period in us */
+#define CLK_PERIOD 1 /* Clock period in us */
 
 class Top : public sc_module
 {
