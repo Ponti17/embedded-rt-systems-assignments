@@ -12,7 +12,7 @@
 #include "AvalonMaster.hpp"
 #include "AvalonSlave.hpp"
 
-#define CLK_PERIOD 20000 /* Clock period in us */
+#define CLK_PERIOD 10000 /* Clock period in us */
 
 class Top : public sc_module
 {
@@ -26,6 +26,7 @@ public:
     sc_signal<sc_int<ERROR_BITS>>   error;
 
     AvalonMaster    *pMaster;
+    AvalonSlave     *pSlave;
 
     /* Constructor */
     Top(sc_module_name name);
