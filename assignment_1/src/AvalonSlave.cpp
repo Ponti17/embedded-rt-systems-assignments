@@ -20,9 +20,16 @@ AvalonSlave::~AvalonSlave() {
     std::cout << std::flush;
 }
 
+uint8_t packetsReceived = 0;
 void AvalonSlave::receive() {
 
-    ready.write(1);
+    if (packetsReceived > 7) {
+        ready.write(0);
+        packetsReceived = 0;
+    }
+    else {
+        ready.write(1);
+    }
 
     if (valid.read() == 1) {
         std::cout << "RECEIVING" << std::endl;
@@ -31,6 +38,8 @@ void AvalonSlave::receive() {
         for (int i = 0; i < DATA_BITS / 8; ++i) {
             message += (binaryPacket >> 8 * i) & 0xFF;
         }
+
+        ++packetsReceived;
     }
 
     if (valid.read() == 0) {
