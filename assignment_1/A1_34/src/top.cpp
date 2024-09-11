@@ -8,8 +8,9 @@
 /* Constructor */
 Top::Top(sc_module_name name) : sc_module(name), clk("clk", CLK_PERIOD, SC_US)
 {
-    pMaster = new AvalonMaster("AvalonMaster");
-    pSlave  = new AvalonSlave("AvalonSlave");
+    pMaster     = new AvalonMaster("AvalonMaster");
+    pSlave      = new AvalonSlave("AvalonSlave");
+    pMonitor    = new Monitor("Monitor");
 
     pMaster->clk(clk);
     pMaster->ready(ready);
@@ -24,6 +25,13 @@ Top::Top(sc_module_name name) : sc_module(name), clk("clk", CLK_PERIOD, SC_US)
     pSlave->data(data);
     pSlave->channel(channel);
     pSlave->error(error);
+
+    pMonitor->clk(clk);
+    pMonitor->ready(ready);
+    pMonitor->valid(valid);
+    pMonitor->data(data);
+    pMonitor->channel(channel);
+    pMonitor->error(error);
 }
 
 /* Destructor */

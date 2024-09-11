@@ -7,11 +7,26 @@
 #define MONITOR_HPP
 
 #include "systemc.h"
+#include "AvalonConf.hpp"
 
-sc_trace_file *file_handler = sc_create_vcd_trace_file("trace");
-sc_trace(file_handler, siga, "SignalA");
-sc_trace(file_handler, sigb, "SignalB");
-sc_trace(file_handler, testclk, "CLK");
-sc_close_vcd_trace_file(file_handler);
+class Monitor : public sc_module {
+
+public:
+    sc_in<bool>                 clk;
+    sc_in<bool>                 ready;
+    sc_in<bool>                 valid;
+    sc_in<sc_int<DATA_BITS>>    data;
+    sc_in<sc_int<CHANNEL_BITS>> channel;
+    sc_in<sc_int<ERROR_BITS>>   error;
+
+    // Constructor
+    Monitor(sc_module_name name);
+
+    // Destructor
+    ~Monitor();
+
+private:
+    std::string moduleName;
+};
 
 #endif // MONITOR_HPP

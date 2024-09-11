@@ -11,6 +11,7 @@
 #include "AvalonConf.hpp"
 #include "AvalonMaster.hpp"
 #include "AvalonSlave.hpp"
+#include "monitor.hpp"
 
 #define CLK_PERIOD 10000 /* Clock period in us */
 
@@ -27,6 +28,7 @@ public:
 
     AvalonMaster    *pMaster;
     AvalonSlave     *pSlave;
+    Monitor         *pMonitor;
 
     /* Constructor */
     Top(sc_module_name name);
