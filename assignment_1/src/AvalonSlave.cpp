@@ -10,7 +10,8 @@ AvalonSlave::AvalonSlave(sc_module_name name)
     : sc_module(name), moduleName(name)
 {
     /* Register a thread process */
-    SC_THREAD(mainThread);
+    SC_METHOD(receive);
+    sensitive << clk.pos();
 }
 
 /* Destructor */
@@ -20,10 +21,22 @@ AvalonSlave::~AvalonSlave()
 }
 
 /* Thread */
-void AvalonSlave::mainThread()
+char buf[120];
+uint8_t buf_idx = 0;
+void AvalonSlave::receive()
 {
-    while (true)
+    if (valid.read() == 1)
     {
-        wait(2, SC_MS);
+        std::cout << "RECEIVING" << std::endl;
+        buf[buf_idx] = data.read();
+        ++buf_idx;
+    }
+    if (valid.read() == 0)
+    {
+        for (uint8_t i = 0; i < buf_idx; i++)
+        {
+            std::cout << buf[i];
+        }
+        std::cout << std::endl;
     }
 }

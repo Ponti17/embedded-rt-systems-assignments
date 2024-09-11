@@ -14,11 +14,12 @@
 class AvalonSlave : public sc_module {
 
 public:
-    sc_out<bool>             ready;
-    sc_in<bool>              valid;
-    sc_in<bool>              error;
-    sc_in<bool>              channel;
-    sc_in<sc_int<DATA_BITS>> data;
+    sc_in<bool>                 clk;
+    sc_out<bool>                ready;
+    sc_in<bool>                 valid;
+    sc_in<sc_int<DATA_BITS>>    data;
+    sc_in<sc_int<CHANNEL_BITS>> channel;
+    sc_in<sc_int<ERROR_BITS>>   error;
 
     // Constructor
     AvalonSlave(sc_module_name name);
@@ -28,7 +29,7 @@ public:
 
 private:
     std::string moduleName;
-    void mainThread();  // Thread function declaration
+    void receive();
 };
 
 #endif // AVALON_SLAVE_HPP
