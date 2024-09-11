@@ -32,7 +32,7 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{24C39CB3-4FA5-4C4B-8807-DD53AB2D31F3}</ProjectGuid>
+    <ProjectGuid>{E1A88679-50C1-492C-95EC-C0ACB7C45D79}</ProjectGuid>
     <RootNamespace>systemctemplate</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
     <ProjectName>a1_34</ProjectName>
