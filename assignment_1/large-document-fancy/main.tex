@@ -1,0 +1,43 @@
+\input{Settings/preamble.tex}
+
+%%% Begin Document
+
+\begin{document}
+
+\pagestyle{fancy}
+
+\subfile{sections/frontpage} % Global pagenumbering is disabled inside here
+
+\newpage
+
+\subfile{sections/dedication}
+
+\newpage
+
+% Use roman numerals for pages before the introduction
+\pagenumbering{Roman}
+\pagestyle{roman}
+
+\subfile{sections/contents}
+
+\newpage
+
+\subfile{sections/abstract}
+
+\newpage
+
+% Switch back the arabic numbering
+\pagenumbering{arabic}
+\pagestyle{fancy}
+
+\subfile{sections/section01}
+
+\newpage
+
+\subfile{sections/conclusion}
+
+\newpage
+
+\subfile{sections/references}
+
+\end{document}

@@ -1,0 +1,169 @@
+\documentclass[twoside,10pt,a4paper]{report} % For defining the document type
+
+\usepackage[normalem]{ulem} % For strike-through text
+
+
+\usepackage{makecell} % For making cells in tables
+
+\usepackage{array} % For making tables
+
+\usepackage{wallpaper}
+
+\usepackage{tocloft} % For making the table of contents
+
+\usepackage{lipsum}
+
+\usepackage{wrapfig} % For wrapping text around figures
+
+\usepackage[toc,page]{appendix}
+
+\usepackage{titlesec} % For lines under section headers
+
+\usepackage{fancyhdr} % For making headers and footers
+
+\usepackage{lastpage} % For referencing the last page
+
+\usepackage{pdfpages} % For including PDF's
+
+% For page layout
+\usepackage{layout}
+\usepackage{geometry}
+\geometry{a4paper, total={170mm,237mm}, left=20mm, top=30mm}
+
+\usepackage{amssymb} % For black square
+
+%%% Language and encoding packages
+\usepackage[T1]{fontenc}
+\usepackage{lmodern} % This package provides a font family that has a wide range of shapes
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel} % For setting the language
+\usepackage{csquotes}
+
+\usepackage[style=ieee]{biblatex} %Imports biblatex package
+\addbibresource{Settings/bibliography.bib} %Import the bibliography file
+
+\usepackage{pgfplots} % Plot package
+\pgfplotsset{compat=1.18} % Set pgfplot version
+
+\input{Settings/functions.tex} % Import some custom settings
+
+\usepackage{graphicx} % For including graphics
+\graphicspath{{imgs/}} % Sets the default location of pictures
+
+\usepackage{changepage} % For changing the page margins
+
+%%% Circuit drawing packages:
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{rotating}
+
+\usepackage{verbatim} % Multiline comment package
+
+\usepackage{multirow}
+\usepackage{multicol}
+\usepackage{tabularx}
+\usepackage{threeparttable}
+\usepackage{makecell}
+\newcommand{\thickhline}{\Xhline{1pt}}
+
+\usepackage{amsmath}  % For making math
+
+\usepackage{siunitx}
+
+\usepackage{subcaption} % for subfigures
+
+\usepackage{float} % for [H]
+
+% For forcing footnotes to the bottom of the page
+\usepackage[bottom]{footmisc}
+
+% Best loaded last in the preamb\xi le
+\usepackage{subfiles}
+
+\setlength\parindent{0pt} % No indents
+
+\usepackage[hidelinks]{hyperref} % make hyperlinks for sections
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    citecolor=black,
+    urlcolor=blue
+}
+
+%%% Front page related stuff
+\usepackage{titling}
+
+%%% Page set up for header, footer and page numbering.
+\fancypagestyle{fancy}{
+    \fancyfoot{}
+    \fancyfoot[R]{Page \thepage\ of~\pageref{LastPage}}
+    \fancyfoot[L]{Aarhus University}
+    \fancyhead{}
+    \fancyhead[RO, LE]{\nouppercase\rightmark}
+    \fancyhead[LO, RE]{\nouppercase\leftmark}
+    \renewcommand{\footrulewidth}{0pt}
+}
+
+\fancypagestyle{plain}{%
+  \fancyhf{}%
+  \fancyfoot[R]{Page \thepage\ of~\pageref{LastPage}}
+  \fancyfoot[L]{Aarhus University}
+}
+
+\fancypagestyle{roman}{%
+  \fancyhf{}%
+  \fancyfoot[R]{\thepage}
+  \fancyfoot[L]{Aarhus University}
+}
+
+\AtBeginDocument{\addtocontents{toc}{\protect\thispagestyle{roman}}} 
+
+% Change thickness of line under header.
+\renewcommand{\headrulewidth}{0pt}
+
+% Use \cdot as multiplication
+\DeclareMathSymbol{*}{\mathbin}{symbols}{"01}
+
+% Sets the height of the header.
+% \setlength{\headheight}{28pt}
+
+% Numbering equations and figures by section
+\numberwithin{equation}{chapter}
+\numberwithin{figure}{chapter}
+
+\usepackage{enumitem}
+\setlist[itemize]{itemsep=1pt, topsep=2pt}
+
+\usepackage{color}
+\newcommand{\hsp}{\hspace{20pt}}
+\definecolor{gray75}{gray}{0.75}
+\titleformat{\chapter}[hang]
+    {\Huge\bfseries}
+    {\thechapter\hsp\textcolor{gray75}{|}\hsp}
+    {0pt}
+    {\Huge\bfseries\slshape}
+
+\titleformat{\section}
+    {\normalfont\Large\bfseries}
+    {\thesection \hspace*{0.5em} \textbullet}
+    {0.5em}
+    {}
+    [{\titlerule[0.4pt]}]
+
+\titleformat{\subsection}
+    {\normalfont\normalsize\bfseries}
+    {\thesubsection}
+    {0.5em}
+    {}
+
+% Spacing before and after header
+\titlespacing*{\chapter}{0pt}{12pt}{12pt}
+\titlespacing*{\section}{0pt}{12pt}{12pt}
+\titlespacing*{\subsection}{0pt}{12pt}{12pt}
+
+\captionsetup{font={footnotesize, sl}, labelfont=bf}
+
+% Move figure caption text closer to figure (default 10pt)
+\setlength{\abovecaptionskip}{0pt}
+
+\nocite{*}
