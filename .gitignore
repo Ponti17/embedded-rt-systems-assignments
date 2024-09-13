@@ -399,3 +399,8 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+# Latex ignores
+**\build
+*.gz
+*.pdf
