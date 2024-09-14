@@ -15,11 +15,11 @@ void Slave::receive()
 
 			std::cout << "Slave received: " << data.read() << std::endl;
 
-			ready.write(SC_LOGIC_1);
+			ready.write(SC_LOGIC_0);
 
 		} else {
 
-			ready.write(SC_LOGIC_0);
+			ready.write(SC_LOGIC_1);
 
 		}
 

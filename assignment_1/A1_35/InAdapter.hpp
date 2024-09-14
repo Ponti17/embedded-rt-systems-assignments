@@ -21,14 +21,15 @@ public:
 	{
 
 		if (reset.read() == SC_LOGIC_0) {
-
+			std::cout << "InAdapter: Waiting for ready signal at " << sc_time_stamp() << std::endl;
+			std::cout << "inAdapter value read: " << value << std::endl;
 			while (ready.read() == SC_LOGIC_0)
 			{
 
 				wait(clock.posedge_event());
 
 			}
-
+			std::cout << "InAdapter: Writing " << value << " at "<< sc_time_stamp() << std::endl;
 			data.write(value);
 			channel.write(0);
 			error.write(0);
@@ -50,17 +51,27 @@ private:
 	
 	bool nb_write(const T& value)
 	{
+
+		SC_REPORT_FATAL("/InAdapter", "Called nb_write()");
 		return false;
+
 	}
 
 	int num_free() const
 	{
-		return 0;
+
+		SC_REPORT_FATAL("/InAdapter", "Called num_free()");
+		return -1;
+
 	}
 
 	const sc_event& data_read_event() const
 	{
-		return *new sc_event();
+
+		SC_REPORT_FATAL("/InAdapter", "Called data_read_event()");
+		static sc_event dummy_event;
+		return dummy_event;
+
 	}
 };
 

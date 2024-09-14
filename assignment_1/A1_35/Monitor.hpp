@@ -7,8 +7,9 @@ class Monitor :
 {
 public:
 
-	sc_in<bool> clk;
-    sc_signal<sc_logic>* reset_signal;
+	sc_in_clk clk;
+    sc_in<sc_logic> reset_signal;
+    sc_in<sc_logic> valid;
 
     SC_CTOR(Monitor);
 

@@ -6,30 +6,53 @@ Top::Top(sc_module_name name) :
 	clock("clock", CLOCK_PERIOD, CLOCK_PERIOD_UNIT)
 {
 
-	sc_fifo<sc_uint<10>> fifo(8);
+	sc_fifo<sc_uint<8>> fifo;
 
 	master = new Master("master");
 	adapter = new InAdapter<sc_uint<8>>("adapter");
 	slave = new Slave("slave");
-	monitor = new Monitor("monitor");
+	//monitor = new Monitor("monitor");
 
-	adapter->clock(clock);
-	adapter->reset(reset);
-	slave->clock(clock);
-	slave->reset(reset);
+    // Connect clock and reset
+    adapter->clock(clock);
+    adapter->reset(reset);
+    slave->clock(clock);
+    slave->reset(reset);
 
-	//interconnects
-	adapter->ready(slave->ready);
-	slave->valid(adapter->valid);
-	slave->data(adapter->data);
-	slave->error(adapter->error);
-	slave->channel(adapter->channel);
+    // Connect Master to Adapter
+    master->out_fifo(*adapter);
+
+    // Connect Adapter and Slave via signals
+    adapter->ready(ready_signal);
+    slave->ready(ready_signal);
+
+    adapter->valid(valid_signal);
+    slave->valid(valid_signal);
+
+    adapter->data(data_signal);
+    slave->data(data_signal);
+
+    adapter->error(error_signal);
+    slave->error(error_signal);
+
+    adapter->channel(channel_signal);
+    slave->channel(channel_signal);
+
+    // Initialize reset signal
+    reset.write(SC_LOGIC_1);
+
+
+	//Monitor connections
+    
+	/*monitor->clk(clock);
+	monitor->reset_signal(reset);
+	monitor->valid(valid_signal);*/
 
 	reset.write(SC_LOGIC_1);
 
 	sc_spawn([&]()
 		{
-			wait(100, SC_NS);
+			wait(10, SC_NS);
 			reset.write(SC_LOGIC_0);
 		});
 

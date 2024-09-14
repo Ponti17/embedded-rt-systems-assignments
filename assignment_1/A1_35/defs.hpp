@@ -1,7 +1,7 @@
 #pragma once
 #include <systemc.h>
 
-constexpr int CLOCK_PERIOD = 10;
+constexpr int CLOCK_PERIOD = 1;
 constexpr enum sc_time_unit CLOCK_PERIOD_UNIT = SC_NS;
 
 constexpr int MASTER_OUTPUT_PERIOD = 10;
