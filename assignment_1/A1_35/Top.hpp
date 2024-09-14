@@ -17,7 +17,7 @@ public:
 	sc_signal<bool > reset;
 
     Master* master;
-	InAdapter* adapter;
+	InAdapter<sc_uint<8>> * adapter;
 	Slave* slave;
 	Monitor* monitor;
 

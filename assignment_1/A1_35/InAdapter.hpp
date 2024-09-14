@@ -11,9 +11,9 @@ public:
 	sc_in<sc_logic> ready, reset;
 
 	sc_out <sc_logic> valid;
-	sc_out<sc_int<CHANNEL_BITS>> channel;
-	sc_out<sc_int<ERROR_BITS>> error;
-	sc_out<sc_int<DATA_BITS>> data;
+	sc_out<CHANNEL_BITS> channel;
+	sc_out<ERROR_BITS> error;
+	sc_out<DATA_BITS> data;
 
 	SC_HAS_PROCESS(InAdapter);
 	InAdapter(sc_module_name name);
