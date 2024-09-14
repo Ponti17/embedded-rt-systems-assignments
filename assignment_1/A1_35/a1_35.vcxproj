@@ -27,6 +27,7 @@
     <ClCompile Include="Top.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="defs.hpp" />
     <ClInclude Include="InAdapter.hpp" />
     <ClInclude Include="Master.hpp" />
     <ClInclude Include="Monitor.hpp" />
