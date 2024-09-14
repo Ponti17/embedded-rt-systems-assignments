@@ -12,5 +12,15 @@ class Top :
     public sc_module
 {
 
+public:
+    sc_clock clock;
+	sc_signal<bool > reset;
+
+    Master* master;
+	InAdapter* adapter;
+	Slave* slave;
+	Monitor* monitor;
+
+	SC_CTOR(Top);
 };
 
