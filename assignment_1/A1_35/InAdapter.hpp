@@ -15,7 +15,6 @@ public:
 	sc_out<ERROR_BITS> error;
 	sc_out<DATA_BITS> data;
 
-	SC_HAS_PROCESS(InAdapter);
 	InAdapter(sc_module_name name);
 
 	void write(const T& data) override;

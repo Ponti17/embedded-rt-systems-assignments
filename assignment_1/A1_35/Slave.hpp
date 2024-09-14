@@ -14,7 +14,6 @@ public:
 	sc_in<ERROR_BITS> error;
 	sc_in<CHANNEL_BITS> channel;
 
-	SC_HAS_PROCESS(Slave);
 	Slave(sc_module_name name);
 
 private:
