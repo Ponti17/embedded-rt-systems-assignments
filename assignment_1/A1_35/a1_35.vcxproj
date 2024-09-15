@@ -20,21 +20,19 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Master.cpp" />
-    <ClCompile Include="Monitor.cpp" />
-    <ClCompile Include="Slave.cpp" />
-    <ClCompile Include="Top.cpp" />
+    <ClCompile Include="src\InAdapter.cpp" />
+    <ClCompile Include="src\Master.cpp" />
+    <ClCompile Include="src\Monitor.cpp" />
+    <ClCompile Include="src\Slave.cpp" />
+    <ClCompile Include="src\Top.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="defs.hpp" />
-    <ClInclude Include="InAdapter.hpp" />
-    <ClInclude Include="Master.hpp" />
-    <ClInclude Include="Monitor.hpp" />
-    <ClInclude Include="Slave.hpp" />
-    <ClInclude Include="Top.hpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="a1_35.rc" />
+    <ClInclude Include="inc\defs.hpp" />
+    <ClInclude Include="inc\InAdapter.hpp" />
+    <ClInclude Include="inc\Master.hpp" />
+    <ClInclude Include="inc\Monitor.hpp" />
+    <ClInclude Include="inc\Slave.hpp" />
+    <ClInclude Include="inc\Top.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
@@ -123,7 +121,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)\..\systemc-3.0.0\src;$(SolutionDir)\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\..\systemc-3.0.0\src;$(SolutionDir)\inc;$(ProjectDir)\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <AdditionalOptions>/vmg %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp17</LanguageStandard>
