@@ -13,8 +13,6 @@ void Slave::receive()
 
 		if (valid.read() == SC_LOGIC_1) {
 
-			std::cout << "Slave received: " << data.read() << std::endl;
-
 			ready.write(SC_LOGIC_0);
 
 		} else {

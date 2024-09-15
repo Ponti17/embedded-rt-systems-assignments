@@ -48,8 +48,6 @@ Top::Top(sc_module_name name)
 
     reset.write(SC_LOGIC_1);
 
-	reset.write(SC_LOGIC_1);
-
 	sc_spawn([&]()
 		{
 			wait(10, SC_NS);

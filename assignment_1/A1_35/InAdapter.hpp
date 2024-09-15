@@ -17,19 +17,15 @@ public:
 
 	InAdapter(sc_module_name name) : sc_module(name) {};
 
-	void write(const T& value)
-	{
-
+	void write(const T& value) {
 		if (reset.read() == SC_LOGIC_0) {
-			std::cout << "InAdapter: Waiting for ready signal at " << sc_time_stamp() << std::endl;
-			std::cout << "inAdapter value read: " << value << std::endl;
-			while (ready.read() == SC_LOGIC_0)
-			{
 
+			while (ready.read() == SC_LOGIC_0) {
 				wait(clock.posedge_event());
-
 			}
-			std::cout << "InAdapter: Writing " << value << " at "<< sc_time_stamp() << std::endl;
+
+			wait(clock.posedge_event());
+
 			data.write(value);
 			channel.write(0);
 			error.write(0);
@@ -37,12 +33,9 @@ public:
 
 			wait(clock.posedge_event());
 			valid.write(SC_LOGIC_0);
-
 		}
 		else {
-
 			wait(clock.posedge_event());
-
 		}
 
 	}

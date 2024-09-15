@@ -27,7 +27,7 @@ Monitor::Monitor(sc_module_name name,
     sc_trace(trace_file, error_signal, "error");
     sc_trace(trace_file, data_signal, "data");
 
-    SC_METHOD(monitor_signals);
+    // SC_METHOD(monitor_signals);
     sensitive << clock.pos();
 }
 
