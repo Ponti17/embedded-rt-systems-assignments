@@ -8,8 +8,7 @@
 #include "AvalonMaster.hpp"
 
 /* Constructor */
-AvalonMaster::AvalonMaster(sc_module_name name) 
-    : sc_module(name), moduleName(name) {
+AvalonMaster::AvalonMaster(sc_module_name name) : sc_module(name), moduleName(name) {
     message = "Hello, World!\nThis is transmitted over the Avalon Streaming Interface!";
     binaryPacket = 0;
 
