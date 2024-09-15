@@ -22,7 +22,7 @@ ModuleSingle::ModuleSingle(sc_module_name name)
 /* Destructor */
 ModuleSingle::~ModuleSingle() 
 {
-    std::cout << std::flush;  // Flush the output buffer
+    std::cout << std::flush;
 }
 
 /* Thread */
