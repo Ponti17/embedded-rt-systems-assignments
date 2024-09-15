@@ -1,4 +1,4 @@
-\documentclass[twoside,10pt,a4paper]{report} % For defining the document type
+\documentclass[10pt,a4paper]{article} % For defining the document type
 
 \usepackage[normalem]{ulem} % For strike-through text
 
@@ -28,7 +28,7 @@
 % For page layout
 \usepackage{layout}
 \usepackage{geometry}
-\geometry{a4paper, total={170mm,237mm}, left=20mm, top=30mm}
+\geometry{a4paper, total={170mm,237mm}, left=38mm, right=38mm, top=25.4mm, bottom=25.4mm}
 
 \usepackage{amssymb} % For black square
 
@@ -128,8 +128,8 @@
 % \setlength{\headheight}{28pt}
 
 % Numbering equations and figures by section
-\numberwithin{equation}{chapter}
-\numberwithin{figure}{chapter}
+\numberwithin{equation}{section}
+\numberwithin{figure}{section}
 
 \usepackage{enumitem}
 \setlist[itemize]{itemsep=1pt, topsep=2pt}
@@ -137,18 +137,17 @@
 \usepackage{color}
 \newcommand{\hsp}{\hspace{20pt}}
 \definecolor{gray75}{gray}{0.75}
-\titleformat{\chapter}[hang]
-    {\Huge\bfseries}
-    {\thechapter\hsp\textcolor{gray75}{|}\hsp}
-    {0pt}
-    {\Huge\bfseries\slshape}
+% \titleformat{\chapter}[hang]
+%     {\Huge\bfseries}
+%     {\thechapter\hsp\textcolor{gray75}{|}\hsp}
+%     {0pt}
+%     {\Huge\bfseries\slshape}
 
 \titleformat{\section}
     {\normalfont\Large\bfseries}
     {\thesection \hspace*{0.5em} \textbullet}
     {0.5em}
     {}
-    [{\titlerule[0.4pt]}]
 
 \titleformat{\subsection}
     {\normalfont\normalsize\bfseries}
@@ -157,7 +156,6 @@
     {}
 
 % Spacing before and after header
-\titlespacing*{\chapter}{0pt}{12pt}{12pt}
 \titlespacing*{\section}{0pt}{12pt}{12pt}
 \titlespacing*{\subsection}{0pt}{12pt}{12pt}
 
