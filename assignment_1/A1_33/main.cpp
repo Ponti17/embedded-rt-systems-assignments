@@ -9,7 +9,6 @@ int sc_main(int sc_argc, char* sc_argv[])
 {
     /**
      * Initialize and configure FIFOs and modules
-     * TODO: Maybe FIFOs should be configured in a dedicated top.h?
      */
     sc_fifo<TCPHeader*> fifo1(10);
     sc_fifo<TCPHeader*> fifo2(10);
