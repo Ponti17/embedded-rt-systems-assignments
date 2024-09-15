@@ -51,7 +51,25 @@ void ModuleSingle::moduleSingleThread() {
 
 \newpage
 
-The \textbf{trigger} method simple prints the time and the counter when called. A snippet of the output is shown in.
+The \textbf{trigger} method simple prints time and the counter value when called. When the counter reaches 0b1111, it "loops" back to 0b0000 due to overflow. A part of the output from ModuleSingle is shown below.
 
+\begin{mintedterminal}{a1\_31.exe (first 16 lines)}
+Module ModuleSingle_i - Counter: 0 at time 0 s
+Module ModuleSingle_i - Counter: 1 at time 2 ms
+Module ModuleSingle_i - Counter: 2 at time 4 ms
+Module ModuleSingle_i - Counter: 3 at time 6 ms
+Module ModuleSingle_i - Counter: 4 at time 8 ms
+Module ModuleSingle_i - Counter: 5 at time 10 ms
+Module ModuleSingle_i - Counter: 6 at time 12 ms
+Module ModuleSingle_i - Counter: 7 at time 14 ms
+Module ModuleSingle_i - Counter: 8 at time 16 ms
+Module ModuleSingle_i - Counter: 9 at time 18 ms
+Module ModuleSingle_i - Counter: 10 at time 20 ms
+Module ModuleSingle_i - Counter: 11 at time 22 ms
+Module ModuleSingle_i - Counter: 12 at time 24 ms
+Module ModuleSingle_i - Counter: 13 at time 26 ms
+Module ModuleSingle_i - Counter: 14 at time 28 ms
+Module ModuleSingle_i - Counter: 15 at time 30 ms
+\end{mintedterminal}
 
 \end{document}
