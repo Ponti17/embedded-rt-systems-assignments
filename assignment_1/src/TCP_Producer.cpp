@@ -6,9 +6,7 @@
 #include "TCP_Producer.hpp"
 
 /* Constructor */
-TCP_Producer::TCP_Producer(sc_module_name name) 
-    : sc_module(name), moduleName(name)
-{
+TCP_Producer::TCP_Producer(sc_module_name name) : sc_module(name), moduleName(name) {
     /* Initialize rand */
     srand(time(0));
 
@@ -22,17 +20,14 @@ TCP_Producer::TCP_Producer(sc_module_name name)
 }
 
 /* Destructor */
-TCP_Producer::~TCP_Producer() 
-{
+TCP_Producer::~TCP_Producer() {
     std::cout << std::flush;  // Flush the output buffer
 }
 
 /* Thread */
-void TCP_Producer::mainThread() 
-{
+void TCP_Producer::mainThread() {
     uint8_t wait_ms = 0;
-    while (true) 
-    {
+    while (true) {
         wait(wait_ms, SC_MS); 
         event_transmit.notify();
         wait_ms = rand() % 9 + 2;
@@ -40,8 +35,7 @@ void TCP_Producer::mainThread()
 }
 
 /* Transmit TCP package method */
-void TCP_Producer::transmit() 
-{
+void TCP_Producer::transmit() {
     /* Allocate TCPHeader on heap and create a pointer, package, to it */
     TCPHeader* packet = new TCPHeader();
     packet->SourcePort         = 0;
@@ -58,11 +52,9 @@ void TCP_Producer::transmit()
      * Transmit to all FIFO channels.
      * Instead of transmitting the whole TCP header through the FIFOs,
      * we send a significantly smaller pointer, after which the consumer can
-     * read the header itself from memory. 
-     * TODO: It occured to me that this is actually retarded, and we really should just send the entire TCP header.
+     * read the header itself from memory.
      */
-    for (int i = 0; i < out.size(); i++)
-    {
+    for (int i = 0; i < out.size(); i++) {
         TCPHeader* packet_copy = new TCPHeader(*packet);
         packet_copy->DestinationPort = i;
         out[i]->write(packet_copy);

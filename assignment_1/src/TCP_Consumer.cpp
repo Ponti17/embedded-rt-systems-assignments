@@ -6,24 +6,19 @@
 #include "TCP_Consumer.hpp"
 
 /* Constructor */
-TCP_Consumer::TCP_Consumer(sc_module_name name) 
-    : sc_module(name), moduleName(name)
-{
+TCP_Consumer::TCP_Consumer(sc_module_name name) : sc_module(name), moduleName(name) {
     /* Register a thread process */
     SC_THREAD(mainThread);
 }
 
 /* Destructor */
-TCP_Consumer::~TCP_Consumer() 
-{
+TCP_Consumer::~TCP_Consumer() {
     std::cout << std::flush;
 }
 
 /* Thread */
-void TCP_Consumer::mainThread() 
-{
-    while (true) 
-    {
+void TCP_Consumer::mainThread() {
+    while (true) {
         TCPHeader* packet = in->read();
 
         std::cout << moduleName << ": received packet from port " << packet->SourcePort
