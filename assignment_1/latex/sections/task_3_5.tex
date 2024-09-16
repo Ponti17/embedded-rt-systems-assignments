@@ -4,8 +4,16 @@
 
 \begin{document}
 
-\section{Chapter One}
+\section{Task 3.5}
 
-\lipsum[1-3]
+Implement a model that demonstrates a system design that transfer data at the TLM level refined to BCAM level. Use the \texttt{sc\_fifo} to model communication at the TLM level and refine it to BCAM using adapters. As inspiration study the example project \textbf{SmartPitchDetector}. Here a master sends data to a slave using a \texttt{sc\_fifo} and an adpater that converts to the bus cycle accurate interface on the receiving slave. Use the model from task 3.4 for the interface at the Avalon-ST sink interface for the slave as illustrated below.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.9\textwidth]{task3_5.png}
+    \caption{Task 3.5 overview.}
+\end{figure}
+
+\subsection*{Solution}
 
 \end{document}
