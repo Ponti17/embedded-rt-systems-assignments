@@ -17,14 +17,12 @@ Create a module (\textbf{ModuleDouble}) with two threads (A, B), one method (A) 
 
 \subsection*{Solution}
 
-We start by defining a class \textbf{ModuleDouble}, inhereting from \textbf{sc\_module}, with the required methods and events.
+We start by defining a class \textbf{ModuleDouble}, inheriting from \texttt{sc\_module}, with the required methods and events. Just like in Task 3.1, we are creating a model that approximately times the computations (implemented using SystemC wait), but does not model any transactions. \textbf{ModuleDouble} is therefore also a \textit{Timed Functional Model}.
 
 \begin{myminted}{/inc/ModuleDouble.hpp}
 class ModuleDouble : public sc_module {
 public:
-    /* Events */
     sc_event event_A, event_B, event_Aack, event_Back;
-
     ModuleDouble(sc_module_name name);
     ~ModuleDouble();
 
@@ -78,7 +76,7 @@ We set the simulation time to $20 \si{ms}$. The output from the first $10 \si{ms
 
 \newpage
 
-\begin{mintedterminal}{a1\_32.exe}
+\begin{mintedterminal}{a1\_32.exe (first 10 ms)}
 Thread A - Time: 0 s - Notifying event_A
 Thread B - Time: 0 s - Notifying event_B
 Method A - Time: 0 s - Handling event_A
