@@ -4,8 +4,73 @@
 
 \begin{document}
 
-\section{Chapter One}
+\section{Task 3.1}
 
-\lipsum[1-3]
+Create a module (\textbf{ModuleSingle}) with a single thread and a method. The thread should notify the method each 2 ms by use of an event and static sensitivity. The method should increment a counter of the type \textbf{sc\_uint<4>} and print the value and current simulation time. Limit the simulation time to 200 ms. Describe what happens when the counter wraps around?
+
+\subsection*{Solution}
+
+We started by defining a simple class for \textbf{ModuleSingle}, inhereting from \texttt{sc\_module}.  The model is designed at quite a high level of abstraction. We don't simulated any pin behaviour, nor any transaction of data. The module is however approximately timed, and can therefore be considered a \textit{Timed Functional Model}.
+
+\begin{myminted}{/inc/ModuleSingle.hpp}
+class ModuleSingle : public sc_module {
+public:
+    ModuleSingle(sc_module_name name);
+    ~ModuleSingle();
+
+private:
+    std::string moduleName;
+    sc_uint<4> counter;
+    sc_event event;
+
+    void moduleSingleThread();
+    void incrementCounter();
+    void trigger();
+};
+\end{myminted}
+
+The \textbf{moduleSingle} constructor simply registers \texttt{moduleSingleThread} and \texttt{trigger}. The method is made sensitive to \texttt{event}. Every 2 ms the thread wakes from "wait", increments the counter, and notifies the method by \texttt{event}.
+
+\begin{myminted}{/src/ModuleSingle.cpp - moduleSingleThread()}
+void ModuleSingle::moduleSingleThread() {
+    while (true) {
+        wait(2, SC_MS); 
+        incrementCounter();
+        event.notify();
+    }
+}
+\end{myminted}
+
+\newpage
+
+Finally the method \texttt{trigger} simply prints the time and and current counter value.
+
+\begin{myminted}{/src/ModuleSingle.cpp - trigger()}
+void ModuleSingle::trigger() {
+    std::cout << "Module " << moduleName << " - Counter: " << counter
+                << " at time " << sc_time_stamp() << "\n";
+}
+\end{myminted}
+
+When the counter reaches 0b1111, it "loops" back to 0b0000 due to overflow. A part of the output from ModuleSingle is shown below.
+
+\begin{mintedterminal}{a1\_31.exe (first 16 lines)}
+Module ModuleSingle_i - Counter: 0 at time 0 s
+Module ModuleSingle_i - Counter: 1 at time 2 ms
+Module ModuleSingle_i - Counter: 2 at time 4 ms
+Module ModuleSingle_i - Counter: 3 at time 6 ms
+Module ModuleSingle_i - Counter: 4 at time 8 ms
+Module ModuleSingle_i - Counter: 5 at time 10 ms
+Module ModuleSingle_i - Counter: 6 at time 12 ms
+Module ModuleSingle_i - Counter: 7 at time 14 ms
+Module ModuleSingle_i - Counter: 8 at time 16 ms
+Module ModuleSingle_i - Counter: 9 at time 18 ms
+Module ModuleSingle_i - Counter: 10 at time 20 ms
+Module ModuleSingle_i - Counter: 11 at time 22 ms
+Module ModuleSingle_i - Counter: 12 at time 24 ms
+Module ModuleSingle_i - Counter: 13 at time 26 ms
+Module ModuleSingle_i - Counter: 14 at time 28 ms
+Module ModuleSingle_i - Counter: 15 at time 30 ms
+\end{mintedterminal}
 
 \end{document}
