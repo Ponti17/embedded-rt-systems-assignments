@@ -10,7 +10,7 @@ Create a module (\textbf{ModuleSingle}) with a single thread and a method. The t
 
 \subsection*{Solution}
 
-We started by defining a simple class for \textbf{ModuleSingle}, inhereting from sc\_module.
+We started by defining a simple class for \textbf{ModuleSingle}, inhereting from \texttt{sc\_module}.  The model is designed at quite a high level of abstraction. We don't simulated any pin behaviour, nor any transaction of data. The module is however approximately timed, and can therefore be considered a \textit{Timed Functional Model}.
 
 \begin{myminted}{/inc/ModuleSingle.hpp}
 class ModuleSingle : public sc_module {
@@ -29,17 +29,9 @@ private:
 };
 \end{myminted}
 
-In the constructor we register the main thread \textbf{moduleSingleThread} and the method \textbf{trigger}. The method is made sensitive to "event". Every 2 ms the thread wakes from "wait", and notifies the method.
+The \textbf{moduleSingle} constructor simply registers \texttt{moduleSingleThread} and \texttt{trigger}. The method is made sensitive to \texttt{event}. Every 2 ms the thread wakes from "wait", increments the counter, and notifies the method by \texttt{event}.
 
-\begin{myminted}{/src/ModuleSingle.cpp (snippet)}
-ModuleSingle::ModuleSingle(sc_module_name name) 
-    : sc_module(name), moduleName(name), counter(0b0000)
-{
-    SC_THREAD(moduleSingleThread);
-    SC_METHOD(trigger);
-    sensitive << event;
-}
-
+\begin{myminted}{/src/ModuleSingle.cpp - moduleSingleThread()}
 void ModuleSingle::moduleSingleThread() {
     while (true) {
         wait(2, SC_MS); 
@@ -51,7 +43,16 @@ void ModuleSingle::moduleSingleThread() {
 
 \newpage
 
-The \textbf{trigger} method simple prints time and the counter value when called. When the counter reaches 0b1111, it "loops" back to 0b0000 due to overflow. A part of the output from ModuleSingle is shown below.
+Finally the method \texttt{trigger} simply prints the time and and current counter value.
+
+\begin{myminted}{/src/ModuleSingle.cpp - trigger()}
+void ModuleSingle::trigger() {
+    std::cout << "Module " << moduleName << " - Counter: " << counter
+                << " at time " << sc_time_stamp() << "\n";
+}
+\end{myminted}
+
+When the counter reaches 0b1111, it "loops" back to 0b0000 due to overflow. A part of the output from ModuleSingle is shown below.
 
 \begin{mintedterminal}{a1\_31.exe (first 16 lines)}
 Module ModuleSingle_i - Counter: 0 at time 0 s
