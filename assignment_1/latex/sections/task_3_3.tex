@@ -52,6 +52,8 @@ void TCP_Producer::mainThread() {
 }
 \end{myminted}
 
+The \texttt{transmit} method creates a new TCPHeader object in memory, and zero initializes it. This zero-initialized TCPHeader acts as a template. In the \texttt{for} loop the template is copied, and the \texttt{DestinationPort} entry is set and the packet is transmitted to one of the connected TCPConsumers. Note that we are actually transmitting a \textit{pointer} to the TCPHeader, not the actual TCPHeader itself. This is fine since we are at a high level of abstraction. 
+
 \begin{myminted}{/src/TCP\_Producer.cpp - transmit()}
 void TCP_Producer::transmit() {
     TCPHeader* packet = new TCPHeader();
@@ -75,6 +77,52 @@ void TCP_Producer::transmit() {
     delete packet;
 }
 \end{myminted}
+
+\newpage
+
+Now for the \textbf{TCP\_Consumer} module. The module is defined as having a single thread waiting for incoming packets.
+
+\begin{myminted}{/inc/TCP\_Producer.hpp}
+class TCP_Consumer : public sc_module {
+public:
+    sc_fifo_in<TCPHeader *> in;
+    TCP_Consumer(sc_module_name name);
+    ~TCP_Consumer();
+
+private:
+    std::string moduleName;
+    void mainThread();
+};
+\end{myminted}
+
+After waiting for an incoming packet pointer, it is dereferenced and the \texttt{SourcePort} is read. A message is printed and the packet is deleted from memory.
+
+\begin{myminted}{/src/TCP\_Consumer.cpp - mainThread()}
+void TCP_Consumer::mainThread() {
+    while (true) {
+        TCPHeader* packet = in->read();
+
+        std::cout << moduleName << ": received packet from port " 
+        << packet->SourcePort << " - time: " 
+        << sc_time_stamp() << '\n';
+
+        delete packet;
+    }
+}
+\end{myminted}
+
+The output from the system is seen below. The producer transmits to port 1 and 2, and each consumer reports the received packet and which port it came from (always port 0 since they only have one).
+
+\begin{mintedterminal}{a1\_33.exe (first 8 lines)}
+producer: transmitting packet to port 1 - time: 0 s
+producer: transmitting packet to port 2 - time: 0 s
+consumer_1: received packet from port 0 - time: 0 s
+consumer_2: received packet from port 0 - time: 0 s
+producer: transmitting packet to port 1 - time: 7 ms
+producer: transmitting packet to port 2 - time: 7 ms
+consumer_1: received packet from port 0 - time: 7 ms
+consumer_2: received packet from port 0 - time: 7 ms
+\end{mintedterminal}
 
 
 
