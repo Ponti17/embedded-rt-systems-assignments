@@ -71,8 +71,9 @@ void TCP_Producer::transmit() {
         TCPHeader* packet_copy = new TCPHeader(*packet);
         packet_copy->DestinationPort = i;
         out[i]->write(packet_copy);
-        std::cout << moduleName << ": transmitting packet to port " << packet_copy->DestinationPort
-                  << " - time: " << sc_time_stamp() << '\n';
+        std::cout << moduleName << ": transmitting packet to port " 
+        << packet_copy->DestinationPort
+        << " - time: " << sc_time_stamp() << '\n';
     }
     delete packet;
 }
