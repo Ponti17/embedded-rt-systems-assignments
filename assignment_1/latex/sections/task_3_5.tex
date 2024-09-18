@@ -36,8 +36,6 @@ void Master::generateDataForAdapter() {
 The fifo is then connected to an adapter module, that converts the data from the fifo to the BCAM interface. The adapter module is implemented as follows:
 
 \begin{myminted}{/inc/InAdapter.hpp}
-#include "defs.hpp"
-template <class T>
 class InAdapter : public sc_module, public sc_fifo_out_if<T> {
 public:
 	sc_in_clk clock;
@@ -64,30 +62,28 @@ public:
 
 			wait(clock.posedge_event());
 			valid.write(SC_LOGIC_0);
-		}
-		else {
+		} else {
 			wait(clock.posedge_event());
 		}
 	}
 private:
-	bool nb_write(const T& value)
-	{
+	bool nb_write(const T& value) {
 		SC_REPORT_FATAL("/InAdapter", "Called nb_write()");
 		return false;
 	}
-	int num_free() const
-	{
+	int num_free() const {
 		SC_REPORT_FATAL("/InAdapter", "Called num_free()");
 		return -1;
 	}
-	const sc_event& data_read_event() const
-	{
+	const sc_event& data_read_event() const {
 		SC_REPORT_FATAL("/InAdapter", "Called data_read_event()");
 		static sc_event dummy_event;
 		return dummy_event;
 	}
 };
 \end{myminted}
+
+\newpage
 
 The adapter module inherits $sc\_module$ and $sc\_fifo_out_if$. The write method is implemented to convert the data from the fifo to the BCAM interface. 
 When the reset signal is low, the adapter waits for a ready signal from the slave. When the ready signal is set to high by the slave, the adapter sets the valid signal to high and waits one cycle before transmitting the data to the slave.
