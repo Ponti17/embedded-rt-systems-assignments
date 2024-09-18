@@ -10,7 +10,7 @@ Create a module (\textbf{ModuleSingle}) with a single thread and a method. The t
 
 \subsection*{Solution}
 
-We started by defining a simple class for \textbf{ModuleSingle}, inhereting from \texttt{sc\_module}.  The model is designed at quite a high level of abstraction. We don't simulated any pin behaviour, nor any transaction of data. The module is however approximately timed, and can therefore be considered a \textit{Timed Functional Model}.
+We started by defining a simple class for \textbf{ModuleSingle}, inhereting from \texttt{sc\_module}.  The model is designed at quite a high level of abstraction. We don't simulate any pin behaviour, nor any transaction of data. The module is however approximately timed, and can therefore be considered a \textit{Timed Functional Model}.
 
 \begin{myminted}{/inc/ModuleSingle.hpp}
 class ModuleSingle : public sc_module {

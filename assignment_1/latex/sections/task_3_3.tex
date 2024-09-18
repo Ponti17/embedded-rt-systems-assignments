@@ -115,12 +115,12 @@ void TCP_Consumer::mainThread() {
 The output from the system is seen below. The producer transmits to port 1 and 2, and each consumer reports the received packet and which port it came from (always port 0 since they only have one).
 
 \begin{mintedterminal}{a1\_33.exe (first 8 lines)}
+producer: transmitting packet to port 0 - time: 0 s
 producer: transmitting packet to port 1 - time: 0 s
-producer: transmitting packet to port 2 - time: 0 s
 consumer_1: received packet from port 0 - time: 0 s
 consumer_2: received packet from port 0 - time: 0 s
+producer: transmitting packet to port 0 - time: 7 ms
 producer: transmitting packet to port 1 - time: 7 ms
-producer: transmitting packet to port 2 - time: 7 ms
 consumer_1: received packet from port 0 - time: 7 ms
 consumer_2: received packet from port 0 - time: 7 ms
 \end{mintedterminal}

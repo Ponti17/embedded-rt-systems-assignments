@@ -85,7 +85,7 @@ private:
 
 \newpage
 
-The adapter module inherits $sc\_module$ and $sc\_fifo_out_if$. The write method is implemented to convert the data from the fifo to the BCAM interface. 
+The adapter module inherits $sc\_module$ and $sc\_fifo\_out\_if$. The write method is implemented to convert the data from the fifo to the BCAM interface. 
 When the reset signal is low, the adapter waits for a ready signal from the slave. When the ready signal is set to high by the slave, the adapter sets the valid signal to high and waits one cycle before transmitting the data to the slave.
 
 \begin{myminted}{/inc/slave.cpp}
