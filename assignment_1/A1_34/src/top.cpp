@@ -39,4 +39,6 @@ Top::~Top()
 {
     std::cout << std::flush;
     delete pMonitor;
+    delete pMaster;
+    delete pSlave;
 }
