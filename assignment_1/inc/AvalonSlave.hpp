@@ -31,6 +31,7 @@ private:
     std::string moduleName;
     std::string message;
     binMessageType binaryPacket;
+    uint8_t packetsReceived;
     void receive();
 };
 
