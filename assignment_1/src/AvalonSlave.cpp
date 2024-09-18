@@ -18,6 +18,9 @@ AvalonSlave::AvalonSlave(sc_module_name name) : sc_module(name), moduleName(name
 /* Destructor */
 AvalonSlave::~AvalonSlave() {
     std::cout << std::flush;
+    std::ofstream out("output.txt");
+    out << message;
+    out.close();
 }
 
 uint8_t packetsReceived = 0;
