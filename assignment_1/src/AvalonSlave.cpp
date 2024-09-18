@@ -9,6 +9,7 @@
 AvalonSlave::AvalonSlave(sc_module_name name) : sc_module(name), moduleName(name) {
     message = "";
     binaryPacket = 0;
+    packetsReceived = 0;
 
     /* Register a thread process */
     SC_METHOD(receive);
@@ -23,9 +24,8 @@ AvalonSlave::~AvalonSlave() {
     out.close();
 }
 
-uint8_t packetsReceived = 0;
 void AvalonSlave::receive() {
-
+    
     if (packetsReceived > 7) {
         ready.write(0);
         packetsReceived = 0;
@@ -41,7 +41,6 @@ void AvalonSlave::receive() {
         for (int i = 0; i < DATA_BITS / 8; ++i) {
             message += (binaryPacket >> 8 * i) & 0xFF;
         }
-
         ++packetsReceived;
     }
 
