@@ -1,4 +1,4 @@
--- (c) Copyright 1995-2016 Xilinx, Inc. All rights reserved.
+-- (c) Copyright 1995-2024 Xilinx, Inc. All rights reserved.
 -- 
 -- This file contains confidential and proprietary information
 -- of Xilinx, Inc. and is protected under U.S. and
@@ -47,14 +47,14 @@
 -- DO NOT MODIFY THIS FILE.
 
 -- IP VLNV: xilinx.com:ip:axi_gpio:2.0
--- IP Revision: 9
+-- IP Revision: 15
 
 LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
 USE ieee.numeric_std.ALL;
 
-LIBRARY axi_gpio_v2_0_9;
-USE axi_gpio_v2_0_9.axi_gpio;
+LIBRARY axi_gpio_v2_0_15;
+USE axi_gpio_v2_0_15.axi_gpio;
 
 ENTITY system_axi_gpio_0_1 IS
   PORT (
@@ -77,16 +77,13 @@ ENTITY system_axi_gpio_0_1 IS
     s_axi_rresp : OUT STD_LOGIC_VECTOR(1 DOWNTO 0);
     s_axi_rvalid : OUT STD_LOGIC;
     s_axi_rready : IN STD_LOGIC;
-    gpio_io_i : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
-    gpio_io_o : OUT STD_LOGIC_VECTOR(31 DOWNTO 0);
-    gpio_io_t : OUT STD_LOGIC_VECTOR(31 DOWNTO 0)
+    gpio_io_i : IN STD_LOGIC_VECTOR(3 DOWNTO 0)
   );
 END system_axi_gpio_0_1;
 
 ARCHITECTURE system_axi_gpio_0_1_arch OF system_axi_gpio_0_1 IS
-  ATTRIBUTE DowngradeIPIdentifiedWarnings : string;
+  ATTRIBUTE DowngradeIPIdentifiedWarnings : STRING;
   ATTRIBUTE DowngradeIPIdentifiedWarnings OF system_axi_gpio_0_1_arch: ARCHITECTURE IS "yes";
-
   COMPONENT axi_gpio IS
     GENERIC (
       C_FAMILY : STRING;
@@ -126,9 +123,9 @@ ARCHITECTURE system_axi_gpio_0_1_arch OF system_axi_gpio_0_1 IS
       s_axi_rvalid : OUT STD_LOGIC;
       s_axi_rready : IN STD_LOGIC;
       ip2intc_irpt : OUT STD_LOGIC;
-      gpio_io_i : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
-      gpio_io_o : OUT STD_LOGIC_VECTOR(31 DOWNTO 0);
-      gpio_io_t : OUT STD_LOGIC_VECTOR(31 DOWNTO 0);
+      gpio_io_i : IN STD_LOGIC_VECTOR(3 DOWNTO 0);
+      gpio_io_o : OUT STD_LOGIC_VECTOR(3 DOWNTO 0);
+      gpio_io_t : OUT STD_LOGIC_VECTOR(3 DOWNTO 0);
       gpio2_io_i : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
       gpio2_io_o : OUT STD_LOGIC_VECTOR(31 DOWNTO 0);
       gpio2_io_t : OUT STD_LOGIC_VECTOR(31 DOWNTO 0)
@@ -155,17 +152,15 @@ ARCHITECTURE system_axi_gpio_0_1_arch OF system_axi_gpio_0_1 IS
   ATTRIBUTE X_INTERFACE_INFO OF s_axi_rvalid: SIGNAL IS "xilinx.com:interface:aximm:1.0 S_AXI RVALID";
   ATTRIBUTE X_INTERFACE_INFO OF s_axi_rready: SIGNAL IS "xilinx.com:interface:aximm:1.0 S_AXI RREADY";
   ATTRIBUTE X_INTERFACE_INFO OF gpio_io_i: SIGNAL IS "xilinx.com:interface:gpio:1.0 GPIO TRI_I";
-  ATTRIBUTE X_INTERFACE_INFO OF gpio_io_o: SIGNAL IS "xilinx.com:interface:gpio:1.0 GPIO TRI_O";
-  ATTRIBUTE X_INTERFACE_INFO OF gpio_io_t: SIGNAL IS "xilinx.com:interface:gpio:1.0 GPIO TRI_T";
 BEGIN
   U0 : axi_gpio
     GENERIC MAP (
       C_FAMILY => "zynq",
       C_S_AXI_ADDR_WIDTH => 9,
       C_S_AXI_DATA_WIDTH => 32,
-      C_GPIO_WIDTH => 32,
+      C_GPIO_WIDTH => 4,
       C_GPIO2_WIDTH => 32,
-      C_ALL_INPUTS => 0,
+      C_ALL_INPUTS => 1,
       C_ALL_INPUTS_2 => 0,
       C_ALL_OUTPUTS => 0,
       C_ALL_OUTPUTS_2 => 0,
@@ -197,8 +192,6 @@ BEGIN
       s_axi_rvalid => s_axi_rvalid,
       s_axi_rready => s_axi_rready,
       gpio_io_i => gpio_io_i,
-      gpio_io_o => gpio_io_o,
-      gpio_io_t => gpio_io_t,
       gpio2_io_i => STD_LOGIC_VECTOR(TO_UNSIGNED(0, 32))
     );
 END system_axi_gpio_0_1_arch;

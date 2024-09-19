@@ -1,8 +1,8 @@
---Copyright 1986-2015 Xilinx, Inc. All Rights Reserved.
+--Copyright 1986-2017 Xilinx, Inc. All Rights Reserved.
 ----------------------------------------------------------------------------------
---Tool Version: Vivado v.2015.4 (lin64) Build 1412921 Wed Nov 18 09:44:32 MST 2015
---Date        : Mon Apr  4 15:50:40 2016
---Host        : QUARTUS running 64-bit Ubuntu 14.04.2 LTS
+--Tool Version: Vivado v.2017.2 (win64) Build 1909853 Thu Jun 15 18:39:09 MDT 2017
+--Date        : Thu Sep 19 09:34:08 2024
+--Host        : andreas-xps15 running 64-bit major release  (build 9200)
 --Command     : generate_target system_wrapper.bd
 --Design      : system_wrapper
 --Purpose     : IP block netlist
@@ -34,6 +34,7 @@ entity system_wrapper is
     FIXED_IO_ps_clk : inout STD_LOGIC;
     FIXED_IO_ps_porb : inout STD_LOGIC;
     FIXED_IO_ps_srstb : inout STD_LOGIC;
+    LED : out STD_LOGIC_VECTOR ( 3 downto 0 );
     btns_4bits_tri_i : in STD_LOGIC_VECTOR ( 3 downto 0 );
     sws_4bits_tri_i : in STD_LOGIC_VECTOR ( 3 downto 0 )
   );
@@ -64,7 +65,8 @@ architecture STRUCTURE of system_wrapper is
     FIXED_IO_ps_srstb : inout STD_LOGIC;
     FIXED_IO_ps_clk : inout STD_LOGIC;
     FIXED_IO_ps_porb : inout STD_LOGIC;
-    sws_4bits_tri_i : in STD_LOGIC_VECTOR ( 3 downto 0 )
+    sws_4bits_tri_i : in STD_LOGIC_VECTOR ( 3 downto 0 );
+    LED : out STD_LOGIC_VECTOR ( 3 downto 0 )
   );
   end component system;
 begin
@@ -91,6 +93,7 @@ system_i: component system
       FIXED_IO_ps_clk => FIXED_IO_ps_clk,
       FIXED_IO_ps_porb => FIXED_IO_ps_porb,
       FIXED_IO_ps_srstb => FIXED_IO_ps_srstb,
+      LED(3 downto 0) => LED(3 downto 0),
       btns_4bits_tri_i(3 downto 0) => btns_4bits_tri_i(3 downto 0),
       sws_4bits_tri_i(3 downto 0) => sws_4bits_tri_i(3 downto 0)
     );
