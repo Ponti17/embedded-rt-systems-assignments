@@ -1,4 +1,4 @@
--- (c) Copyright 1995-2016 Xilinx, Inc. All rights reserved.
+-- (c) Copyright 1995-2024 Xilinx, Inc. All rights reserved.
 -- 
 -- This file contains confidential and proprietary information
 -- of Xilinx, Inc. and is protected under U.S. and
@@ -47,14 +47,14 @@
 -- DO NOT MODIFY THIS FILE.
 
 -- IP VLNV: xilinx.com:ip:proc_sys_reset:5.0
--- IP Revision: 8
+-- IP Revision: 11
 
 LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
 USE ieee.numeric_std.ALL;
 
-LIBRARY proc_sys_reset_v5_0_8;
-USE proc_sys_reset_v5_0_8.proc_sys_reset;
+LIBRARY proc_sys_reset_v5_0_11;
+USE proc_sys_reset_v5_0_11.proc_sys_reset;
 
 ENTITY system_rst_processing_system7_0_50M_0 IS
   PORT (
@@ -72,9 +72,8 @@ ENTITY system_rst_processing_system7_0_50M_0 IS
 END system_rst_processing_system7_0_50M_0;
 
 ARCHITECTURE system_rst_processing_system7_0_50M_0_arch OF system_rst_processing_system7_0_50M_0 IS
-  ATTRIBUTE DowngradeIPIdentifiedWarnings : string;
+  ATTRIBUTE DowngradeIPIdentifiedWarnings : STRING;
   ATTRIBUTE DowngradeIPIdentifiedWarnings OF system_rst_processing_system7_0_50M_0_arch: ARCHITECTURE IS "yes";
-
   COMPONENT proc_sys_reset IS
     GENERIC (
       C_FAMILY : STRING;

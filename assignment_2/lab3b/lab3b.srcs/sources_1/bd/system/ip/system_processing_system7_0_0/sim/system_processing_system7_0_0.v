@@ -50,7 +50,7 @@
 // DO NOT MODIFY THIS FILE.
 
 
-// IP VLNV: xilinx.com:ip:processing_system7_bfm:2.0
+// IP VLNV: xilinx.com:ip:processing_system7_vip:1.0
 // IP Revision: 1
 
 `timescale 1ns/1ps
@@ -182,7 +182,7 @@ input PS_SRSTB;
 input PS_CLK;
 input PS_PORB;
 
-  processing_system7_bfm_v2_0_5_processing_system7_bfm #(
+  processing_system7_vip_v1_0_1 #(
     .C_USE_M_AXI_GP0(1),
     .C_USE_M_AXI_GP1(0),
     .C_USE_S_AXI_ACP(0),
@@ -198,9 +198,9 @@ input PS_PORB;
     .C_S_AXI_HP3_DATA_WIDTH(64),
     .C_HIGH_OCM_EN(0),
     .C_FCLK_CLK0_FREQ(100.0),
-    .C_FCLK_CLK1_FREQ(50.0),
-    .C_FCLK_CLK2_FREQ(50.0),
-    .C_FCLK_CLK3_FREQ(50.0),
+    .C_FCLK_CLK1_FREQ(10.0),
+    .C_FCLK_CLK2_FREQ(10.0),
+    .C_FCLK_CLK3_FREQ(10.0),
 	.C_M_AXI_GP0_ENABLE_STATIC_REMAP(0),
 	.C_M_AXI_GP1_ENABLE_STATIC_REMAP(0),
 	.C_M_AXI_GP0_THREAD_ID_WIDTH (12), 
