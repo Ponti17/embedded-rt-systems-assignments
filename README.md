@@ -8,6 +8,14 @@
   </p>
 </div>
 
+## Long Paths
+
+Enable long paths for git by
+
+```
+git config --system core.longpaths true
+```
+
 ## Branch Naming
 
 Assignment branches should be named as follows:
