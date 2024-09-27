@@ -1,5 +1,6 @@
 #include "xparameters.h"
 #include "xgpio.h"
+#include "led_ip.h"
 
 //====================================================
 
@@ -26,7 +27,7 @@ int main (void)
 	  xil_printf("DIP Switch Status %x\r\n", dip_check);
 	  
 	  // output dip switches value on LED_ip device
-	  
+	  LED_IP_mWriteReg(XPAR_LED_IP_S_AXI_BASEADDR, 0, dip_check);
 	  while (1) {
 		  asm ("nop");
 	  }
