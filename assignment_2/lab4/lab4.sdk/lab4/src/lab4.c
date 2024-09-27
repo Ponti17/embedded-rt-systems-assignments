@@ -27,6 +27,8 @@ int main (void)
 	  
 	  // output dip switches value on LED_ip device
 	  
-	  for (i=0; i<9999999; i++);
+	  while (1) {
+		  asm ("nop");
+	  }
    }
 }
