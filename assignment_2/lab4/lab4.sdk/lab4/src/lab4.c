@@ -1,8 +1,11 @@
 #include "xparameters.h"
 #include "xgpio.h"
+#include "led_ip.h"
+#include "sleep.h"
 
 //====================================================
 
+unsigned int delay = 1; // seconds
 int main (void) 
 {
 
@@ -16,7 +19,6 @@ int main (void)
 	
    XGpio_Initialize(&push, XPAR_BUTTONS_DEVICE_ID); // Modify this
    XGpio_SetDataDirection(&push, 1, 0xffffffff);
-	
 
    while (1)
    {
@@ -27,8 +29,7 @@ int main (void)
 	  
 	  // output dip switches value on LED_ip device
 	  
-	  while (1) {
-		  asm("nop");
-	  }
+	  LED_IP_mWriteReg(XPAR_LED_IP_S_AXI_BASEADDR, 0, dip_check);
+	  sleep(delay);
    }
 }
