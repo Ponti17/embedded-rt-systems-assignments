@@ -590,3 +590,4 @@ dismissDialog("Launch SDK"); // aa:p (cg:JFrame)
 // Tcl Message: INFO: [Vivado 12-393] Launching SDK... INFO: [Vivado 12-417] Running xsdk -workspace C:/home/university/7-semester/embedded-rt-systems-assignments/assignment_2/lab4/lab4.sdk -hwspec C:/home/university/7-semester/embedded-rt-systems-assignments/assignment_2/lab4/lab4.sdk/system_wrapper.hdf INFO: [Vivado 12-3157] SDK launch initiated. Please check console for any further messages. 
 // [GUI Memory]: 154 MB (+310kb) [00:09:26]
 // [GUI Memory]: 161 MB (+125kb) [00:18:14]
+// HMemoryUtils.trashcanNow. Engine heap size: 1,696 MB. GUI used memory: 101 MB. Current time: 9/28/24 11:36:53 AM CEST

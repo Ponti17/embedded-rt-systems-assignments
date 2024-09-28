@@ -5,12 +5,11 @@
 
 //====================================================
 
+void read_switches(XGpio dip);
 unsigned int delay = 1; // seconds
 int main (void) 
 {
-
    XGpio dip, push;
-   int i, psb_check, dip_check;
 	
    xil_printf("-- Start of the Program --\r\n");
  
@@ -20,16 +19,29 @@ int main (void)
    XGpio_Initialize(&push, XPAR_BUTTONS_DEVICE_ID); // Modify this
    XGpio_SetDataDirection(&push, 1, 0xffffffff);
 
+   int value, skip;
+
    while (1)
    {
-	  psb_check = XGpio_DiscreteRead(&push, 1);
-	  xil_printf("Push Buttons Status %x\r\n", psb_check);
-	  dip_check = XGpio_DiscreteRead(&dip, 1);
-	  xil_printf("DIP Switch Status %x\r\n", dip_check);
-	  
-	  // output dip switches value on LED_ip device
-	  
-	  LED_IP_mWriteReg(XPAR_LED_IP_S_AXI_BASEADDR, 0, dip_check);
-	  sleep(delay);
+	  xil_printf("\r\nCMD:>");
+	  value = inbyte();
+	  skip = inbyte();
+	  skip = inbyte();
+	  switch (value)
+	  {
+	  	  case '1':
+	  		  read_switches(dip);
+	  		  xil_printf("\r\nReceived 1.");
+	  	  case '2':
+	  		  xil_printf("\r\nReceived 2.");
+	  	  default:
+	  		  xil_printf("\r\nUnrecognized input.");
+	  }
    }
+}
+
+void read_switches (XGpio dip)
+{
+	int switch_read = XGpio_DiscreteRead(&dip, 1);
+	LED_IP_mWriteReg(XPAR_LED_IP_S_AXI_BASEADDR, 0, switch_read);
 }
