@@ -1,0 +1,269 @@
+/*
+ * main.c
+ * Date Created: 02/10/24
+*/
+
+#include "main.h"
+#include "xparameters.h"
+#include "xgpio.h"
+#include "xscutimer.h"
+#include "xscugic.h"
+#include "xil_exception.h"
+#include "xil_printf.h"
+#include "led_ip.h"
+#include "sleep.h"
+
+/* Function Prototypes */
+int ScuTimerInit(XScuTimer *TimerInstancePtr, u16 TimerDeviceId, u32 TimerCounter);
+int ScuIntrInit(XScuGic *IntcInstancePtr, u16 GicDeviceId);
+int TimerSetupIntr(XScuGic *IntcInstancePtr, XScuTimer *TimerInstancePtr, u16 TimerIntrId);
+int GpioInit(XGpio *GpioInstancePtr, u16 DeviceId);
+int configure_timer(XScuTimer timer);
+
+void TimerStart(XScuTimer *TimerInstancePtr);
+void TimerStop(XScuTimer *TimerInstancePtr);
+
+static void TimerIntrHandler(void *CallBackRef);
+static void TimerDisableIntrSystem(XScuGic *IntcInstancePtr, u16 TimerIntrId);
+
+void read_switches();
+void count_leds();
+
+/* Device Instances */
+XScuTimer TimerInstance;	/* Cortex A9 Scu Private Timer Instance	*/
+XScuGic IntcInstance;		/* Interrupt Controller Instance 		*/
+XGpio DipInstance;			/* Dip switches Instance 				*/
+XGpio PushInstance;			/* Push buttons Instance 				*/
+
+/* Function pointer for the timer interrupt handler */
+void (*TimerFunctionPtr)(void);
+
+int main (void) 
+{
+	GpioInit(&DipInstance, XPAR_SWITCHES_DEVICE_ID);
+	GpioInit(&PushInstance, XPAR_BUTTONS_DEVICE_ID);
+
+	ScuTimerInit(&TimerInstance, XPAR_XSCUTIMER_0_DEVICE_ID, 100*MILLISECOND);
+	ScuIntrInit(&IntcInstance, XPAR_SCUGIC_SINGLE_DEVICE_ID);
+	TimerSetupIntr(&IntcInstance, &TimerInstance, XPAR_SCUTIMER_INTR);
+
+	int input;
+
+	xil_printf("\r\n-- Start of the Program --\r\n");
+
+	while (1)
+	{
+		xil_printf("\r\nCMD:> ");
+		input = inbyte();
+		xil_printf("%c", input);
+		switch (input)
+		{
+			case '0':
+				xil_printf("\r\nNo action.");
+				xil_printf("\r\nStopping Timer Routine.");
+				TimerFunctionPtr = NULL;
+				TimerStop(&TimerInstance);
+				break;
+			case '1':
+				xil_printf("\r\nStarting Program 1.");
+				xil_printf("\r\nSwitches to LEDs.");
+				TimerFunctionPtr = &read_switches;
+				TimerStart(&TimerInstance);
+				break;
+			case '2':
+				xil_printf("\r\nStarting Program 2.");
+				xil_printf("\r\nLED Binary Counting.");
+				TimerFunctionPtr = &count_leds;
+				TimerStart(&TimerInstance);
+				break;
+			default:
+				xil_printf("\r\nUnrecognized input. \"%c\"", input);
+				break;
+		}
+	}
+}
+
+/*****************************************************************************/
+/**
+* Initializes a GPIO instance as an input device.
+*
+* @param GpioInstancePtr is a pointer to the instance of XGpio driver.
+* @param DeviceId is the device Id of the GPIO device.
+*
+* @return	XST_SUCCESS if successful, otherwise XST_FAILURE.
+******************************************************************************/
+int GpioInit(XGpio *GpioInstancePtr, u16 DeviceId)
+{
+	XGpio_Initialize(GpioInstancePtr, DeviceId);
+	XGpio_SetDataDirection(GpioInstancePtr, 1, 0xffffffff);
+
+	return XST_SUCCESS;
+}
+
+/*****************************************************************************/
+/**
+* Initializes the timer. The timer is configured to reset on expiration
+*
+* @param TimerInstancePtr is a pointer to the instance of XScuTimer driver.
+* @param TimerDeviceId is the device Id of the XScuTimer device.
+* @param TimerCounter is the value to load into the timer counter register.
+*
+* @return	XST_SUCCESS if successful, otherwise XST_FAILURE.
+******************************************************************************/
+int ScuTimerInit(XScuTimer *TimerInstancePtr, u16 TimerDeviceId, u32 TimerCounter)
+{
+	XScuTimer_Config *ConfigPtr;
+	int Status;
+
+	ConfigPtr = XScuTimer_LookupConfig(TimerDeviceId);
+	Status = XScuTimer_CfgInitialize(TimerInstancePtr, ConfigPtr, ConfigPtr->BaseAddr);
+	if (Status != XST_SUCCESS)
+	{
+		xil_printf("Timer init failed.");
+		return XST_FAILURE;
+	}
+
+	/* Enable Auto Reloading of Timer */
+	XScuTimer_EnableAutoReload(TimerInstancePtr);
+
+	/* Load timer counter register */
+	XScuTimer_LoadTimer(TimerInstancePtr, TimerCounter);
+
+	return XST_SUCCESS;
+}
+
+/*****************************************************************************/
+/**
+* Initializes the general interrupt controller.
+*
+* @param IntcInstancePtr is a pointer to the instance of XScuGic driver.
+* @param GicDeviceId is the device Id of the XScuGic device.
+*
+* @return	XST_SUCCESS if successful, otherwise XST_FAILURE.
+******************************************************************************/
+int ScuIntrInit(XScuGic *IntcInstancePtr, u16 GicDeviceId)
+{
+	XScuGic_Config *IntcConfig;
+	int Status;
+
+	IntcConfig = XScuGic_LookupConfig(GicDeviceId);
+	if (NULL == IntcConfig) {
+		xil_printf("Interrupt controller lookup failed.");
+		return XST_FAILURE;
+	}
+
+	Status = XScuGic_CfgInitialize(IntcInstancePtr, IntcConfig, IntcConfig->CpuBaseAddress);
+	if (Status != XST_SUCCESS) {
+		xil_printf("Interrupt controller initialization failed.");
+		return XST_FAILURE;
+	}
+
+	Xil_ExceptionInit();
+
+	Xil_ExceptionRegisterHandler(XIL_EXCEPTION_ID_IRQ_INT, (Xil_ExceptionHandler)XScuGic_InterruptHandler, IntcInstancePtr);
+
+	return XST_SUCCESS;
+}
+
+/*****************************************************************************/
+/**
+* Connects the timer to the interrupt subsystem such that interrupts can occur.
+*
+* @param IntcInstancePtr is a pointer to the instance of XScuGic driver.
+* @param TimerInstancePtr is a pointer to the instance of XScuTimer driver.
+* @param TimerIntrId is the Interrupt Id of the XScuTimer device.
+*
+* @return	XST_SUCCESS if successful, otherwise XST_FAILURE.
+******************************************************************************/
+int TimerSetupIntr(XScuGic *IntcInstancePtr, XScuTimer *TimerInstancePtr, u16 TimerIntrId)
+{
+	int Status;
+
+	Status = XScuGic_Connect(IntcInstancePtr, TimerIntrId, (Xil_ExceptionHandler)TimerIntrHandler, (void *)TimerInstancePtr);
+	if (Status != XST_SUCCESS)
+	{
+		xil_printf("Timer interrupt connect failed.");
+		return XST_FAILURE;
+	}
+
+	XScuGic_Enable(IntcInstancePtr, TimerIntrId);
+
+	XScuTimer_EnableInterrupt(TimerInstancePtr);
+
+	Xil_ExceptionEnable();
+
+	return XST_SUCCESS;
+}
+
+/*****************************************************************************/
+/**
+* Starts the timer.
+*
+* @param TimerInstancePtr is a pointer to the instance of XScuTimer driver.
+* @return None
+******************************************************************************/
+void TimerStart(XScuTimer *TimerInstancePtr)
+{
+	XScuTimer_Start(TimerInstancePtr);
+}
+
+void TimerStop(XScuTimer *TimerInstancePtr)
+{
+	XScuTimer_Stop(TimerInstancePtr);
+}
+
+/*****************************************************************************/
+/**
+* This function is the Interrupt handler for the Timer interrupt of the
+* Timer device. It is called on the expiration of the timer counter in
+* interrupt context.
+*
+* @param	CallBackRef is a pointer to the callback function.
+*
+* @return	None.
+******************************************************************************/
+static void TimerIntrHandler(void *CallBackRef)
+{
+	XScuTimer *TimerInstancePtr = (XScuTimer *) CallBackRef;
+	XScuTimer_ClearInterruptStatus(TimerInstancePtr);
+
+	if (TimerFunctionPtr != NULL) {
+		TimerFunctionPtr();
+	}
+}
+
+/*****************************************************************************/
+/**
+* This function disables the interrupts that occur for the device.
+*
+* @param IntcInstancePtr is the pointer to the instance of XScuGic driver.
+* @param TimerIntrId is the Interrupt Id for the device.
+*
+* @return	None.
+******************************************************************************/
+static void TimerDisableIntrSystem(XScuGic *IntcInstancePtr, u16 TimerIntrId)
+{
+	XScuGic_Disconnect(IntcInstancePtr, TimerIntrId);
+}
+
+void read_switches()
+{
+	int switch_read = XGpio_DiscreteRead(&DipInstance, 1);
+	LED_IP_mWriteReg(XPAR_LED_IP_S_AXI_BASEADDR, 0, switch_read);
+}
+
+void count_leds()
+{
+	static u8 call_count = 0;
+	static u8 count = 0;
+
+	call_count++;
+
+	/* This function triggers every 100ms,	*/
+	/* but we only count every 1 second.	*/
+	if (call_count >= 10) {
+		call_count = 0;
+		count = (count + 1) & 0x0F;
+		LED_IP_mWriteReg(XPAR_LED_IP_S_AXI_BASEADDR, 0, count);
+	}
+}
