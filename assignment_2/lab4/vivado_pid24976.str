@@ -1,0 +1,107 @@
+/*
+
+Vivado v2017.2 (64-bit)
+SW Build 1909853 on Thu Jun 15 18:39:09 MDT 2017
+IP Build 1909766 on Thu Jun 15 19:58:00 MDT 2017
+
+Process ID: 24976
+License: Customer
+
+Current time: 	10/2/24 12:20:58 PM CEST
+Time zone: 	Central European Time (Europe/Paris)
+
+OS: Windows 10
+OS Version: 10.0
+OS Architecture: amd64
+Available processors (cores): 20
+
+Screen size: 1728x1080
+Screen resolution (DPI): 96
+Available screens: 1
+Available disk space: 655 GB
+Default font: family=Dialog,name=Dialog,style=plain,size=12
+
+Java version: 	1.8.0_112 64-bit
+Java home: 	C:/Xilinx/Vivado/2017.2/tps/win64/jre
+JVM executable location: 	C:/Xilinx/Vivado/2017.2/tps/win64/jre/bin/java.exe
+Java library paths: C:/Xilinx/Vivado/2017.2/bin/unwrapped/win64.o;C:/WINDOWS/Sun/Java/bin;C:/WINDOWS/system32;C:/WINDOWS;C:/Xilinx/Vivado/2017.2/bin;C:/Xilinx/Vivado/2017.2/lib/win64.o;C:/Xilinx/Vivado/2017.2/tps/win64/jre/bin/server;C:/Xilinx/Vivado/2017.2/tps/win64/jre/bin;C:/Xilinx/SDK/2017.2/bin;C:/Xilinx/Vivado/2017.2/ids_lite/ISE/bin/nt64;C:/Xilinx/Vivado/2017.2/ids_lite/ISE/lib/nt64;C:/Xilinx/Vivado_HLS/2017.2/bin;C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.4/bin;C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.4/libnvvp;C:/Windows/system32;C:/Windows;C:/Windows/System32/Wbem;C:/Windows/System32/WindowsPowerShell/v1.0/;C:/Windows/System32/OpenSSH/;C:/Program Files/dotnet/;C:/Program Files (x86)/NVIDIA Corporation/PhysX/Common;C:/ProgramData/chocolatey/bin;C:/Program Files/Microsoft VS Code/bin;C:/tools/gsudo/Current;C:/Program Files/MiKTeX/miktex/bin/x64/;C:/Strawberry/c/bin;C:/Strawberry/perl/site/bin;C:/Strawberry/perl/bin;C:/Program Files/CMake/bin;C:/Program Files/nu/bin/;C:/Program Files (x86)/Bitvise SSH Client;C:/Program Files/GitHub CLI/;C:/Program Files/Git/cmd;C:/Program Files/TortoiseGit/bin;C:/Program Files/Git/usr/bin;C:/Program Files (x86)/Midnight Commander;C:/Program Files/Tailscale/;C:/Program Files/MATLAB/R2023b/bin;C:/Program Files (x86)/Windows Kits/10/Windows Performance Toolkit/;C:/msys64;C:/Users/techu/AppData/Roaming/Python/Scripts;C:/Program Files/NVIDIA Corporation/Nsight Compute 2024.1.0/;C:/Program Files/NVIDIA Corporation/NVIDIA NvDLISR;C:/Program Files/Calibre2/;C:/Program Files/Wolfram Research/WolframScript/;C:/Program Files/nodejs/;C:/Users/techu/.cargo/bin;C:/Users/techu/AppData/Local/Microsoft/WindowsApps;C:/tools/neovim/nvim-win64/bin;C:/Program Files/JetBrains/RustRover 2024.1.4/bin;C:/Program Files/JetBrains/GoLand 2024.1.4/bin;C:/Program Files/JetBrains/CLion 2024.1.4/bin;C:/Users/techu/AppData/Local/Microsoft/WinGet/Packages/hrkfdn.ncspot_Microsoft.Winget.Source_8wekyb3d8bbwe;C:/Program Files/Python312;C:/Program Files/Python312/Scripts;C:/Users/techu/AppData/Roaming/Python/Python312/Scripts;C:/Users/techu/AppData/Roaming/npm;C:/Program Files/Graphviz/bin;C:/Xilinx/Vivado/2017.2/tps/mingw/6.2.0/win64.o/nt/bin;C:/Xilinx/Vivado/2017.2/tps/mingw/6.2.0/win64.o/nt/libexec/gcc/x86_64-w64-mingw32/6.2.0;.
+
+User name: 	techu
+User home directory: C:/Users/techu
+User working directory: C:/home/university/7-semester/embedded-rt-systems-assignments/assignment_2/lab4
+User country: 	US
+User language: 	en
+User locale: 	en_US
+
+RDI_BASEROOT: C:/Xilinx/Vivado
+HDI_APPROOT: C:/Xilinx/Vivado/2017.2
+RDI_DATADIR: C:/Xilinx/Vivado/2017.2/data
+RDI_BINDIR: C:/Xilinx/Vivado/2017.2/bin
+
+User preferences location: C:/Users/techu/AppData/Roaming/Xilinx/Vivado
+Vivado preferences directory: C:/Users/techu/AppData/Roaming/Xilinx/Vivado/2017.2/vivado.xml
+Vivado layouts directory: C:/Users/techu/AppData/Roaming/Xilinx/Vivado/2017.2/layouts
+PlanAhead jar location: 	C:/Xilinx/Vivado/2017.2/lib/classes/planAhead.jar
+Vivado Look & Feel: 	[Synthetica - the extended Synth Look and Feel. - ui.g.i.H]
+Engine tmp dir: 	C:/home/university/7-semester/embedded-rt-systems-assignments/assignment_2/lab4/.Xil/Vivado-24976-andreas-xps15
+
+GUI allocated memory:	166 MB
+GUI max memory:		3,052 MB
+Engine allocated memory: 542 MB
+
+*/
+
+// TclEventType: START_GUI
+// TclEventType: PROJECT_OPEN_DIALOG
+// Tcl Message: start_gui 
+// TclEventType: PROJECT_OPEN_DIALOG
+// Opening Vivado Project: C:\home\university\7-semester\embedded-rt-systems-assignments\assignment_2\lab4\lab4.xpr. Version: Vivado v2017.2 
+// bs:g (cg:JFrame):  Open Project : addNotify
+// TclEventType: DEBUG_PROBE_SET_CHANGE
+// TclEventType: MSGMGR_MOVEMSG
+// TclEventType: FILE_SET_NEW
+// TclEventType: RUN_COMPLETED
+// TclEventType: RUN_CURRENT
+// [GUI Memory]: 54 MB (+54360kb) [00:00:10]
+// [Engine Memory]: 522 MB (+395520kb) [00:00:10]
+// TclEventType: FILE_SET_CHANGE
+// TclEventType: PROJECT_NEW
+// [GUI Memory]: 80 MB (+23959kb) [00:00:14]
+// [Engine Memory]: 592 MB (+46597kb) [00:00:14]
+// [GUI Memory]: 99 MB (+15585kb) [00:00:14]
+// [Engine Memory]: 629 MB (+7911kb) [00:00:14]
+// [GUI Memory]: 104 MB (+460kb) [00:00:14]
+// [Engine Memory]: 665 MB (+4388kb) [00:00:15]
+// Tcl Message: open_project C:/home/university/7-semester/embedded-rt-systems-assignments/assignment_2/lab4/lab4.xpr 
+// Tcl Message: Scanning sources... Finished scanning sources 
+// Tcl Message: INFO: [IP_Flow 19-234] Refreshing IP repositories INFO: [IP_Flow 19-1700] Loaded user IP repository 'c:/home/university/7-semester/embedded-rt-systems-assignments/assignment_2/files_from_brightspace/led_ip_1.0'. INFO: [IP_Flow 19-2313] Loaded Vivado IP repository 'C:/Xilinx/Vivado/2017.2/data/ip'. 
+// HMemoryUtils.trashcanNow. Engine heap size: 679 MB. GUI used memory: 45 MB. Current time: 10/2/24 12:21:02 PM CEST
+// Project name: lab4; location: C:/home/university/7-semester/embedded-rt-systems-assignments/assignment_2/lab4; part: xc7z010clg400-1
+// Tcl Message: open_project: Time (s): cpu = 00:00:03 ; elapsed = 00:00:06 . Memory (MB): peak = 886.672 ; gain = 95.941 
+dismissDialog("Open Project"); // bs:g (cg:JFrame)
+// TclEventType: DG_ANALYSIS_MSG_RESET
+selectMenu(PAResourceItoN.MainMenuMgr_FILE, "File"); // U:JideMenu (CommandMenuBar:CommandBar, cg:JFrame)
+// TclEventType: DG_GRAPH_GENERATED
+// Tcl Message: update_compile_order -fileset sources_1 
+selectMenu(PAResourceItoN.MainMenuMgr_EXPORT, "Export"); // Z:JMenu (JPopupMenu:JComponent, cg:JFrame)
+selectMenuItem(PAResourceCommand.PACommandNames_LAUNCH_HARDWARE, "Launch SDK"); // ac:JMenuItem (JPopupMenu:JComponent, cg:JFrame)
+dismissMenu(PAResourceItoN.MainMenuMgr_FILE, "File"); // U:JideMenu (CommandMenuBar:CommandBar, cg:JFrame)
+// Run Command: PAResourceCommand.PACommandNames_LAUNCH_HARDWARE
+// aa:p (cg:JFrame): Launch SDK: addNotify
+selectButton(RDIResource.BaseDialog_OK, "OK"); // a:JButton (JPanel:JComponent, aa:p)
+dismissDialog("Launch SDK"); // aa:p (cg:JFrame)
+// Tcl Message: launch_sdk -workspace C:/home/university/7-semester/embedded-rt-systems-assignments/assignment_2/lab4/lab4.sdk -hwspec C:/home/university/7-semester/embedded-rt-systems-assignments/assignment_2/lab4/lab4.sdk/system_wrapper.hdf 
+// Tcl Message: INFO: [Vivado 12-393] Launching SDK... INFO: [Vivado 12-417] Running xsdk -workspace C:/home/university/7-semester/embedded-rt-systems-assignments/assignment_2/lab4/lab4.sdk -hwspec C:/home/university/7-semester/embedded-rt-systems-assignments/assignment_2/lab4/lab4.sdk/system_wrapper.hdf INFO: [Vivado 12-3157] SDK launch initiated. Please check console for any further messages. 
+// Elapsed time: 1159 seconds
+selectMenu(PAResourceItoN.MainMenuMgr_FILE, "File"); // U:JideMenu (CommandMenuBar:CommandBar, cg:JFrame)
+selectMenu(PAResourceItoN.MainMenuMgr_OPEN_RECENT_PROJECT, "Open Recent Project"); // Z:JMenu (JPopupMenu:JComponent, cg:JFrame)
+selectMenu(PAResourceItoN.MainMenuMgr_EXPORT, "Export"); // Z:JMenu (JPopupMenu:JComponent, cg:JFrame)
+selectMenuItem(PAResourceCommand.PACommandNames_LAUNCH_HARDWARE, "Launch SDK"); // ac:JMenuItem (JPopupMenu:JComponent, cg:JFrame)
+dismissMenu(PAResourceItoN.MainMenuMgr_FILE, "File"); // U:JideMenu (CommandMenuBar:CommandBar, cg:JFrame)
+// Run Command: PAResourceCommand.PACommandNames_LAUNCH_HARDWARE
+// aa:p (cg:JFrame): Launch SDK: addNotify
+selectButton(RDIResource.BaseDialog_OK, "OK"); // a:JButton (JPanel:JComponent, aa:p)
+dismissDialog("Launch SDK"); // aa:p (cg:JFrame)
+// Tcl Message: launch_sdk -workspace C:/home/university/7-semester/embedded-rt-systems-assignments/assignment_2/lab4/lab4.sdk -hwspec C:/home/university/7-semester/embedded-rt-systems-assignments/assignment_2/lab4/lab4.sdk/system_wrapper.hdf 
+// Tcl Message: INFO: [Vivado 12-393] Launching SDK... INFO: [Vivado 12-417] Running xsdk -workspace C:/home/university/7-semester/embedded-rt-systems-assignments/assignment_2/lab4/lab4.sdk -hwspec C:/home/university/7-semester/embedded-rt-systems-assignments/assignment_2/lab4/lab4.sdk/system_wrapper.hdf INFO: [Vivado 12-3157] SDK launch initiated. Please check console for any further messages. 
+// [Engine Memory]: 698 MB (+31kb) [00:19:48]

@@ -1,0 +1,28 @@
+#-----------------------------------------------------------
+# Vivado v2017.2 (64-bit)
+# SW Build 1909853 on Thu Jun 15 18:39:09 MDT 2017
+# IP Build 1909766 on Thu Jun 15 19:58:00 MDT 2017
+# Start of session at: Sat Sep 28 11:01:58 2024
+# Process ID: 6388
+# Current directory: C:/home/university/7-semester/embedded-rt-systems-assignments/assignment_2/lab4
+# Command line: vivado.exe -gui_launcher_event rodinguilauncherevent9980 C:\home\university\7-semester\embedded-rt-systems-assignments\assignment_2\lab4\lab4.xpr
+# Log file: C:/home/university/7-semester/embedded-rt-systems-assignments/assignment_2/lab4/vivado.log
+# Journal file: C:/home/university/7-semester/embedded-rt-systems-assignments/assignment_2/lab4\vivado.jou
+#-----------------------------------------------------------
+start_gui
+open_project C:/home/university/7-semester/embedded-rt-systems-assignments/assignment_2/lab4/lab4.xpr
+update_compile_order -fileset sources_1
+open_bd_design {C:/home/university/7-semester/embedded-rt-systems-assignments/assignment_2/lab4/lab4.srcs/sources_1/bd/system/system.bd}
+reset_target all [get_files  C:/home/university/7-semester/embedded-rt-systems-assignments/assignment_2/lab4/lab4.srcs/sources_1/bd/system/system.bd]
+export_ip_user_files -of_objects  [get_files  C:/home/university/7-semester/embedded-rt-systems-assignments/assignment_2/lab4/lab4.srcs/sources_1/bd/system/system.bd] -sync -no_script -force -quiet
+generate_target all [get_files  C:/home/university/7-semester/embedded-rt-systems-assignments/assignment_2/lab4/lab4.srcs/sources_1/bd/system/system.bd]
+export_ip_user_files -of_objects [get_files C:/home/university/7-semester/embedded-rt-systems-assignments/assignment_2/lab4/lab4.srcs/sources_1/bd/system/system.bd] -no_script -sync -force -quiet
+export_simulation -of_objects [get_files C:/home/university/7-semester/embedded-rt-systems-assignments/assignment_2/lab4/lab4.srcs/sources_1/bd/system/system.bd] -directory C:/home/university/7-semester/embedded-rt-systems-assignments/assignment_2/lab4/lab4.ip_user_files/sim_scripts -ip_user_files_dir C:/home/university/7-semester/embedded-rt-systems-assignments/assignment_2/lab4/lab4.ip_user_files -ipstatic_source_dir C:/home/university/7-semester/embedded-rt-systems-assignments/assignment_2/lab4/lab4.ip_user_files/ipstatic -lib_map_path [list {modelsim=C:/home/university/7-semester/embedded-rt-systems-assignments/assignment_2/lab4/lab4.cache/compile_simlib/modelsim} {questa=C:/home/university/7-semester/embedded-rt-systems-assignments/assignment_2/lab4/lab4.cache/compile_simlib/questa} {riviera=C:/home/university/7-semester/embedded-rt-systems-assignments/assignment_2/lab4/lab4.cache/compile_simlib/riviera} {activehdl=C:/home/university/7-semester/embedded-rt-systems-assignments/assignment_2/lab4/lab4.cache/compile_simlib/activehdl}] -use_ip_compiled_libs -force -quiet
+reset_run synth_1
+launch_runs impl_1 -to_step write_bitstream -jobs 20
+wait_on_run impl_1
+open_run impl_1
+file mkdir C:/home/university/7-semester/embedded-rt-systems-assignments/assignment_2/lab4/lab4.sdk
+file copy -force C:/home/university/7-semester/embedded-rt-systems-assignments/assignment_2/lab4/lab4.runs/impl_1/system_wrapper.sysdef C:/home/university/7-semester/embedded-rt-systems-assignments/assignment_2/lab4/lab4.sdk/system_wrapper.hdf
+
+launch_sdk -workspace C:/home/university/7-semester/embedded-rt-systems-assignments/assignment_2/lab4/lab4.sdk -hwspec C:/home/university/7-semester/embedded-rt-systems-assignments/assignment_2/lab4/lab4.sdk/system_wrapper.hdf
