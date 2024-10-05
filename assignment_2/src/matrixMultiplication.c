@@ -1,4 +1,5 @@
 #include "matrixMultiplication.h"
+#include "xil_io.h"
 
 void setInputMatrices(vectorArray matrixA, vectorArray matrixB){
 
@@ -45,4 +46,13 @@ void multiplyMatricesSoft(vectorArray matrixA, vectorArray matrixB, vectorArray 
     }
 }
 
-void multiplyMatricesHard(vectorArray matrixA, vectorArray matrixB, vectorArray matrixP){}
+void multiplyMatricesHard(vectorArray matrixA, vectorArray matrixB, vectorArray matrixP)
+{
+	for (int row = 0; row < MATRIX_SIZE; row++) {
+		for (int col = 0; col < MATRIX_SIZE; col++) {
+			Xil_Out32(XPAR_MATRIX_IP_S00_AXI_BASEADDR + MATRIX_IP_S_AXI_SLV_REG0_OFFSET, matrixA[row].vect);
+			Xil_Out32(XPAR_MATRIX_IP_S00_AXI_BASEADDR + MATRIX_IP_S_AXI_SLV_REG1_OFFSET, matrixB[col].vect);
+			matrixP[row].comp[col] = Xil_In32(XPAR_MATRIX_IP_S00_AXI_BASEADDR + MATRIX_IP_S_AXI_SLV_REG2_OFFSET);
+		}
+	}
+}
