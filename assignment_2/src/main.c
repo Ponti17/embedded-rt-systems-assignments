@@ -12,22 +12,24 @@
 #include "xil_printf.h"
 #include "led_ip.h"
 #include "sleep.h"
+#include "matrixMultiplication.h"
 
 /* Function Prototypes */
 int ScuTimerInit(XScuTimer *TimerInstancePtr, u16 TimerDeviceId, u32 TimerCounter);
 int ScuIntrInit(XScuGic *IntcInstancePtr, u16 GicDeviceId);
 int TimerSetupIntr(XScuGic *IntcInstancePtr, XScuTimer *TimerInstancePtr, u16 TimerIntrId);
 int GpioInit(XGpio *GpioInstancePtr, u16 DeviceId);
-int configure_timer(XScuTimer timer);
 
 void TimerStart(XScuTimer *TimerInstancePtr);
 void TimerStop(XScuTimer *TimerInstancePtr);
+void TimerLoad(XScuTimer *TimerInstancePtr, u32 TimerCounter);
 
 static void TimerIntrHandler(void *CallBackRef);
 static void TimerDisableIntrSystem(XScuGic *IntcInstancePtr, u16 TimerIntrId);
 
 void read_switches();
 void count_leds();
+void matrix_soft();
 
 /* Device Instances */
 XScuTimer TimerInstance;	/* Cortex A9 Scu Private Timer Instance	*/
@@ -68,19 +70,66 @@ int main (void)
 				xil_printf("\r\nStarting Program 1.");
 				xil_printf("\r\nSwitches to LEDs.");
 				TimerFunctionPtr = &read_switches;
+				TimerLoad(&TimerInstance, 100*MILLISECOND);
 				TimerStart(&TimerInstance);
 				break;
 			case '2':
 				xil_printf("\r\nStarting Program 2.");
 				xil_printf("\r\nLED Binary Counting.");
 				TimerFunctionPtr = &count_leds;
+				TimerLoad(&TimerInstance, 1000*MILLISECOND);
 				TimerStart(&TimerInstance);
+				break;
+			case '3':
+				xil_printf("\r\nStarting Program 3.");
+				xil_printf("\r\nSoft Matrix Multiplication.");
+				TimerFunctionPtr = NULL;
+				TimerLoad(&TimerInstance, 1000*MILLISECOND);
+				TimerStart(&TimerInstance);
+				matrix_soft();
 				break;
 			default:
 				xil_printf("\r\nUnrecognized input. \"%c\"", input);
 				break;
 		}
 	}
+}
+
+void matrix_soft()
+{
+	vectorArray matrixA, matrixB, matrixP;
+	u32 start, end;
+
+	setInputMatrices(matrixA, matrixB);
+
+	xil_printf("\r\n\nMatrix A:\r\n");
+	displayMatrix(matrixA);
+
+	xil_printf("\r\n\nMatrix B:\r\n");
+	displayMatrix(matrixB);
+
+	start = XScuTimer_GetCounterValue(&TimerInstance);
+	multiplyMatricesSoft(matrixA, matrixB, matrixP);
+	end = XScuTimer_GetCounterValue(&TimerInstance);
+
+	xil_printf("\r\n\nMatrix P (Result of multiplication):\r\n");
+	displayMatrix(matrixP);
+
+	/* Subtract 'end' from 'start' since XScuTimer is down counting */
+	xil_printf("Clock cycles: %llu\n", 2 * (start - end));
+}
+
+void read_switches()
+{
+	int switch_read = XGpio_DiscreteRead(&DipInstance, 1);
+	LED_IP_mWriteReg(XPAR_LED_IP_S_AXI_BASEADDR, 0, switch_read);
+}
+
+void count_leds()
+{
+	static u8 count = 0;
+	count = (count + 1) & 0x0F;
+	LED_IP_mWriteReg(XPAR_LED_IP_S_AXI_BASEADDR, 0, count);
 }
 
 /*****************************************************************************/
@@ -126,8 +175,8 @@ int ScuTimerInit(XScuTimer *TimerInstancePtr, u16 TimerDeviceId, u32 TimerCounte
 	/* Enable Auto Reloading of Timer */
 	XScuTimer_EnableAutoReload(TimerInstancePtr);
 
-	/* Load timer counter register */
-	XScuTimer_LoadTimer(TimerInstancePtr, TimerCounter);
+	/* Load timer counter register with default 1 second */
+	XScuTimer_LoadTimer(TimerInstancePtr, 325000000);
 
 	return XST_SUCCESS;
 }
@@ -212,6 +261,11 @@ void TimerStop(XScuTimer *TimerInstancePtr)
 	XScuTimer_Stop(TimerInstancePtr);
 }
 
+void TimerLoad(XScuTimer *TimerInstancePtr, u32 TimerCounter)
+{
+	XScuTimer_LoadTimer(TimerInstancePtr, TimerCounter);
+}
+
 /*****************************************************************************/
 /**
 * This function is the Interrupt handler for the Timer interrupt of the
@@ -246,24 +300,3 @@ static void TimerDisableIntrSystem(XScuGic *IntcInstancePtr, u16 TimerIntrId)
 	XScuGic_Disconnect(IntcInstancePtr, TimerIntrId);
 }
 
-void read_switches()
-{
-	int switch_read = XGpio_DiscreteRead(&DipInstance, 1);
-	LED_IP_mWriteReg(XPAR_LED_IP_S_AXI_BASEADDR, 0, switch_read);
-}
-
-void count_leds()
-{
-	static u8 call_count = 0;
-	static u8 count = 0;
-
-	call_count++;
-
-	/* This function triggers every 100ms,	*/
-	/* but we only count every 1 second.	*/
-	if (call_count >= 10) {
-		call_count = 0;
-		count = (count + 1) & 0x0F;
-		LED_IP_mWriteReg(XPAR_LED_IP_S_AXI_BASEADDR, 0, count);
-	}
-}
