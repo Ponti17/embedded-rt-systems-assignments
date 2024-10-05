@@ -61,3 +61,9 @@ For new assignments we should copy `systemc_template` and rename it as `assignme
 ## Documentation
 
 Inside each assignment folder the respective `.pdf` detailing the assignment should be included.
+
+## Vivado HLS Patch
+
+For _some_ reason Vivado HLS 2017 has an integer overflow error when it assigns a date to an IP during `export RTL`. See [Link]([link](https://adaptivesupport.amd.com/s/article/76960?language=en_US)).
+
+Patch is located in `utilities`.
