@@ -30,6 +30,7 @@ static void TimerDisableIntrSystem(XScuGic *IntcInstancePtr, u16 TimerIntrId);
 void read_switches();
 void count_leds();
 void matrix_soft();
+void matrix_hard();
 
 /* Device Instances */
 XScuTimer TimerInstance;	/* Cortex A9 Scu Private Timer Instance	*/
@@ -62,20 +63,22 @@ int main (void)
 		{
 			case '0':
 				xil_printf("\r\nNo action.");
-				xil_printf("\r\nStopping Timer Routine.");
-				TimerFunctionPtr = NULL;
+				xil_printf("\r\nStopping Timer Routine.\n");
 				TimerStop(&TimerInstance);
+				TimerFunctionPtr = NULL;
 				break;
 			case '1':
 				xil_printf("\r\nStarting Program 1.");
-				xil_printf("\r\nSwitches to LEDs.");
+				xil_printf("\r\nSwitches to LEDs.\n");
+				TimerStop(&TimerInstance);
 				TimerFunctionPtr = &read_switches;
 				TimerLoad(&TimerInstance, 100*MILLISECOND);
 				TimerStart(&TimerInstance);
 				break;
 			case '2':
 				xil_printf("\r\nStarting Program 2.");
-				xil_printf("\r\nLED Binary Counting.");
+				xil_printf("\r\nLED Binary Counting.\n");
+				TimerStop(&TimerInstance);
 				TimerFunctionPtr = &count_leds;
 				TimerLoad(&TimerInstance, 1000*MILLISECOND);
 				TimerStart(&TimerInstance);
@@ -83,13 +86,23 @@ int main (void)
 			case '3':
 				xil_printf("\r\nStarting Program 3.");
 				xil_printf("\r\nSoft Matrix Multiplication.");
+				TimerStop(&TimerInstance);
 				TimerFunctionPtr = NULL;
 				TimerLoad(&TimerInstance, 1000*MILLISECOND);
 				TimerStart(&TimerInstance);
 				matrix_soft();
 				break;
+			case '4':
+				xil_printf("\r\nStarting Program 4.");
+				xil_printf("\r\nHard Matrix Multiplication.");
+				TimerStop(&TimerInstance);
+				TimerFunctionPtr = NULL;
+				TimerLoad(&TimerInstance, 1000*MILLISECOND);
+				TimerStart(&TimerInstance);
+				matrix_hard();
+				break;
 			default:
-				xil_printf("\r\nUnrecognized input. \"%c\"", input);
+				xil_printf("\r\nUnrecognized input. \"%c\"\n", input);
 				break;
 		}
 	}
@@ -110,6 +123,30 @@ void matrix_soft()
 
 	start = XScuTimer_GetCounterValue(&TimerInstance);
 	multiplyMatricesSoft(matrixA, matrixB, matrixP);
+	end = XScuTimer_GetCounterValue(&TimerInstance);
+
+	xil_printf("\r\n\nMatrix P (Result of multiplication):\r\n");
+	displayMatrix(matrixP);
+
+	/* Subtract 'end' from 'start' since XScuTimer is down counting */
+	xil_printf("Clock cycles: %llu\n", 2 * (start - end));
+}
+
+void matrix_hard()
+{
+	vectorArray matrixA, matrixB, matrixP;
+	u32 start, end;
+
+	setInputMatrices(matrixA, matrixB);
+
+	xil_printf("\r\n\nMatrix A:\r\n");
+	displayMatrix(matrixA);
+
+	xil_printf("\r\n\nMatrix B:\r\n");
+	displayMatrix(matrixB);
+
+	start = XScuTimer_GetCounterValue(&TimerInstance);
+	multiplyMatricesHard(matrixA, matrixB, matrixP);
 	end = XScuTimer_GetCounterValue(&TimerInstance);
 
 	xil_printf("\r\n\nMatrix P (Result of multiplication):\r\n");

@@ -10,6 +10,10 @@
 
 #define MATRIX_SIZE 4
 
+#define MATRIX_IP_S_AXI_SLV_REG0_OFFSET 0x0
+#define MATRIX_IP_S_AXI_SLV_REG1_OFFSET 0x4
+#define MATRIX_IP_S_AXI_SLV_REG2_OFFSET 0x8
+
 typedef union {
   unsigned char comp[MATRIX_SIZE];
   unsigned int vect;
