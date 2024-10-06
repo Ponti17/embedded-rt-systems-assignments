@@ -82,7 +82,15 @@ static void TimerIntrHandler(void *CallBackRef)
 }
 \end{myminted}
 
-All devices necessary are now intialized. In the main loop we will wait for UART input, using \texttt{inbyte()}, and enter the corresponding application in a \texttt{switch}-statement. The applications configure the timer accordingly and set \texttt{*TimerFunctionPtr} to the application function. The timer interrupt will then call the function pointed to by \texttt{*TimerFunctionPtr}.
+All devices necessary are now intialized. In the main loop we will wait for UART input, using \texttt{inbyte()}, and enter the corresponding application in a \texttt{switch}-statement. The procedure is roughly as follows:
+
+\begin{enumerate}
+    \item Wait for UART input.
+    \item Parse input and enter corresponding application (switch-statement).
+    \item Stop the timer and set the function pointer to the application.
+    \item Load the timer counter register.
+    \item Start the timer.
+\end{enumerate}
 
 \newpage
 
@@ -96,20 +104,22 @@ while (1)
     {
         case '0':
             xil_printf("\r\nNo action.");
-            xil_printf("\r\nStopping Timer Routine.");
-            TimerFunctionPtr = NULL;
+            xil_printf("\r\nStopping Timer Routine.\n");
             TimerStop(&TimerInstance);
+            TimerFunctionPtr = NULL;
             break;
         case '1':
             xil_printf("\r\nStarting Program 1.");
-            xil_printf("\r\nSwitches to LEDs.");
+            xil_printf("\r\nSwitches to LEDs.\n");
+            TimerStop(&TimerInstance);
             TimerFunctionPtr = &read_switches;
             TimerLoad(&TimerInstance, 100*MILLISECOND);
             TimerStart(&TimerInstance);
             break;
         case '2':
             xil_printf("\r\nStarting Program 2.");
-            xil_printf("\r\nLED Binary Counting.");
+            xil_printf("\r\nLED Binary Counting.\n");
+            TimerStop(&TimerInstance);
             TimerFunctionPtr = &count_leds;
             TimerLoad(&TimerInstance, 1000*MILLISECOND);
             TimerStart(&TimerInstance);
@@ -118,6 +128,28 @@ while (1)
             xil_printf("\r\nUnrecognized input. \"%c\"", input);
             break;
     }
+}
+\end{myminted}
+
+The actual applications are simple void functions. The \texttt{read\_switches()} function is triggered every 100 ms and reads the switches, setting the LEDs accordingly.
+
+\begin{myminted}{main.c - read\_switches()}
+void read_switches()
+{
+	int switch_read = XGpio_DiscreteRead(&DipInstance, 1);
+	LED_IP_mWriteReg(XPAR_LED_IP_S_AXI_BASEADDR, 0, switch_read);
+}
+\end{myminted}
+
+\newpage
+
+The \texttt{count\_leds()} function is triggered every second and increments a \texttt{static} counter variable, displaying the binary value on the LEDs.
+\begin{myminted}{main.c - count\_leds()}
+void count_leds()
+{
+	static u8 count = 0;
+	count = (count + 1) & 0x0F;
+	LED_IP_mWriteReg(XPAR_LED_IP_S_AXI_BASEADDR, 0, count);
 }
 \end{myminted}
 
