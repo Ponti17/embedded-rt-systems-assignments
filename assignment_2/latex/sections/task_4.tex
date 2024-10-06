@@ -150,5 +150,16 @@ void matrix_soft()
 }
 \end{myminted}
 
+\newpage
+
+The output of the program is shown below. The matrices are displayed, the product is calculated and displayed, and the number of clock cycles used to perform the matrix multiplication is shown. We see that it takes 3558 clock cycles to perform the matrix multiplication. The Cortex-A9 core is clocked at 650 MHz, meaning the total time for calculating matrix P is:
+
+$$ \frac{3558}{650 * 10^6} = 5.48 \mu s $$
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1\textwidth]{task4_putty.png}
+\end{figure}
+
 
 \end{document}
