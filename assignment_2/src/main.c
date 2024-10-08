@@ -111,7 +111,8 @@ int main (void)
 void matrix_soft()
 {
 	vectorArray matrixA, matrixB, matrixP;
-	u32 start, end;
+	volatile u32 start = 0;
+	volatile u32 end = 0;
 
 	setInputMatrices(matrixA, matrixB);
 
@@ -135,7 +136,8 @@ void matrix_soft()
 void matrix_hard()
 {
 	vectorArray matrixA, matrixB, matrixP;
-	u32 start, end;
+	volatile u32 start = 0;
+	volatile u32 end = 0;
 
 	setInputMatrices(matrixA, matrixB);
 
