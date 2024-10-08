@@ -23,6 +23,7 @@ int GpioInit(XGpio *GpioInstancePtr, u16 DeviceId);
 void TimerStart(XScuTimer *TimerInstancePtr);
 void TimerStop(XScuTimer *TimerInstancePtr);
 void TimerLoad(XScuTimer *TimerInstancePtr, u32 TimerCounter);
+void TimerReinitialize(XScuTimer *TimerInstancePtr, u32 TimerCounter, void (*TimerFunction)(void));
 
 static void TimerIntrHandler(void *CallBackRef);
 static void TimerDisableIntrSystem(XScuGic *IntcInstancePtr, u16 TimerIntrId);
@@ -70,35 +71,23 @@ int main (void)
 			case '1':
 				xil_printf("\r\nStarting Program 1.");
 				xil_printf("\r\nSwitches to LEDs.\n");
-				TimerStop(&TimerInstance);
-				TimerFunctionPtr = &read_switches;
-				TimerLoad(&TimerInstance, 100*MILLISECOND);
-				TimerStart(&TimerInstance);
+				TimerReinitialize(&TimerInstance, 100*MILLISECOND, &read_switches);
 				break;
 			case '2':
 				xil_printf("\r\nStarting Program 2.");
 				xil_printf("\r\nLED Binary Counting.\n");
-				TimerStop(&TimerInstance);
-				TimerFunctionPtr = &count_leds;
-				TimerLoad(&TimerInstance, 1000*MILLISECOND);
-				TimerStart(&TimerInstance);
+				TimerReinitialize(&TimerInstance, 1000*MILLISECOND, &count_leds);
 				break;
 			case '3':
 				xil_printf("\r\nStarting Program 3.");
 				xil_printf("\r\nSoft Matrix Multiplication.");
-				TimerStop(&TimerInstance);
-				TimerFunctionPtr = NULL;
-				TimerLoad(&TimerInstance, 1000*MILLISECOND);
-				TimerStart(&TimerInstance);
+				TimerReinitialize(&TimerInstance, 1000*MILLISECOND, NULL);
 				matrix_soft();
 				break;
 			case '4':
 				xil_printf("\r\nStarting Program 4.");
 				xil_printf("\r\nHard Matrix Multiplication.");
-				TimerStop(&TimerInstance);
-				TimerFunctionPtr = NULL;
-				TimerLoad(&TimerInstance, 1000*MILLISECOND);
-				TimerStart(&TimerInstance);
+				TimerReinitialize(&TimerInstance, 1000*MILLISECOND, NULL);
 				matrix_hard();
 				break;
 			default:
@@ -295,14 +284,47 @@ void TimerStart(XScuTimer *TimerInstancePtr)
 	XScuTimer_Start(TimerInstancePtr);
 }
 
+/*****************************************************************************/
+/**
+* Stops the timer.
+*
+* @param TimerInstancePtr is a pointer to the instance of XScuTimer driver.
+* @return None
+******************************************************************************/
 void TimerStop(XScuTimer *TimerInstancePtr)
 {
 	XScuTimer_Stop(TimerInstancePtr);
 }
 
+/*****************************************************************************/
+/**
+* Loads the timer.
+*
+* @param TimerInstancePtr is a pointer to the instance of XScuTimer driver.
+* @param TimerCounter is the value to load into the timer counter register.
+* @return None
+******************************************************************************/
 void TimerLoad(XScuTimer *TimerInstancePtr, u32 TimerCounter)
 {
 	XScuTimer_LoadTimer(TimerInstancePtr, TimerCounter);
+}
+
+/*****************************************************************************/
+/**
+* Reinitializes the timer.
+*
+* @param TimerInstancePtr is a pointer to the instance of XScuTimer driver.
+* @param TimerCounter is the value to load into the timer counter register.
+* @param TimerFunction is the function pointer to the timer interrupt handler.
+* @return None
+******************************************************************************/
+void TimerReinitialize(XScuTimer *TimerInstancePtr, u32 TimerCounter, void (*TimerFunction)(void))
+{
+	TimerStop(TimerInstancePtr);
+	TimerFunctionPtr = TimerFunction;
+	TimerLoad(TimerInstancePtr, TimerCounter);
+	XScuTimer_RestartTimer(TimerInstancePtr);
+	TimerStart(TimerInstancePtr);
 }
 
 /*****************************************************************************/
