@@ -1,62 +1,58 @@
-#include "advios.hpp"
+#include "advios.h"
 
-Advios::Advios(sc_module_name name) : sc_module(name)
-{
-    SC_CTHREAD(generatePulse, clk.pos());
-    reset_signal_is(reset, true);
+void advios::iosThread() {
 
-    SC_CTHREAD(switchControl, clk.pos());
-    reset_signal_is(reset, true);
-}
+#pragma HLS RESOURCE variable=ctrl core=AXI4LiteS metadata="-bus_bundle slv0"
 
-void Advios::generatePulse()
-{
-    while (true)
-    {
-        if (reset.read())
-        {
-            this->pulse.write(false);
+	control = 0x0;
+	switchs = 0x0;
+	sec_counter = 0x0;
+	wait();
+
+    while (true) {
+        wait(); // Wait for clock event
+        control = ctrl.read();
+        switchs = inSwitch.read();
+
+        switch (control){
+
+        case 0x0:
+
+        	if (switchs == 0x8) {
+
+        		outLeds.write(0x0);
+        		sec_counter = 0x0;
+
+        	}else{
+
+        		if(sec_pulse.read()){
+
+        			sec_counter++;
+        			outLeds.write(sec_counter);
+        		}
+
+        	}
+
+        	break;
+        default:
+        	outLeds.write(control & switchs);
+        	break;
         }
-        else
-        {
-            wait(1, SC_SEC);
-            this->pulse.write(true);
-            wait();
-            this->pulse.write(false);
-        }
-        wait();  // Synchronize to clock
     }
 }
 
-void Advios::switchControl()
-{
-    while (true)
-    {
-        if (reset.read())
-        {
-            this->outLeds.write(0);
-        }
-        else
-        {
-            sc_uint<NUM_BITS> switch_state = inSwitch.read();
-            sc_uint<NUM_BITS> control_state = ctrl.read();
+void advios::countThread() {
 
-            if (control_state == 0x0)
-            {
-                if (switch_state == 0x8)
-                {
-                    outLeds.write(0x0);
-                }
-                else if (pulse.read())
-                {
-                    outLeds.write(outLeds.read() + 1);
-                }
-            }
-            else
-            {
-                outLeds.write(switch_state & control_state);
-            }
+	wait();
+	count = 0;
+    while (true) {
+        wait();  // Wait for clock event
+        count++;
+        if (count == 100000000) {
+        	sec_pulse.write(true);
+        	count = 0;
+        } else {
+        	sec_pulse.write(false);
         }
-        wait();  // Wait for the next clock cycle
     }
 }
