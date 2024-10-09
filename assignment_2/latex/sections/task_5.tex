@@ -80,6 +80,14 @@ void matrix_hard()
 
 \newpage
 
-We see that it takes approximately 8000 clock cycles to compute the matrix product using the hardware IP core. This is \textit{worse} than the software implementation. 
+We see that it takes 7992 clock cycles to compute the matrix product using the hardware IP core. This is \textit{worse} than the software implementation. This is because the hardware IP core is clocked at 100 MHz, which is slower than the ARM processor clocked at 650 MHz. This means that it takes
+
+$$ T_{hard} = \frac{7992}{650 \times 10^6} = 12.3 \mu s $$
+
+to compute the matrix product using the hardware IP core. The software implementation takes
+
+$$ T_{soft} = \frac{3558 \times 10^6}{650 \times 10^6} = 5.47 \mu s $$
+
+i.e. the hardware implementation is $12.3/5.47 = 2.25$ times slower than the software implementation. Keep in mind that our clock cycle results are in terms of the ARM processor clock, not the hardware IP core clock. In reality the matrix ip has only seen $7992/6.5 \approx 1229$ clock cycles. Were the IP and the ARM processor clocked at the same frequency, the hardware implementation would be $3558/1229 = 2.9$ times faster than the software implementation.
 
 \end{document}
