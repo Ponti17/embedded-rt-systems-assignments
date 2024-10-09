@@ -10,7 +10,6 @@
 #include "xil_exception.h"
 #include "xil_printf.h"
 #include "sleep.h"
-#include "matrixMultiplication.h"
 
 /* Function Prototypes */
 int ScuTimerInit(XScuTimer *TimerInstancePtr, u16 TimerDeviceId, u32 TimerCounter);
