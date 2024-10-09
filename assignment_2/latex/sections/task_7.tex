@@ -6,6 +6,61 @@
 
 \section{Task 7}
 
+In this task, we will use HLS to convert a SystemC hardware description to an RTL implementation.
+
+\begin{itemize}
+    \item Write the ADVIOS IP core and a testbench in SystemC.
+    \item Document and verify the result of the simulation and synthesis using Vivado HLS.
+    \item Connect the ctrl port to the AXI4Lite interface by using pragma as described in UG902, p. 161.
+    \item Create a Vivado project and add the ADVIOS IP core and connect it to the LEDS and SWITCHES on the ZYBO board.
+    \item Write a program with the Xilinx SDDK that verifies the functionality of the IP core and document the results.
+\end{itemize}
+
+\subsection*{Solution}
+
+% Something something i don't know
 \lipsum[1]
+
+\newpage
+
+We had the \textit{classic} of issue of Vivado not wanting to generate the necessary files for the IP core in the BSP. To read/write to the IP core register, we chose to simply use \texttt{Xil\_Out8}. We found the driver file of the IP core, and looked up the register offset to be \texttt{0x14}. A test program was written where different values could be written to the \texttt{ctrl} register. In addition we also added to capability to read the value of the register. The main event loop of the program is shown below.
+
+\begin{myminted}{main.c - Main Event Loop}
+while (1)
+{
+    xil_printf("\r\n\nCMD:> ");
+    input = inbyte();
+    xil_printf("%c", input);
+    switch (input)
+    {
+        case '0':
+            xil_printf("\r\nReading CTRL: ");
+            ctrl_read = Xil_In8(CTRL_ADDR) & 0xF;
+            xil_printf("%u", ctrl_read);
+            break;
+        case '1':
+            xil_printf("\r\nWriting 0x0.");
+            Xil_Out8(CTRL_ADDR, 0x0);
+            break;
+        case '2':
+            xil_printf("\r\nWriting 0xA.");
+            Xil_Out8(CTRL_ADDR, 0xA);
+            break;
+        case '3':
+            xil_printf("\r\nWriting 0xF.");
+            Xil_Out8(CTRL_ADDR, 0xF);
+            break;
+        case '4':
+            xil_printf("\r\nGenerating random value.");
+            uint8_t rand = rand_uint8() & 0xF;
+            xil_printf("\r\nWriting %u to CTRL.", rand);
+            Xil_Out8(CTRL_ADDR, rand);
+            break;
+        default:
+            xil_printf("\r\nUnrecognized input. \"%c\"", input);
+            break;
+    }
+}
+\end{myminted}
 
 \end{document}
