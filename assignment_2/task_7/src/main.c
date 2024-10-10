@@ -49,15 +49,15 @@ int main (void)
 				xil_printf("%u", ctrl_read);
 				break;
 			case '1':
-				xil_printf("\r\nWriting 0x0.");
+				xil_printf("\r\nWriting 0x0 to CTRL.");
 				Xil_Out8(CTRL_ADDR, 0x0);
 				break;
 			case '2':
-				xil_printf("\r\nWriting 0xA.");
+				xil_printf("\r\nWriting 0xA to CTRL.");
 				Xil_Out8(CTRL_ADDR, 0xA);
 				break;
 			case '3':
-				xil_printf("\r\nWriting 0xF.");
+				xil_printf("\r\nWriting 0xF to CTRL.");
 				Xil_Out8(CTRL_ADDR, 0xF);
 				break;
 			case '4':
