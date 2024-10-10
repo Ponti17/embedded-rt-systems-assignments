@@ -111,18 +111,15 @@ void multiplyMatricesSoft(vectorArray matrixA, vectorArray matrixB, vectorArray 
 Finally we add an example function using soft matrix multiplication to our main application. The function \texttt{matrix\_soft} is called when the user inputs '3' in the main menu. The \texttt{matrix\_soft} function should only be called once, so the \texttt{TimerFunctionPtr} is set to \texttt{NULL}. The timer is set to 1 second and started. We will read the counter register in the timer to calculate the number of clock cycles used to perform the matrix multiplication.
 
 \begin{myminted}{main.c - Soft Matrix Multiplication Switch Case}
-    case '3':
-        xil_printf("\r\nStarting Program 3.");
-        xil_printf("\r\nSoft Matrix Multiplication.");
-        TimerStop(&TimerInstance);
-        TimerFunctionPtr = NULL;
-        TimerLoad(&TimerInstance, 1000*MILLISECOND);
-        TimerStart(&TimerInstance);
-        matrix_soft();
-        break;
+case '3':
+    xil_printf("\r\nStarting Program 3.");
+    xil_printf("\r\nSoft Matrix Multiplication.");
+    TimerReinitialize(&TimerInstance, 1000*MILLISECOND, NULL);
+    matrix_soft();
+    break;
 \end{myminted}
 
-The \texttt{matrix\_soft} function is shown below. It initializes the matrices, displays them, multiplies them and displays the result. The clock cycles are calculated by subtracting the end value from the start value.
+The \texttt{matrix\_soft} function is shown below. It initializes the matrices, displays them, multiplies them and displays the result. The clock cycles are calculated by subtracting the end value from the start value and multiplying by 2 (XScuTimer decrements every two cycles).
 
 \begin{myminted}{main.c - matrix\_soft()}
 void matrix_soft()
@@ -154,12 +151,11 @@ void matrix_soft()
 
 The output of the program is shown below. The matrices are displayed, the product is calculated and displayed, and the number of clock cycles used to perform the matrix multiplication is shown. We see that it takes 3558 clock cycles to perform the matrix multiplication. The Cortex-A9 core is clocked at 650 MHz, meaning the total time for calculating matrix P is:
 
-$$ \frac{3558}{650 * 10^6} = 5.48 \mu s $$
+$$ T_{soft} = \frac{3558}{650 * 10^6} = 5.48 \, \si{\mu s} $$
 
 \begin{figure}[h]
     \centering
     \includegraphics[width=1\textwidth]{task4_putty.png}
 \end{figure}
-
 
 \end{document}
