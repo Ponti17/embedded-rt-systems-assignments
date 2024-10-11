@@ -18,8 +18,151 @@ In this task, we will use HLS to convert a SystemC hardware description to an RT
 
 \subsection*{Solution}
 
-% Something something i don't know
-\lipsum[1]
+First we wrote the IP in SystemC for Vivado HLS, according to the specification of the task. 
+The IP core has the following interface:
+\begin{itemize}
+    \item \texttt{ctrl} - 4-bit input
+    \item \texttt{inSwitch} - 4-bit input
+    \item \texttt{outLeds} - 4-bit output
+    \item \texttt{clk} - clock signal input
+    \item \texttt{reset} - reset signal input
+\end{itemize}
+
+\noindent The advios IP core needs to behave as follows:
+
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{|>{\raggedright}p{3cm}|>{\raggedright\arraybackslash}p{10cm}|}
+    \hline
+    \textbf{Ctrl value} & \textbf{Behavior} \\
+    \hline
+    0x0 & The outLeds are incremented by a second counter and cleared by inSwitch. \\
+         & \textit{outLeds = increments every 1 second} \\
+         & \textit{if inSwitch = 0x8 then clear outLeds} \\
+    \hline
+    0x1 -- 0xF & The value of outLeds are masked by ctrl register and inSwitch. \\
+               & \textit{outLeds = ctrl AND inSwitch} \\
+    \hline
+\end{tabular}%
+}
+To achieve this, we use the clocked threads process in SystemC. The code for the IP core is shown below.
+\begin{myminted}{advios.h - SystemC IP Core}
+    #include <systemc.h>
+    SC_MODULE(advios){
+        sc_in<bool> clk;
+        sc_in<bool> reset;
+        sc_in<sc_uint<4> > inSwitch;
+        sc_in<sc_uint<4> > ctrl;
+        sc_out<sc_uint<4> > outLeds;
+    
+        sc_uint<4> switchs;
+        sc_uint<4> control;
+        sc_uint<28> count;
+        sc_uint<4> sec_counter;
+        sc_signal<bool> sec_pulse;
+    
+        void iosThread();
+        void countThread();
+        SC_CTOR(advios){
+            SC_CTHREAD(iosThread, clk.pos());
+            reset_signal_is(reset, true);
+    
+            SC_CTHREAD(countThread, clk.pos());
+            reset_signal_is(reset, true);
+        }
+    };
+\end{myminted}
+\begin{myminted}{advios.cpp - implementation}
+    void advios::iosThread() {
+    #pragma HLS RESOURCE variable=ctrl core=AXI4LiteS metadata="-bus_bundle slv0" // pragma for AXI4Lite interface
+    
+        control = 0x0;
+        switchs = 0x0;
+        sec_counter = 0x0;
+        wait();
+    
+        while (true) {
+            wait(); // Wait for clock event
+            control = ctrl.read();
+            switchs = inSwitch.read();
+    
+            switch (control){
+                case 0x0:
+                    if (switchs == 0x8) {
+                        outLeds.write(0x0);
+                        sec_counter = 0x0;
+                    }else{
+                        if(sec_pulse.read()){
+        
+                            sec_counter++;
+                            outLeds.write(sec_counter);
+                        }
+                    }
+                    break;
+                default:
+                    outLeds.write(control & switchs);
+                    break;
+            }
+        }
+    }
+    void advios::countThread() {
+        wait();
+        count = 0;
+        while (true) {
+            wait();  // Wait for clock event
+            count++;
+            if (count == 100000000) {
+                sec_pulse.write(true);
+                count = 0;
+            } else {
+                sec_pulse.write(false);
+            }
+        }
+    }
+\end{myminted}
+
+To check if the core is working according to the specification, a testbench was written. The testbench consists of a main code
+and a driver module. 
+The main declares all signals, module and other components needed for the simulation, and it is also the entry point for the executable. The driver module is designed to test
+the different functionalities of the IP core. The testbench driver is shown below:
+\begin{myminted}{advios_driver.cpp - testbench driver}
+void advios_driver::test(){
+	wait();
+	reset.write(true); //test reset signal
+	ctrl.write(0x0);
+	outSwitch.write(0x0);
+	wait_c(3); //wait for 3 clock cycles
+	reset.write(false);
+	wait();
+
+	sc_uint<4> leds_result; //test ctrl AND switch (when ctrl = 0x1-0xF)
+	bool mask_result = true;
+	for (sc_uint<4> i_ctrl = 0x1; i_ctrl < 0xF; i_ctrl++) {
+	    for (sc_uint<4> i_outSwitch = 0x0; i_outSwitch < 0xF; i_outSwitch++) {
+	        ctrl.write(i_ctrl);
+	        outSwitch.write(i_outSwitch);
+	        wait_c(2);  // Wait for two clock cycles to allow signal propagation
+	        leds_result = inLeds.read();
+	        if (!(leds_result == (i_outSwitch & i_ctrl))) { //check if the output is correct
+	            mask_result = false; //if not, test has failed
+	        }
+	    }
+	}
+
+	wait_c(10); //wait for 10 clock cycles
+	ctrl.write(0x0);
+	reset.write(true);
+	wait();
+	reset.write(false);
+	for(sc_uint<4> i_outSwitch = 0x0; i_outSwitch < 0xf; i_outSwitch++){ //test counter
+		outSwitch.write(i_outSwitch);
+		for (int i = 0; i < 16; i++){
+			wait();
+		}
+	}
+}
+\end{myminted}
+
+
 
 \newpage
 
