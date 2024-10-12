@@ -20,15 +20,18 @@ In this task, we will use HLS to convert a SystemC hardware description to an RT
 
 First we wrote the IP in SystemC for Vivado HLS, according to the specification of the task. 
 The IP core has the following interface:
+
 \begin{itemize}
-    \item \texttt{ctrl} - 4-bit input
-    \item \texttt{inSwitch} - 4-bit input
-    \item \texttt{outLeds} - 4-bit output
-    \item \texttt{clk} - clock signal input
-    \item \texttt{reset} - reset signal input
+    \item \makebox[1.8cm]{\texttt{ctrl}\hfill}     4-bit input
+    \item \makebox[1.8cm]{\texttt{inSwitch}\hfill} 4-bit input
+    \item \makebox[1.8cm]{\texttt{outLeds}\hfill}  4-bit output
+    \item \makebox[1.8cm]{\texttt{clk}\hfill}      clock signal input
+    \item \makebox[1.8cm]{\texttt{reset}\hfill}    reset signal input
 \end{itemize}
 
-\noindent The advios IP core needs to behave as follows:
+The advios IP core needs to behave as follows:
+
+\vspace{10pt}
 \par
 \resizebox{\linewidth}{!}{%
 \begin{tabular}{|>{\raggedright}p{3cm}|>{\raggedright\arraybackslash}p{10cm}|}
@@ -44,6 +47,8 @@ The IP core has the following interface:
     \hline
 \end{tabular}%
 }
+\vspace{10pt}
+
 To achieve this, we use the clocked threads process in SystemC. The code for the IP core is shown below.
 \begin{myminted}{advios.h - SystemC IP Core}
     #include <systemc.h>
@@ -124,7 +129,7 @@ To check if the core is working according to the specification, a testbench was 
 and a driver module. 
 The main declares all signals, module and other components needed for the simulation, and it is also the entry point for the executable. The driver module is designed to test
 the different functionalities of the IP core. The testbench driver is shown below:
-\begin{myminted}{advios_driver.cpp - testbench driver}
+\begin{myminted}{advios\_driver.cpp - testbench driver}
 void advios_driver::test(){
 	wait();
 	reset.write(true); //test reset signal
@@ -205,15 +210,15 @@ while (1)
             xil_printf("%u", ctrl_read);
             break;
         case '1':
-            xil_printf("\r\nWriting 0x0.");
+            xil_printf("\r\nWriting 0x0 to CTRL.");
             Xil_Out8(CTRL_ADDR, 0x0);
             break;
         case '2':
-            xil_printf("\r\nWriting 0xA.");
+            xil_printf("\r\nWriting 0xA to CTRL.");
             Xil_Out8(CTRL_ADDR, 0xA);
             break;
         case '3':
-            xil_printf("\r\nWriting 0xF.");
+            xil_printf("\r\nWriting 0xF to CTRL.");
             Xil_Out8(CTRL_ADDR, 0xF);
             break;
         case '4':
@@ -228,5 +233,7 @@ while (1)
     }
 }
 \end{myminted}
+
+In conclusion our Advios IP core \textit{mostly} works as expected. As noted before, the C/RTL co-simulation showed that the timer was counting at half the intended speed, and that was also observed when running the IP core on the ZYBO board. Aside from that, the IP core works as intended.
 
 \end{document}
