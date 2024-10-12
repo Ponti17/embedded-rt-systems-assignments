@@ -81,6 +81,18 @@ We see that it takes 7992 clock cycles to compute the matrix product using the h
 
 $$ T_{hard} = \frac{7992}{650 * 10^6} = 12.3 \mu s $$
 
-to compute the matrix product using the hardware IP core. The hardware implementation is $12.3/5.48 \approx 2.3$ times slower than the software implementation. Keep in mind that our clock cycle results are in terms of the ARM processor clock, not the hardware IP core clock. In reality the matrix ip has only seen $7992/6.5 \approx 1229$ clock cycles. Were the IP and the ARM processor clocked at the same frequency, the hardware implementation would be $3558/1229 = 2.9$ times faster than the software implementation.
+to compute the matrix product using the hardware IP core. The hardware implementation is $12.3/5.48 \approx 2.3$ times slower than the software implementation. Keep in mind that our clock cycle results are in terms of the ARM processor clock, not the hardware IP core clock. In reality the matrix ip has only seen $7992/6.5 \approx 1229$ clock cycles.
+
+\vspace{10pt}
+
+When looking at the RTL for the matrix IP core, we see that the output is \textit{combinatorial} i.e. it is not clocked and appears instantly after both input registers are set (yes there is \textit{technically} an electrical delay). This means that the time it takes to calculate the matrix product is spent entirely on AXI bus tranfers and not on the actual computation. To investigate this further we implemented a design with \textbf{four} matrix IP cores, allowing us to unroll the inner loop of the matrix multiplication. When running this design we saw nearly the exact same clock cycles as with only a single matrix IP core. Even though there are four IPs, we still have to transfer the same amount of data over the bus. Potential improvements could be:
+
+\begin{enumerate}
+    \item Use a DMA to transfer the data to the IPs.
+    \item Clock the AXI bus faster (Duh).
+    \item Improve the IP core so it can load an entire matrix at once (saving us three transfers).
+\end{enumerate}
+
+Unfortunately, all of the above are out of the scope of this assignment.
 
 \end{document}
