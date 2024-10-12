@@ -29,7 +29,7 @@ The IP core has the following interface:
 \end{itemize}
 
 \noindent The advios IP core needs to behave as follows:
-
+\par
 \resizebox{\linewidth}{!}{%
 \begin{tabular}{|>{\raggedright}p{3cm}|>{\raggedright\arraybackslash}p{10cm}|}
     \hline
@@ -119,7 +119,7 @@ To achieve this, we use the clocked threads process in SystemC. The code for the
         }
     }
 \end{myminted}
-
+\newpage
 To check if the core is working according to the specification, a testbench was written. The testbench consists of a main code
 and a driver module. 
 The main declares all signals, module and other components needed for the simulation, and it is also the entry point for the executable. The driver module is designed to test
@@ -161,22 +161,31 @@ void advios_driver::test(){
 	}
 }
 \end{myminted}
-
+\newpage
+The testbench was simulated in Vivado HLS. First we did a C simulation, and then a C/RTL co-simulation. The first two figures shows the results of the C simulation.
+For the simulation the IP core counter was set to generate a pulse for every two clocks. 
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1\textwidth]{csim-ctrl-0x1-0xf.png}
+    \caption{C-simulation of the IP core with ctrl set to 0x1-0xF}
+\end{figure}
 
 \begin{figure}[h]
     \centering
     \includegraphics[width=1\textwidth]{csim-ctrl-0x0.png}
+    \caption{C-simulation of the IP core with ctrl set to 0x0}
 \end{figure}
-
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=1\textwidth]{csim-ctrl-0x1-0xf.png}
-\end{figure}
+\par
+The waveform of the C simulation shows that the IP core is working as expected.
 
 \begin{figure}[h]
     \centering
     \includegraphics[width=1\textwidth]{syn-sim-sysc-ctrl-0x0.png}
+    \caption{C/RTL simulation of the IP core with ctrl set to 0x0}
 \end{figure}
+
+The C/RTL co-simulation showed a different result. The IP core did not behave as in the C-simulation in the pulse generation. 
+The simulation showed that the code execution could not be completed within the clock cycle, resulting in a pulse generation half the speed of the C-simulation.
 
 \newpage
 
