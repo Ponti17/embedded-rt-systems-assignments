@@ -1,4 +1,4 @@
--- (c) Copyright 1995-2017 Xilinx, Inc. All rights reserved.
+-- (c) Copyright 1995-2024 Xilinx, Inc. All rights reserved.
 -- 
 -- This file contains confidential and proprietary information
 -- of Xilinx, Inc. and is protected under U.S. and
@@ -95,7 +95,7 @@ ARCHITECTURE hdmi_out_rgb2dvi_0_0_arch OF hdmi_out_rgb2dvi_0_0 IS
     );
   END COMPONENT rgb2dvi;
   ATTRIBUTE X_CORE_INFO : STRING;
-  ATTRIBUTE X_CORE_INFO OF hdmi_out_rgb2dvi_0_0_arch: ARCHITECTURE IS "rgb2dvi,Vivado 2016.4";
+  ATTRIBUTE X_CORE_INFO OF hdmi_out_rgb2dvi_0_0_arch: ARCHITECTURE IS "rgb2dvi,Vivado 2017.2";
   ATTRIBUTE CHECK_LICENSE_TYPE : STRING;
   ATTRIBUTE CHECK_LICENSE_TYPE OF hdmi_out_rgb2dvi_0_0_arch : ARCHITECTURE IS "hdmi_out_rgb2dvi_0_0,rgb2dvi,{}";
   ATTRIBUTE X_INTERFACE_INFO : STRING;

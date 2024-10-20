@@ -1,4 +1,4 @@
-// (c) Copyright 1995-2017 Xilinx, Inc. All rights reserved.
+// (c) Copyright 1995-2024 Xilinx, Inc. All rights reserved.
 // 
 // This file contains confidential and proprietary information
 // of Xilinx, Inc. and is protected under U.S. and
@@ -48,11 +48,11 @@
 
 
 // IP VLNV: xilinx.com:ip:axi_crossbar:2.1
-// IP Revision: 12
+// IP Revision: 14
 
-(* X_CORE_INFO = "axi_crossbar_v2_1_12_axi_crossbar,Vivado 2016.4" *)
-(* CHECK_LICENSE_TYPE = "hdmi_out_xbar_0,axi_crossbar_v2_1_12_axi_crossbar,{}" *)
-(* CORE_GENERATION_INFO = "hdmi_out_xbar_0,axi_crossbar_v2_1_12_axi_crossbar,{x_ipProduct=Vivado 2016.4,x_ipVendor=xilinx.com,x_ipLibrary=ip,x_ipName=axi_crossbar,x_ipVersion=2.1,x_ipCoreRevision=12,x_ipLanguage=VHDL,x_ipSimLanguage=MIXED,C_FAMILY=zynq,C_NUM_SLAVE_SLOTS=1,C_NUM_MASTER_SLOTS=7,C_AXI_ID_WIDTH=1,C_AXI_ADDR_WIDTH=32,C_AXI_DATA_WIDTH=32,C_AXI_PROTOCOL=2,C_NUM_ADDR_RANGES=1,C_M_AXI_BASE_ADDR=0x000000004123000000000000430000000000000043c100000000000043c00000000000004122000000000000412100000000000041200000,C_M_AX\
+(* X_CORE_INFO = "axi_crossbar_v2_1_14_axi_crossbar,Vivado 2017.2" *)
+(* CHECK_LICENSE_TYPE = "hdmi_out_xbar_0,axi_crossbar_v2_1_14_axi_crossbar,{}" *)
+(* CORE_GENERATION_INFO = "hdmi_out_xbar_0,axi_crossbar_v2_1_14_axi_crossbar,{x_ipProduct=Vivado 2017.2,x_ipVendor=xilinx.com,x_ipLibrary=ip,x_ipName=axi_crossbar,x_ipVersion=2.1,x_ipCoreRevision=14,x_ipLanguage=VHDL,x_ipSimLanguage=MIXED,C_FAMILY=zynq,C_NUM_SLAVE_SLOTS=1,C_NUM_MASTER_SLOTS=7,C_AXI_ID_WIDTH=1,C_AXI_ADDR_WIDTH=32,C_AXI_DATA_WIDTH=32,C_AXI_PROTOCOL=2,C_NUM_ADDR_RANGES=1,C_M_AXI_BASE_ADDR=0x000000004123000000000000430000000000000043c100000000000043c00000000000004122000000000000412100000000000041200000,C_M_AX\
 I_ADDR_WIDTH=0x00000010000000100000001000000010000000100000001000000010,C_S_AXI_BASE_ID=0x00000000,C_S_AXI_THREAD_ID_WIDTH=0x00000000,C_AXI_SUPPORTS_USER_SIGNALS=0,C_AXI_AWUSER_WIDTH=1,C_AXI_ARUSER_WIDTH=1,C_AXI_WUSER_WIDTH=1,C_AXI_RUSER_WIDTH=1,C_AXI_BUSER_WIDTH=1,C_M_AXI_WRITE_CONNECTIVITY=0x00000001000000010000000100000001000000010000000100000001,C_M_AXI_READ_CONNECTIVITY=0x00000001000000010000000100000001000000010000000100000001,C_R_REGISTER=1,C_S_AXI_SINGLE_THREAD=0x00000001,C_S_AXI_WRITE_A\
 CCEPTANCE=0x00000001,C_S_AXI_READ_ACCEPTANCE=0x00000001,C_M_AXI_WRITE_ISSUING=0x00000001000000010000000100000001000000010000000100000001,C_M_AXI_READ_ISSUING=0x00000001000000010000000100000001000000010000000100000001,C_S_AXI_ARB_PRIORITY=0x00000000,C_M_AXI_SECURE=0x00000000000000000000000000000000000000000000000000000000,C_CONNECTIVITY_MODE=0}" *)
 (* DowngradeIPIdentifiedWarnings = "yes" *)
@@ -180,7 +180,7 @@ input wire [6 : 0] m_axi_rvalid;
 (* X_INTERFACE_INFO = "xilinx.com:interface:aximm:1.0 M00_AXI RREADY [0:0] [0:0], xilinx.com:interface:aximm:1.0 M01_AXI RREADY [0:0] [1:1], xilinx.com:interface:aximm:1.0 M02_AXI RREADY [0:0] [2:2], xilinx.com:interface:aximm:1.0 M03_AXI RREADY [0:0] [3:3], xilinx.com:interface:aximm:1.0 M04_AXI RREADY [0:0] [4:4], xilinx.com:interface:aximm:1.0 M05_AXI RREADY [0:0] [5:5], xilinx.com:interface:aximm:1.0 M06_AXI RREADY [0:0] [6:6]" *)
 output wire [6 : 0] m_axi_rready;
 
-  axi_crossbar_v2_1_12_axi_crossbar #(
+  axi_crossbar_v2_1_14_axi_crossbar #(
     .C_FAMILY("zynq"),
     .C_NUM_SLAVE_SLOTS(1),
     .C_NUM_MASTER_SLOTS(7),

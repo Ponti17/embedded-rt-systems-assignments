@@ -1,10 +1,10 @@
--- Copyright 1986-2016 Xilinx, Inc. All Rights Reserved.
+-- Copyright 1986-2017 Xilinx, Inc. All Rights Reserved.
 -- --------------------------------------------------------------------------------
--- Tool Version: Vivado v.2016.4 (win64) Build 1733598 Wed Dec 14 22:35:39 MST 2016
--- Date        : Fri Feb 24 14:46:14 2017
--- Host        : WK117 running 64-bit major release  (build 9200)
+-- Tool Version: Vivado v.2017.2 (win64) Build 1909853 Thu Jun 15 18:39:09 MDT 2017
+-- Date        : Sat Oct 19 11:48:36 2024
+-- Host        : andreas-xps15 running 64-bit major release  (build 9200)
 -- Command     : write_vhdl -force -mode funcsim
---               c:/Users/aholzer/Desktop/zybo-hdmi-out/src/bd/hdmi_out/ip/hdmi_out_auto_pc_0/hdmi_out_auto_pc_0_sim_netlist.vhdl
+--               c:/home/university/7-semester/embedded-rt-systems-assignments/project/src/bd/hdmi_out/ip/hdmi_out_auto_pc_0/hdmi_out_auto_pc_0_sim_netlist.vhdl
 -- Design      : hdmi_out_auto_pc_0
 -- Purpose     : This VHDL netlist is a functional simulation representation of the design and should not be modified or
 --               synthesized. This netlist cannot be used for SDF annotated simulation.
@@ -367,8 +367,8 @@ entity hdmi_out_auto_pc_0_rd_fwft is
     ram_empty_i_reg : out STD_LOGIC;
     clk : in STD_LOGIC;
     AR : in STD_LOGIC_VECTOR ( 0 to 0 );
-    ram_empty_fb_i_reg : in STD_LOGIC;
     rd_en : in STD_LOGIC;
+    ram_empty_fb_i_reg : in STD_LOGIC;
     p_0_out : in STD_LOGIC;
     dout_i : in STD_LOGIC
   );
@@ -393,8 +393,8 @@ architecture STRUCTURE of hdmi_out_auto_pc_0_rd_fwft is
   signal empty_fwft_i : STD_LOGIC;
   attribute DONT_TOUCH of empty_fwft_i : signal is std.standard.true;
   signal empty_fwft_i0 : STD_LOGIC;
+  signal \gpregsm1.curr_fwft_state[0]_i_1_n_0\ : STD_LOGIC;
   signal \gpregsm1.curr_fwft_state[1]_i_1_n_0\ : STD_LOGIC;
-  signal next_fwft_state : STD_LOGIC_VECTOR ( 0 to 0 );
   signal user_valid : STD_LOGIC;
   attribute DONT_TOUCH of user_valid : signal is std.standard.true;
   attribute DONT_TOUCH of aempty_fwft_fb_i_reg : label is std.standard.true;
@@ -428,14 +428,14 @@ begin
   \out\(1 downto 0) <= curr_fwft_state(1 downto 0);
 aempty_fwft_fb_i_i_1: unisim.vcomponents.LUT5
     generic map(
-      INIT => X"EA88A8AA"
+      INIT => X"EA8AA88A"
     )
         port map (
       I0 => aempty_fwft_fb_i,
       I1 => ram_empty_fb_i_reg,
-      I2 => rd_en,
+      I2 => curr_fwft_state(1),
       I3 => curr_fwft_state(0),
-      I4 => curr_fwft_state(1),
+      I4 => rd_en,
       O => aempty_fwft_i0
     );
 aempty_fwft_fb_i_reg: unisim.vcomponents.FDPE
@@ -547,7 +547,7 @@ empty_fwft_i_reg: unisim.vcomponents.FDPE
       I0 => curr_fwft_state(1),
       I1 => curr_fwft_state(0),
       I2 => rd_en,
-      O => next_fwft_state(0)
+      O => \gpregsm1.curr_fwft_state[0]_i_1_n_0\
     );
 \gpregsm1.curr_fwft_state[1]_i_1\: unisim.vcomponents.LUT4
     generic map(
@@ -568,7 +568,7 @@ empty_fwft_i_reg: unisim.vcomponents.FDPE
       C => clk,
       CE => '1',
       CLR => AR(0),
-      D => next_fwft_state(0),
+      D => \gpregsm1.curr_fwft_state[0]_i_1_n_0\,
       Q => curr_fwft_state(0)
     );
 \gpregsm1.curr_fwft_state_reg[1]\: unisim.vcomponents.FDCE
@@ -590,7 +590,7 @@ empty_fwft_i_reg: unisim.vcomponents.FDPE
       C => clk,
       CE => '1',
       CLR => AR(0),
-      D => next_fwft_state(0),
+      D => \gpregsm1.curr_fwft_state[0]_i_1_n_0\,
       Q => user_valid
     );
 ram_empty_fb_i_i_5: unisim.vcomponents.LUT3
@@ -1296,7 +1296,7 @@ use UNISIM.VCOMPONENTS.ALL;
 entity hdmi_out_auto_pc_0_rd_logic is
   port (
     \out\ : out STD_LOGIC;
-    aempty_fwft_i_reg : out STD_LOGIC_VECTOR ( 1 downto 0 );
+    empty_fwft_i_reg : out STD_LOGIC_VECTOR ( 1 downto 0 );
     empty : out STD_LOGIC;
     \gpr1.dout_i_reg[0]\ : out STD_LOGIC;
     Q : out STD_LOGIC_VECTOR ( 4 downto 0 );
@@ -1332,7 +1332,7 @@ begin
       dout_i => dout_i,
       empty => empty,
       \gpr1.dout_i_reg[0]\ => \gpr1.dout_i_reg[0]\,
-      \out\(1 downto 0) => aempty_fwft_i_reg(1 downto 0),
+      \out\(1 downto 0) => empty_fwft_i_reg(1 downto 0),
       p_0_out => p_0_out,
       ram_empty_fb_i_reg => \^out\,
       ram_empty_i_reg => ram_empty_i_reg,
@@ -1712,11 +1712,11 @@ begin
      port map (
       AR(0) => rd_rst_i(2),
       Q(4 downto 0) => rd_pntr_plus1(4 downto 0),
-      aempty_fwft_i_reg(1) => \gntv_or_sync_fifo.gl0.rd_n_1\,
-      aempty_fwft_i_reg(0) => \gr1.gr1_int.rfwft/p_0_in\(0),
       clk => clk,
       dout_i => dout_i,
       empty => empty,
+      empty_fwft_i_reg(1) => \gntv_or_sync_fifo.gl0.rd_n_1\,
+      empty_fwft_i_reg(0) => \gr1.gr1_int.rfwft/p_0_in\(0),
       \gcc0.gc0.count_d1_reg[4]\(4 downto 0) => p_11_out(4 downto 0),
       \gcc0.gc0.count_reg[4]\(4 downto 0) => p_12_out(4 downto 0),
       \gpr1.dout_i_reg[0]\ => \gntv_or_sync_fifo.gl0.rd_n_4\,
@@ -1812,7 +1812,7 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 library UNISIM;
 use UNISIM.VCOMPONENTS.ALL;
-entity hdmi_out_auto_pc_0_fifo_generator_v13_1_3_synth is
+entity hdmi_out_auto_pc_0_fifo_generator_v13_1_4_synth is
   port (
     empty : out STD_LOGIC;
     full : out STD_LOGIC;
@@ -1824,10 +1824,10 @@ entity hdmi_out_auto_pc_0_fifo_generator_v13_1_3_synth is
     wr_en : in STD_LOGIC
   );
   attribute ORIG_REF_NAME : string;
-  attribute ORIG_REF_NAME of hdmi_out_auto_pc_0_fifo_generator_v13_1_3_synth : entity is "fifo_generator_v13_1_3_synth";
-end hdmi_out_auto_pc_0_fifo_generator_v13_1_3_synth;
+  attribute ORIG_REF_NAME of hdmi_out_auto_pc_0_fifo_generator_v13_1_4_synth : entity is "fifo_generator_v13_1_4_synth";
+end hdmi_out_auto_pc_0_fifo_generator_v13_1_4_synth;
 
-architecture STRUCTURE of hdmi_out_auto_pc_0_fifo_generator_v13_1_3_synth is
+architecture STRUCTURE of hdmi_out_auto_pc_0_fifo_generator_v13_1_4_synth is
 begin
 \gconvfifo.rf\: entity work.hdmi_out_auto_pc_0_fifo_generator_top
      port map (
@@ -1845,7 +1845,7 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 library UNISIM;
 use UNISIM.VCOMPONENTS.ALL;
-entity hdmi_out_auto_pc_0_fifo_generator_v13_1_3 is
+entity hdmi_out_auto_pc_0_fifo_generator_v13_1_4 is
   port (
     backup : in STD_LOGIC;
     backup_marker : in STD_LOGIC;
@@ -2080,414 +2080,414 @@ entity hdmi_out_auto_pc_0_fifo_generator_v13_1_3 is
     axis_prog_empty : out STD_LOGIC
   );
   attribute C_ADD_NGC_CONSTRAINT : integer;
-  attribute C_ADD_NGC_CONSTRAINT of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_ADD_NGC_CONSTRAINT of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_APPLICATION_TYPE_AXIS : integer;
-  attribute C_APPLICATION_TYPE_AXIS of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_APPLICATION_TYPE_AXIS of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_APPLICATION_TYPE_RACH : integer;
-  attribute C_APPLICATION_TYPE_RACH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_APPLICATION_TYPE_RACH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_APPLICATION_TYPE_RDCH : integer;
-  attribute C_APPLICATION_TYPE_RDCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_APPLICATION_TYPE_RDCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_APPLICATION_TYPE_WACH : integer;
-  attribute C_APPLICATION_TYPE_WACH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_APPLICATION_TYPE_WACH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_APPLICATION_TYPE_WDCH : integer;
-  attribute C_APPLICATION_TYPE_WDCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_APPLICATION_TYPE_WDCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_APPLICATION_TYPE_WRCH : integer;
-  attribute C_APPLICATION_TYPE_WRCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_APPLICATION_TYPE_WRCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_AXIS_TDATA_WIDTH : integer;
-  attribute C_AXIS_TDATA_WIDTH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 64;
+  attribute C_AXIS_TDATA_WIDTH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 64;
   attribute C_AXIS_TDEST_WIDTH : integer;
-  attribute C_AXIS_TDEST_WIDTH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 4;
+  attribute C_AXIS_TDEST_WIDTH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 4;
   attribute C_AXIS_TID_WIDTH : integer;
-  attribute C_AXIS_TID_WIDTH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 8;
+  attribute C_AXIS_TID_WIDTH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 8;
   attribute C_AXIS_TKEEP_WIDTH : integer;
-  attribute C_AXIS_TKEEP_WIDTH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 4;
+  attribute C_AXIS_TKEEP_WIDTH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 4;
   attribute C_AXIS_TSTRB_WIDTH : integer;
-  attribute C_AXIS_TSTRB_WIDTH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 4;
+  attribute C_AXIS_TSTRB_WIDTH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 4;
   attribute C_AXIS_TUSER_WIDTH : integer;
-  attribute C_AXIS_TUSER_WIDTH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 4;
+  attribute C_AXIS_TUSER_WIDTH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 4;
   attribute C_AXIS_TYPE : integer;
-  attribute C_AXIS_TYPE of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_AXIS_TYPE of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_AXI_ADDR_WIDTH : integer;
-  attribute C_AXI_ADDR_WIDTH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 32;
+  attribute C_AXI_ADDR_WIDTH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 32;
   attribute C_AXI_ARUSER_WIDTH : integer;
-  attribute C_AXI_ARUSER_WIDTH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 1;
+  attribute C_AXI_ARUSER_WIDTH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 1;
   attribute C_AXI_AWUSER_WIDTH : integer;
-  attribute C_AXI_AWUSER_WIDTH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 1;
+  attribute C_AXI_AWUSER_WIDTH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 1;
   attribute C_AXI_BUSER_WIDTH : integer;
-  attribute C_AXI_BUSER_WIDTH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 1;
+  attribute C_AXI_BUSER_WIDTH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 1;
   attribute C_AXI_DATA_WIDTH : integer;
-  attribute C_AXI_DATA_WIDTH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 64;
+  attribute C_AXI_DATA_WIDTH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 64;
   attribute C_AXI_ID_WIDTH : integer;
-  attribute C_AXI_ID_WIDTH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 4;
+  attribute C_AXI_ID_WIDTH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 4;
   attribute C_AXI_LEN_WIDTH : integer;
-  attribute C_AXI_LEN_WIDTH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 8;
+  attribute C_AXI_LEN_WIDTH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 8;
   attribute C_AXI_LOCK_WIDTH : integer;
-  attribute C_AXI_LOCK_WIDTH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 2;
+  attribute C_AXI_LOCK_WIDTH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 2;
   attribute C_AXI_RUSER_WIDTH : integer;
-  attribute C_AXI_RUSER_WIDTH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 1;
+  attribute C_AXI_RUSER_WIDTH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 1;
   attribute C_AXI_TYPE : integer;
-  attribute C_AXI_TYPE of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_AXI_TYPE of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_AXI_WUSER_WIDTH : integer;
-  attribute C_AXI_WUSER_WIDTH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 1;
+  attribute C_AXI_WUSER_WIDTH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 1;
   attribute C_COMMON_CLOCK : integer;
-  attribute C_COMMON_CLOCK of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 1;
+  attribute C_COMMON_CLOCK of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 1;
   attribute C_COUNT_TYPE : integer;
-  attribute C_COUNT_TYPE of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_COUNT_TYPE of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_DATA_COUNT_WIDTH : integer;
-  attribute C_DATA_COUNT_WIDTH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 6;
+  attribute C_DATA_COUNT_WIDTH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 6;
   attribute C_DEFAULT_VALUE : string;
-  attribute C_DEFAULT_VALUE of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is "BlankString";
+  attribute C_DEFAULT_VALUE of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is "BlankString";
   attribute C_DIN_WIDTH : integer;
-  attribute C_DIN_WIDTH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 1;
+  attribute C_DIN_WIDTH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 1;
   attribute C_DIN_WIDTH_AXIS : integer;
-  attribute C_DIN_WIDTH_AXIS of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 1;
+  attribute C_DIN_WIDTH_AXIS of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 1;
   attribute C_DIN_WIDTH_RACH : integer;
-  attribute C_DIN_WIDTH_RACH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 32;
+  attribute C_DIN_WIDTH_RACH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 32;
   attribute C_DIN_WIDTH_RDCH : integer;
-  attribute C_DIN_WIDTH_RDCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 64;
+  attribute C_DIN_WIDTH_RDCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 64;
   attribute C_DIN_WIDTH_WACH : integer;
-  attribute C_DIN_WIDTH_WACH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 32;
+  attribute C_DIN_WIDTH_WACH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 32;
   attribute C_DIN_WIDTH_WDCH : integer;
-  attribute C_DIN_WIDTH_WDCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 64;
+  attribute C_DIN_WIDTH_WDCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 64;
   attribute C_DIN_WIDTH_WRCH : integer;
-  attribute C_DIN_WIDTH_WRCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 2;
+  attribute C_DIN_WIDTH_WRCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 2;
   attribute C_DOUT_RST_VAL : string;
-  attribute C_DOUT_RST_VAL of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is "0";
+  attribute C_DOUT_RST_VAL of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is "0";
   attribute C_DOUT_WIDTH : integer;
-  attribute C_DOUT_WIDTH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 1;
+  attribute C_DOUT_WIDTH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 1;
   attribute C_ENABLE_RLOCS : integer;
-  attribute C_ENABLE_RLOCS of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_ENABLE_RLOCS of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_ENABLE_RST_SYNC : integer;
-  attribute C_ENABLE_RST_SYNC of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 1;
+  attribute C_ENABLE_RST_SYNC of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 1;
   attribute C_EN_SAFETY_CKT : integer;
-  attribute C_EN_SAFETY_CKT of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_EN_SAFETY_CKT of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_ERROR_INJECTION_TYPE : integer;
-  attribute C_ERROR_INJECTION_TYPE of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_ERROR_INJECTION_TYPE of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_ERROR_INJECTION_TYPE_AXIS : integer;
-  attribute C_ERROR_INJECTION_TYPE_AXIS of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_ERROR_INJECTION_TYPE_AXIS of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_ERROR_INJECTION_TYPE_RACH : integer;
-  attribute C_ERROR_INJECTION_TYPE_RACH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_ERROR_INJECTION_TYPE_RACH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_ERROR_INJECTION_TYPE_RDCH : integer;
-  attribute C_ERROR_INJECTION_TYPE_RDCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_ERROR_INJECTION_TYPE_RDCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_ERROR_INJECTION_TYPE_WACH : integer;
-  attribute C_ERROR_INJECTION_TYPE_WACH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_ERROR_INJECTION_TYPE_WACH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_ERROR_INJECTION_TYPE_WDCH : integer;
-  attribute C_ERROR_INJECTION_TYPE_WDCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_ERROR_INJECTION_TYPE_WDCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_ERROR_INJECTION_TYPE_WRCH : integer;
-  attribute C_ERROR_INJECTION_TYPE_WRCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_ERROR_INJECTION_TYPE_WRCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_FAMILY : string;
-  attribute C_FAMILY of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is "zynq";
+  attribute C_FAMILY of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is "zynq";
   attribute C_FULL_FLAGS_RST_VAL : integer;
-  attribute C_FULL_FLAGS_RST_VAL of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_FULL_FLAGS_RST_VAL of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_HAS_ALMOST_EMPTY : integer;
-  attribute C_HAS_ALMOST_EMPTY of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_HAS_ALMOST_EMPTY of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_HAS_ALMOST_FULL : integer;
-  attribute C_HAS_ALMOST_FULL of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_HAS_ALMOST_FULL of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_HAS_AXIS_TDATA : integer;
-  attribute C_HAS_AXIS_TDATA of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_HAS_AXIS_TDATA of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_HAS_AXIS_TDEST : integer;
-  attribute C_HAS_AXIS_TDEST of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_HAS_AXIS_TDEST of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_HAS_AXIS_TID : integer;
-  attribute C_HAS_AXIS_TID of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_HAS_AXIS_TID of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_HAS_AXIS_TKEEP : integer;
-  attribute C_HAS_AXIS_TKEEP of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_HAS_AXIS_TKEEP of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_HAS_AXIS_TLAST : integer;
-  attribute C_HAS_AXIS_TLAST of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_HAS_AXIS_TLAST of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_HAS_AXIS_TREADY : integer;
-  attribute C_HAS_AXIS_TREADY of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 1;
+  attribute C_HAS_AXIS_TREADY of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 1;
   attribute C_HAS_AXIS_TSTRB : integer;
-  attribute C_HAS_AXIS_TSTRB of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_HAS_AXIS_TSTRB of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_HAS_AXIS_TUSER : integer;
-  attribute C_HAS_AXIS_TUSER of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_HAS_AXIS_TUSER of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_HAS_AXI_ARUSER : integer;
-  attribute C_HAS_AXI_ARUSER of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_HAS_AXI_ARUSER of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_HAS_AXI_AWUSER : integer;
-  attribute C_HAS_AXI_AWUSER of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_HAS_AXI_AWUSER of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_HAS_AXI_BUSER : integer;
-  attribute C_HAS_AXI_BUSER of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_HAS_AXI_BUSER of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_HAS_AXI_ID : integer;
-  attribute C_HAS_AXI_ID of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_HAS_AXI_ID of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_HAS_AXI_RD_CHANNEL : integer;
-  attribute C_HAS_AXI_RD_CHANNEL of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_HAS_AXI_RD_CHANNEL of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_HAS_AXI_RUSER : integer;
-  attribute C_HAS_AXI_RUSER of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_HAS_AXI_RUSER of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_HAS_AXI_WR_CHANNEL : integer;
-  attribute C_HAS_AXI_WR_CHANNEL of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_HAS_AXI_WR_CHANNEL of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_HAS_AXI_WUSER : integer;
-  attribute C_HAS_AXI_WUSER of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_HAS_AXI_WUSER of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_HAS_BACKUP : integer;
-  attribute C_HAS_BACKUP of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_HAS_BACKUP of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_HAS_DATA_COUNT : integer;
-  attribute C_HAS_DATA_COUNT of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_HAS_DATA_COUNT of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_HAS_DATA_COUNTS_AXIS : integer;
-  attribute C_HAS_DATA_COUNTS_AXIS of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_HAS_DATA_COUNTS_AXIS of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_HAS_DATA_COUNTS_RACH : integer;
-  attribute C_HAS_DATA_COUNTS_RACH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_HAS_DATA_COUNTS_RACH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_HAS_DATA_COUNTS_RDCH : integer;
-  attribute C_HAS_DATA_COUNTS_RDCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_HAS_DATA_COUNTS_RDCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_HAS_DATA_COUNTS_WACH : integer;
-  attribute C_HAS_DATA_COUNTS_WACH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_HAS_DATA_COUNTS_WACH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_HAS_DATA_COUNTS_WDCH : integer;
-  attribute C_HAS_DATA_COUNTS_WDCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_HAS_DATA_COUNTS_WDCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_HAS_DATA_COUNTS_WRCH : integer;
-  attribute C_HAS_DATA_COUNTS_WRCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_HAS_DATA_COUNTS_WRCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_HAS_INT_CLK : integer;
-  attribute C_HAS_INT_CLK of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_HAS_INT_CLK of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_HAS_MASTER_CE : integer;
-  attribute C_HAS_MASTER_CE of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_HAS_MASTER_CE of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_HAS_MEMINIT_FILE : integer;
-  attribute C_HAS_MEMINIT_FILE of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_HAS_MEMINIT_FILE of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_HAS_OVERFLOW : integer;
-  attribute C_HAS_OVERFLOW of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_HAS_OVERFLOW of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_HAS_PROG_FLAGS_AXIS : integer;
-  attribute C_HAS_PROG_FLAGS_AXIS of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_HAS_PROG_FLAGS_AXIS of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_HAS_PROG_FLAGS_RACH : integer;
-  attribute C_HAS_PROG_FLAGS_RACH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_HAS_PROG_FLAGS_RACH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_HAS_PROG_FLAGS_RDCH : integer;
-  attribute C_HAS_PROG_FLAGS_RDCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_HAS_PROG_FLAGS_RDCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_HAS_PROG_FLAGS_WACH : integer;
-  attribute C_HAS_PROG_FLAGS_WACH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_HAS_PROG_FLAGS_WACH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_HAS_PROG_FLAGS_WDCH : integer;
-  attribute C_HAS_PROG_FLAGS_WDCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_HAS_PROG_FLAGS_WDCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_HAS_PROG_FLAGS_WRCH : integer;
-  attribute C_HAS_PROG_FLAGS_WRCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_HAS_PROG_FLAGS_WRCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_HAS_RD_DATA_COUNT : integer;
-  attribute C_HAS_RD_DATA_COUNT of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_HAS_RD_DATA_COUNT of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_HAS_RD_RST : integer;
-  attribute C_HAS_RD_RST of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_HAS_RD_RST of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_HAS_RST : integer;
-  attribute C_HAS_RST of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 1;
+  attribute C_HAS_RST of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 1;
   attribute C_HAS_SLAVE_CE : integer;
-  attribute C_HAS_SLAVE_CE of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_HAS_SLAVE_CE of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_HAS_SRST : integer;
-  attribute C_HAS_SRST of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_HAS_SRST of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_HAS_UNDERFLOW : integer;
-  attribute C_HAS_UNDERFLOW of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_HAS_UNDERFLOW of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_HAS_VALID : integer;
-  attribute C_HAS_VALID of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_HAS_VALID of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_HAS_WR_ACK : integer;
-  attribute C_HAS_WR_ACK of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_HAS_WR_ACK of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_HAS_WR_DATA_COUNT : integer;
-  attribute C_HAS_WR_DATA_COUNT of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_HAS_WR_DATA_COUNT of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_HAS_WR_RST : integer;
-  attribute C_HAS_WR_RST of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_HAS_WR_RST of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_IMPLEMENTATION_TYPE : integer;
-  attribute C_IMPLEMENTATION_TYPE of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_IMPLEMENTATION_TYPE of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_IMPLEMENTATION_TYPE_AXIS : integer;
-  attribute C_IMPLEMENTATION_TYPE_AXIS of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 1;
+  attribute C_IMPLEMENTATION_TYPE_AXIS of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 1;
   attribute C_IMPLEMENTATION_TYPE_RACH : integer;
-  attribute C_IMPLEMENTATION_TYPE_RACH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 1;
+  attribute C_IMPLEMENTATION_TYPE_RACH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 1;
   attribute C_IMPLEMENTATION_TYPE_RDCH : integer;
-  attribute C_IMPLEMENTATION_TYPE_RDCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 1;
+  attribute C_IMPLEMENTATION_TYPE_RDCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 1;
   attribute C_IMPLEMENTATION_TYPE_WACH : integer;
-  attribute C_IMPLEMENTATION_TYPE_WACH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 1;
+  attribute C_IMPLEMENTATION_TYPE_WACH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 1;
   attribute C_IMPLEMENTATION_TYPE_WDCH : integer;
-  attribute C_IMPLEMENTATION_TYPE_WDCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 1;
+  attribute C_IMPLEMENTATION_TYPE_WDCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 1;
   attribute C_IMPLEMENTATION_TYPE_WRCH : integer;
-  attribute C_IMPLEMENTATION_TYPE_WRCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 1;
+  attribute C_IMPLEMENTATION_TYPE_WRCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 1;
   attribute C_INIT_WR_PNTR_VAL : integer;
-  attribute C_INIT_WR_PNTR_VAL of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_INIT_WR_PNTR_VAL of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_INTERFACE_TYPE : integer;
-  attribute C_INTERFACE_TYPE of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_INTERFACE_TYPE of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_MEMORY_TYPE : integer;
-  attribute C_MEMORY_TYPE of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 2;
+  attribute C_MEMORY_TYPE of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 2;
   attribute C_MIF_FILE_NAME : string;
-  attribute C_MIF_FILE_NAME of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is "BlankString";
+  attribute C_MIF_FILE_NAME of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is "BlankString";
   attribute C_MSGON_VAL : integer;
-  attribute C_MSGON_VAL of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 1;
+  attribute C_MSGON_VAL of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 1;
   attribute C_OPTIMIZATION_MODE : integer;
-  attribute C_OPTIMIZATION_MODE of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_OPTIMIZATION_MODE of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_OVERFLOW_LOW : integer;
-  attribute C_OVERFLOW_LOW of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_OVERFLOW_LOW of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_POWER_SAVING_MODE : integer;
-  attribute C_POWER_SAVING_MODE of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_POWER_SAVING_MODE of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_PRELOAD_LATENCY : integer;
-  attribute C_PRELOAD_LATENCY of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_PRELOAD_LATENCY of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_PRELOAD_REGS : integer;
-  attribute C_PRELOAD_REGS of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 1;
+  attribute C_PRELOAD_REGS of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 1;
   attribute C_PRIM_FIFO_TYPE : string;
-  attribute C_PRIM_FIFO_TYPE of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is "512x36";
+  attribute C_PRIM_FIFO_TYPE of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is "512x36";
   attribute C_PRIM_FIFO_TYPE_AXIS : string;
-  attribute C_PRIM_FIFO_TYPE_AXIS of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is "512x36";
+  attribute C_PRIM_FIFO_TYPE_AXIS of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is "512x36";
   attribute C_PRIM_FIFO_TYPE_RACH : string;
-  attribute C_PRIM_FIFO_TYPE_RACH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is "512x36";
+  attribute C_PRIM_FIFO_TYPE_RACH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is "512x36";
   attribute C_PRIM_FIFO_TYPE_RDCH : string;
-  attribute C_PRIM_FIFO_TYPE_RDCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is "512x36";
+  attribute C_PRIM_FIFO_TYPE_RDCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is "512x36";
   attribute C_PRIM_FIFO_TYPE_WACH : string;
-  attribute C_PRIM_FIFO_TYPE_WACH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is "512x36";
+  attribute C_PRIM_FIFO_TYPE_WACH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is "512x36";
   attribute C_PRIM_FIFO_TYPE_WDCH : string;
-  attribute C_PRIM_FIFO_TYPE_WDCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is "512x36";
+  attribute C_PRIM_FIFO_TYPE_WDCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is "512x36";
   attribute C_PRIM_FIFO_TYPE_WRCH : string;
-  attribute C_PRIM_FIFO_TYPE_WRCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is "512x36";
+  attribute C_PRIM_FIFO_TYPE_WRCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is "512x36";
   attribute C_PROG_EMPTY_THRESH_ASSERT_VAL : integer;
-  attribute C_PROG_EMPTY_THRESH_ASSERT_VAL of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 4;
+  attribute C_PROG_EMPTY_THRESH_ASSERT_VAL of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 4;
   attribute C_PROG_EMPTY_THRESH_ASSERT_VAL_AXIS : integer;
-  attribute C_PROG_EMPTY_THRESH_ASSERT_VAL_AXIS of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 1022;
+  attribute C_PROG_EMPTY_THRESH_ASSERT_VAL_AXIS of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 1022;
   attribute C_PROG_EMPTY_THRESH_ASSERT_VAL_RACH : integer;
-  attribute C_PROG_EMPTY_THRESH_ASSERT_VAL_RACH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 1022;
+  attribute C_PROG_EMPTY_THRESH_ASSERT_VAL_RACH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 1022;
   attribute C_PROG_EMPTY_THRESH_ASSERT_VAL_RDCH : integer;
-  attribute C_PROG_EMPTY_THRESH_ASSERT_VAL_RDCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 1022;
+  attribute C_PROG_EMPTY_THRESH_ASSERT_VAL_RDCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 1022;
   attribute C_PROG_EMPTY_THRESH_ASSERT_VAL_WACH : integer;
-  attribute C_PROG_EMPTY_THRESH_ASSERT_VAL_WACH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 1022;
+  attribute C_PROG_EMPTY_THRESH_ASSERT_VAL_WACH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 1022;
   attribute C_PROG_EMPTY_THRESH_ASSERT_VAL_WDCH : integer;
-  attribute C_PROG_EMPTY_THRESH_ASSERT_VAL_WDCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 1022;
+  attribute C_PROG_EMPTY_THRESH_ASSERT_VAL_WDCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 1022;
   attribute C_PROG_EMPTY_THRESH_ASSERT_VAL_WRCH : integer;
-  attribute C_PROG_EMPTY_THRESH_ASSERT_VAL_WRCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 1022;
+  attribute C_PROG_EMPTY_THRESH_ASSERT_VAL_WRCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 1022;
   attribute C_PROG_EMPTY_THRESH_NEGATE_VAL : integer;
-  attribute C_PROG_EMPTY_THRESH_NEGATE_VAL of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 5;
+  attribute C_PROG_EMPTY_THRESH_NEGATE_VAL of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 5;
   attribute C_PROG_EMPTY_TYPE : integer;
-  attribute C_PROG_EMPTY_TYPE of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_PROG_EMPTY_TYPE of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_PROG_EMPTY_TYPE_AXIS : integer;
-  attribute C_PROG_EMPTY_TYPE_AXIS of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_PROG_EMPTY_TYPE_AXIS of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_PROG_EMPTY_TYPE_RACH : integer;
-  attribute C_PROG_EMPTY_TYPE_RACH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_PROG_EMPTY_TYPE_RACH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_PROG_EMPTY_TYPE_RDCH : integer;
-  attribute C_PROG_EMPTY_TYPE_RDCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_PROG_EMPTY_TYPE_RDCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_PROG_EMPTY_TYPE_WACH : integer;
-  attribute C_PROG_EMPTY_TYPE_WACH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_PROG_EMPTY_TYPE_WACH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_PROG_EMPTY_TYPE_WDCH : integer;
-  attribute C_PROG_EMPTY_TYPE_WDCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_PROG_EMPTY_TYPE_WDCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_PROG_EMPTY_TYPE_WRCH : integer;
-  attribute C_PROG_EMPTY_TYPE_WRCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_PROG_EMPTY_TYPE_WRCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_PROG_FULL_THRESH_ASSERT_VAL : integer;
-  attribute C_PROG_FULL_THRESH_ASSERT_VAL of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 31;
+  attribute C_PROG_FULL_THRESH_ASSERT_VAL of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 31;
   attribute C_PROG_FULL_THRESH_ASSERT_VAL_AXIS : integer;
-  attribute C_PROG_FULL_THRESH_ASSERT_VAL_AXIS of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 1023;
+  attribute C_PROG_FULL_THRESH_ASSERT_VAL_AXIS of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 1023;
   attribute C_PROG_FULL_THRESH_ASSERT_VAL_RACH : integer;
-  attribute C_PROG_FULL_THRESH_ASSERT_VAL_RACH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 1023;
+  attribute C_PROG_FULL_THRESH_ASSERT_VAL_RACH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 1023;
   attribute C_PROG_FULL_THRESH_ASSERT_VAL_RDCH : integer;
-  attribute C_PROG_FULL_THRESH_ASSERT_VAL_RDCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 1023;
+  attribute C_PROG_FULL_THRESH_ASSERT_VAL_RDCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 1023;
   attribute C_PROG_FULL_THRESH_ASSERT_VAL_WACH : integer;
-  attribute C_PROG_FULL_THRESH_ASSERT_VAL_WACH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 1023;
+  attribute C_PROG_FULL_THRESH_ASSERT_VAL_WACH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 1023;
   attribute C_PROG_FULL_THRESH_ASSERT_VAL_WDCH : integer;
-  attribute C_PROG_FULL_THRESH_ASSERT_VAL_WDCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 1023;
+  attribute C_PROG_FULL_THRESH_ASSERT_VAL_WDCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 1023;
   attribute C_PROG_FULL_THRESH_ASSERT_VAL_WRCH : integer;
-  attribute C_PROG_FULL_THRESH_ASSERT_VAL_WRCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 1023;
+  attribute C_PROG_FULL_THRESH_ASSERT_VAL_WRCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 1023;
   attribute C_PROG_FULL_THRESH_NEGATE_VAL : integer;
-  attribute C_PROG_FULL_THRESH_NEGATE_VAL of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 30;
+  attribute C_PROG_FULL_THRESH_NEGATE_VAL of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 30;
   attribute C_PROG_FULL_TYPE : integer;
-  attribute C_PROG_FULL_TYPE of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_PROG_FULL_TYPE of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_PROG_FULL_TYPE_AXIS : integer;
-  attribute C_PROG_FULL_TYPE_AXIS of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_PROG_FULL_TYPE_AXIS of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_PROG_FULL_TYPE_RACH : integer;
-  attribute C_PROG_FULL_TYPE_RACH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_PROG_FULL_TYPE_RACH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_PROG_FULL_TYPE_RDCH : integer;
-  attribute C_PROG_FULL_TYPE_RDCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_PROG_FULL_TYPE_RDCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_PROG_FULL_TYPE_WACH : integer;
-  attribute C_PROG_FULL_TYPE_WACH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_PROG_FULL_TYPE_WACH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_PROG_FULL_TYPE_WDCH : integer;
-  attribute C_PROG_FULL_TYPE_WDCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_PROG_FULL_TYPE_WDCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_PROG_FULL_TYPE_WRCH : integer;
-  attribute C_PROG_FULL_TYPE_WRCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_PROG_FULL_TYPE_WRCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_RACH_TYPE : integer;
-  attribute C_RACH_TYPE of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_RACH_TYPE of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_RDCH_TYPE : integer;
-  attribute C_RDCH_TYPE of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_RDCH_TYPE of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_RD_DATA_COUNT_WIDTH : integer;
-  attribute C_RD_DATA_COUNT_WIDTH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 6;
+  attribute C_RD_DATA_COUNT_WIDTH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 6;
   attribute C_RD_DEPTH : integer;
-  attribute C_RD_DEPTH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 32;
+  attribute C_RD_DEPTH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 32;
   attribute C_RD_FREQ : integer;
-  attribute C_RD_FREQ of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 1;
+  attribute C_RD_FREQ of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 1;
   attribute C_RD_PNTR_WIDTH : integer;
-  attribute C_RD_PNTR_WIDTH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 5;
+  attribute C_RD_PNTR_WIDTH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 5;
   attribute C_REG_SLICE_MODE_AXIS : integer;
-  attribute C_REG_SLICE_MODE_AXIS of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_REG_SLICE_MODE_AXIS of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_REG_SLICE_MODE_RACH : integer;
-  attribute C_REG_SLICE_MODE_RACH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_REG_SLICE_MODE_RACH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_REG_SLICE_MODE_RDCH : integer;
-  attribute C_REG_SLICE_MODE_RDCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_REG_SLICE_MODE_RDCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_REG_SLICE_MODE_WACH : integer;
-  attribute C_REG_SLICE_MODE_WACH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_REG_SLICE_MODE_WACH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_REG_SLICE_MODE_WDCH : integer;
-  attribute C_REG_SLICE_MODE_WDCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_REG_SLICE_MODE_WDCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_REG_SLICE_MODE_WRCH : integer;
-  attribute C_REG_SLICE_MODE_WRCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_REG_SLICE_MODE_WRCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_SELECT_XPM : integer;
-  attribute C_SELECT_XPM of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_SELECT_XPM of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_SYNCHRONIZER_STAGE : integer;
-  attribute C_SYNCHRONIZER_STAGE of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 3;
+  attribute C_SYNCHRONIZER_STAGE of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 3;
   attribute C_UNDERFLOW_LOW : integer;
-  attribute C_UNDERFLOW_LOW of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_UNDERFLOW_LOW of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_USE_COMMON_OVERFLOW : integer;
-  attribute C_USE_COMMON_OVERFLOW of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_USE_COMMON_OVERFLOW of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_USE_COMMON_UNDERFLOW : integer;
-  attribute C_USE_COMMON_UNDERFLOW of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_USE_COMMON_UNDERFLOW of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_USE_DEFAULT_SETTINGS : integer;
-  attribute C_USE_DEFAULT_SETTINGS of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_USE_DEFAULT_SETTINGS of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_USE_DOUT_RST : integer;
-  attribute C_USE_DOUT_RST of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_USE_DOUT_RST of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_USE_ECC : integer;
-  attribute C_USE_ECC of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_USE_ECC of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_USE_ECC_AXIS : integer;
-  attribute C_USE_ECC_AXIS of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_USE_ECC_AXIS of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_USE_ECC_RACH : integer;
-  attribute C_USE_ECC_RACH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_USE_ECC_RACH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_USE_ECC_RDCH : integer;
-  attribute C_USE_ECC_RDCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_USE_ECC_RDCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_USE_ECC_WACH : integer;
-  attribute C_USE_ECC_WACH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_USE_ECC_WACH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_USE_ECC_WDCH : integer;
-  attribute C_USE_ECC_WDCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_USE_ECC_WDCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_USE_ECC_WRCH : integer;
-  attribute C_USE_ECC_WRCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_USE_ECC_WRCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_USE_EMBEDDED_REG : integer;
-  attribute C_USE_EMBEDDED_REG of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_USE_EMBEDDED_REG of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_USE_FIFO16_FLAGS : integer;
-  attribute C_USE_FIFO16_FLAGS of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_USE_FIFO16_FLAGS of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_USE_FWFT_DATA_COUNT : integer;
-  attribute C_USE_FWFT_DATA_COUNT of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 1;
+  attribute C_USE_FWFT_DATA_COUNT of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 1;
   attribute C_USE_PIPELINE_REG : integer;
-  attribute C_USE_PIPELINE_REG of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_USE_PIPELINE_REG of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_VALID_LOW : integer;
-  attribute C_VALID_LOW of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_VALID_LOW of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_WACH_TYPE : integer;
-  attribute C_WACH_TYPE of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_WACH_TYPE of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_WDCH_TYPE : integer;
-  attribute C_WDCH_TYPE of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_WDCH_TYPE of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_WRCH_TYPE : integer;
-  attribute C_WRCH_TYPE of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_WRCH_TYPE of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_WR_ACK_LOW : integer;
-  attribute C_WR_ACK_LOW of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 0;
+  attribute C_WR_ACK_LOW of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 0;
   attribute C_WR_DATA_COUNT_WIDTH : integer;
-  attribute C_WR_DATA_COUNT_WIDTH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 6;
+  attribute C_WR_DATA_COUNT_WIDTH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 6;
   attribute C_WR_DEPTH : integer;
-  attribute C_WR_DEPTH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 32;
+  attribute C_WR_DEPTH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 32;
   attribute C_WR_DEPTH_AXIS : integer;
-  attribute C_WR_DEPTH_AXIS of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 1024;
+  attribute C_WR_DEPTH_AXIS of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 1024;
   attribute C_WR_DEPTH_RACH : integer;
-  attribute C_WR_DEPTH_RACH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 16;
+  attribute C_WR_DEPTH_RACH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 16;
   attribute C_WR_DEPTH_RDCH : integer;
-  attribute C_WR_DEPTH_RDCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 1024;
+  attribute C_WR_DEPTH_RDCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 1024;
   attribute C_WR_DEPTH_WACH : integer;
-  attribute C_WR_DEPTH_WACH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 16;
+  attribute C_WR_DEPTH_WACH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 16;
   attribute C_WR_DEPTH_WDCH : integer;
-  attribute C_WR_DEPTH_WDCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 1024;
+  attribute C_WR_DEPTH_WDCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 1024;
   attribute C_WR_DEPTH_WRCH : integer;
-  attribute C_WR_DEPTH_WRCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 16;
+  attribute C_WR_DEPTH_WRCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 16;
   attribute C_WR_FREQ : integer;
-  attribute C_WR_FREQ of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 1;
+  attribute C_WR_FREQ of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 1;
   attribute C_WR_PNTR_WIDTH : integer;
-  attribute C_WR_PNTR_WIDTH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 5;
+  attribute C_WR_PNTR_WIDTH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 5;
   attribute C_WR_PNTR_WIDTH_AXIS : integer;
-  attribute C_WR_PNTR_WIDTH_AXIS of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 10;
+  attribute C_WR_PNTR_WIDTH_AXIS of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 10;
   attribute C_WR_PNTR_WIDTH_RACH : integer;
-  attribute C_WR_PNTR_WIDTH_RACH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 4;
+  attribute C_WR_PNTR_WIDTH_RACH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 4;
   attribute C_WR_PNTR_WIDTH_RDCH : integer;
-  attribute C_WR_PNTR_WIDTH_RDCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 10;
+  attribute C_WR_PNTR_WIDTH_RDCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 10;
   attribute C_WR_PNTR_WIDTH_WACH : integer;
-  attribute C_WR_PNTR_WIDTH_WACH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 4;
+  attribute C_WR_PNTR_WIDTH_WACH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 4;
   attribute C_WR_PNTR_WIDTH_WDCH : integer;
-  attribute C_WR_PNTR_WIDTH_WDCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 10;
+  attribute C_WR_PNTR_WIDTH_WDCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 10;
   attribute C_WR_PNTR_WIDTH_WRCH : integer;
-  attribute C_WR_PNTR_WIDTH_WRCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 4;
+  attribute C_WR_PNTR_WIDTH_WRCH of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 4;
   attribute C_WR_RESPONSE_LATENCY : integer;
-  attribute C_WR_RESPONSE_LATENCY of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is 1;
+  attribute C_WR_RESPONSE_LATENCY of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is 1;
   attribute ORIG_REF_NAME : string;
-  attribute ORIG_REF_NAME of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 : entity is "fifo_generator_v13_1_3";
-end hdmi_out_auto_pc_0_fifo_generator_v13_1_3;
+  attribute ORIG_REF_NAME of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 : entity is "fifo_generator_v13_1_4";
+end hdmi_out_auto_pc_0_fifo_generator_v13_1_4;
 
-architecture STRUCTURE of hdmi_out_auto_pc_0_fifo_generator_v13_1_3 is
+architecture STRUCTURE of hdmi_out_auto_pc_0_fifo_generator_v13_1_4 is
   signal \<const0>\ : STD_LOGIC;
 begin
   almost_empty <= \<const0>\;
@@ -3096,7 +3096,7 @@ GND: unisim.vcomponents.GND
      port map (
       G => \<const0>\
     );
-inst_fifo_gen: entity work.hdmi_out_auto_pc_0_fifo_generator_v13_1_3_synth
+inst_fifo_gen: entity work.hdmi_out_auto_pc_0_fifo_generator_v13_1_4_synth
      port map (
       clk => clk,
       din(0) => din(0),
@@ -3112,7 +3112,7 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 library UNISIM;
 use UNISIM.VCOMPONENTS.ALL;
-entity hdmi_out_auto_pc_0_axi_data_fifo_v2_1_10_fifo_gen is
+entity hdmi_out_auto_pc_0_axi_data_fifo_v2_1_12_fifo_gen is
   port (
     SR : out STD_LOGIC_VECTOR ( 0 to 0 );
     din : out STD_LOGIC_VECTOR ( 0 to 0 );
@@ -3151,7 +3151,7 @@ entity hdmi_out_auto_pc_0_axi_data_fifo_v2_1_10_fifo_gen is
     aresetn : in STD_LOGIC;
     almost_empty : in STD_LOGIC;
     access_is_incr_q : in STD_LOGIC;
-    num_transactions_q : in STD_LOGIC_VECTOR ( 3 downto 0 );
+    \num_transactions_q_reg[3]\ : in STD_LOGIC_VECTOR ( 3 downto 0 );
     \pushed_commands_reg[3]\ : in STD_LOGIC_VECTOR ( 3 downto 0 );
     \areset_d_reg[1]\ : in STD_LOGIC_VECTOR ( 1 downto 0 );
     S_AXI_AREADY_I_reg_0 : in STD_LOGIC;
@@ -3161,10 +3161,10 @@ entity hdmi_out_auto_pc_0_axi_data_fifo_v2_1_10_fifo_gen is
     cmd_empty_reg : in STD_LOGIC
   );
   attribute ORIG_REF_NAME : string;
-  attribute ORIG_REF_NAME of hdmi_out_auto_pc_0_axi_data_fifo_v2_1_10_fifo_gen : entity is "axi_data_fifo_v2_1_10_fifo_gen";
-end hdmi_out_auto_pc_0_axi_data_fifo_v2_1_10_fifo_gen;
+  attribute ORIG_REF_NAME of hdmi_out_auto_pc_0_axi_data_fifo_v2_1_12_fifo_gen : entity is "axi_data_fifo_v2_1_12_fifo_gen";
+end hdmi_out_auto_pc_0_axi_data_fifo_v2_1_12_fifo_gen;
 
-architecture STRUCTURE of hdmi_out_auto_pc_0_axi_data_fifo_v2_1_10_fifo_gen is
+architecture STRUCTURE of hdmi_out_auto_pc_0_axi_data_fifo_v2_1_12_fifo_gen is
   signal \^sr\ : STD_LOGIC_VECTOR ( 0 to 0 );
   signal S_AXI_AREADY_I_i_3_n_0 : STD_LOGIC;
   signal S_AXI_AREADY_I_i_4_n_0 : STD_LOGIC;
@@ -3754,9 +3754,9 @@ S_AXI_AREADY_I_i_3: unisim.vcomponents.LUT6
         port map (
       I0 => access_is_incr_q,
       I1 => S_AXI_AREADY_I_i_4_n_0,
-      I2 => num_transactions_q(3),
+      I2 => \num_transactions_q_reg[3]\(3),
       I3 => \pushed_commands_reg[3]\(3),
-      I4 => num_transactions_q(1),
+      I4 => \num_transactions_q_reg[3]\(1),
       I5 => \pushed_commands_reg[3]\(1),
       O => S_AXI_AREADY_I_i_3_n_0
     );
@@ -3765,9 +3765,9 @@ S_AXI_AREADY_I_i_4: unisim.vcomponents.LUT4
       INIT => X"6FF6"
     )
         port map (
-      I0 => num_transactions_q(0),
+      I0 => \num_transactions_q_reg[3]\(0),
       I1 => \pushed_commands_reg[3]\(0),
-      I2 => num_transactions_q(2),
+      I2 => \num_transactions_q_reg[3]\(2),
       I3 => \pushed_commands_reg[3]\(2),
       O => S_AXI_AREADY_I_i_4_n_0
     );
@@ -3879,7 +3879,7 @@ command_ongoing_i_1: unisim.vcomponents.LUT6
       I5 => command_ongoing,
       O => command_ongoing_reg
     );
-fifo_gen_inst: entity work.hdmi_out_auto_pc_0_fifo_generator_v13_1_3
+fifo_gen_inst: entity work.hdmi_out_auto_pc_0_fifo_generator_v13_1_4
      port map (
       almost_empty => NLW_fifo_gen_inst_almost_empty_UNCONNECTED,
       almost_full => NLW_fifo_gen_inst_almost_full_UNCONNECTED,
@@ -4270,7 +4270,7 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 library UNISIM;
 use UNISIM.VCOMPONENTS.ALL;
-entity hdmi_out_auto_pc_0_axi_data_fifo_v2_1_10_axic_fifo is
+entity hdmi_out_auto_pc_0_axi_data_fifo_v2_1_12_axic_fifo is
   port (
     SR : out STD_LOGIC_VECTOR ( 0 to 0 );
     din : out STD_LOGIC_VECTOR ( 0 to 0 );
@@ -4309,7 +4309,7 @@ entity hdmi_out_auto_pc_0_axi_data_fifo_v2_1_10_axic_fifo is
     aresetn : in STD_LOGIC;
     almost_empty : in STD_LOGIC;
     access_is_incr_q : in STD_LOGIC;
-    num_transactions_q : in STD_LOGIC_VECTOR ( 3 downto 0 );
+    \num_transactions_q_reg[3]\ : in STD_LOGIC_VECTOR ( 3 downto 0 );
     \pushed_commands_reg[3]\ : in STD_LOGIC_VECTOR ( 3 downto 0 );
     \areset_d_reg[1]\ : in STD_LOGIC_VECTOR ( 1 downto 0 );
     S_AXI_AREADY_I_reg_0 : in STD_LOGIC;
@@ -4319,12 +4319,12 @@ entity hdmi_out_auto_pc_0_axi_data_fifo_v2_1_10_axic_fifo is
     cmd_empty_reg : in STD_LOGIC
   );
   attribute ORIG_REF_NAME : string;
-  attribute ORIG_REF_NAME of hdmi_out_auto_pc_0_axi_data_fifo_v2_1_10_axic_fifo : entity is "axi_data_fifo_v2_1_10_axic_fifo";
-end hdmi_out_auto_pc_0_axi_data_fifo_v2_1_10_axic_fifo;
+  attribute ORIG_REF_NAME of hdmi_out_auto_pc_0_axi_data_fifo_v2_1_12_axic_fifo : entity is "axi_data_fifo_v2_1_12_axic_fifo";
+end hdmi_out_auto_pc_0_axi_data_fifo_v2_1_12_axic_fifo;
 
-architecture STRUCTURE of hdmi_out_auto_pc_0_axi_data_fifo_v2_1_10_axic_fifo is
+architecture STRUCTURE of hdmi_out_auto_pc_0_axi_data_fifo_v2_1_12_axic_fifo is
 begin
-inst: entity work.hdmi_out_auto_pc_0_axi_data_fifo_v2_1_10_fifo_gen
+inst: entity work.hdmi_out_auto_pc_0_axi_data_fifo_v2_1_12_fifo_gen
      port map (
       D(4 downto 0) => D(4 downto 0),
       E(0) => E(0),
@@ -4358,7 +4358,7 @@ inst: entity work.hdmi_out_auto_pc_0_axi_data_fifo_v2_1_10_fifo_gen
       multiple_id_non_split => multiple_id_non_split,
       multiple_id_non_split_reg => multiple_id_non_split_reg,
       need_to_split_q => need_to_split_q,
-      num_transactions_q(3 downto 0) => num_transactions_q(3 downto 0),
+      \num_transactions_q_reg[3]\(3 downto 0) => \num_transactions_q_reg[3]\(3 downto 0),
       \pushed_commands_reg[0]\ => pushed_new_cmd,
       \pushed_commands_reg[3]\(3 downto 0) => \pushed_commands_reg[3]\(3 downto 0),
       queue_id => queue_id,
@@ -4377,7 +4377,7 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 library UNISIM;
 use UNISIM.VCOMPONENTS.ALL;
-entity hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_11_a_axi3_conv is
+entity hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_13_a_axi3_conv is
   port (
     E : out STD_LOGIC_VECTOR ( 0 to 0 );
     M_AXI_ARID : out STD_LOGIC_VECTOR ( 0 to 0 );
@@ -4411,10 +4411,10 @@ entity hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_11_a_axi3_conv is
     s_axi_arvalid : in STD_LOGIC
   );
   attribute ORIG_REF_NAME : string;
-  attribute ORIG_REF_NAME of hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_11_a_axi3_conv : entity is "axi_protocol_converter_v2_1_11_a_axi3_conv";
-end hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_11_a_axi3_conv;
+  attribute ORIG_REF_NAME of hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_13_a_axi3_conv : entity is "axi_protocol_converter_v2_1_13_a_axi3_conv";
+end hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_13_a_axi3_conv;
 
-architecture STRUCTURE of hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_11_a_axi3_conv is
+architecture STRUCTURE of hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_13_a_axi3_conv is
   signal \^e\ : STD_LOGIC_VECTOR ( 0 to 0 );
   signal \^m_axi_arid\ : STD_LOGIC_VECTOR ( 0 to 0 );
   signal S_AXI_AADDR_Q : STD_LOGIC_VECTOR ( 31 downto 0 );
@@ -4438,6 +4438,10 @@ architecture STRUCTURE of hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_11_a_ax
   signal access_is_incr_q : STD_LOGIC;
   signal addr_step : STD_LOGIC_VECTOR ( 11 downto 5 );
   signal addr_step_q : STD_LOGIC_VECTOR ( 11 downto 5 );
+  signal \addr_step_q[6]_i_1_n_0\ : STD_LOGIC;
+  signal \addr_step_q[7]_i_1_n_0\ : STD_LOGIC;
+  signal \addr_step_q[8]_i_1_n_0\ : STD_LOGIC;
+  signal \addr_step_q[9]_i_1_n_0\ : STD_LOGIC;
   signal almost_empty : STD_LOGIC;
   signal areset_d : STD_LOGIC_VECTOR ( 1 downto 0 );
   signal \cmd_depth[0]_i_1_n_0\ : STD_LOGIC;
@@ -4584,39 +4588,39 @@ architecture STRUCTURE of hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_11_a_ax
   signal split_ongoing : STD_LOGIC;
   signal \NLW_next_mi_addr_reg[31]_i_1_CO_UNCONNECTED\ : STD_LOGIC_VECTOR ( 3 to 3 );
   attribute SOFT_HLUTNM : string;
-  attribute SOFT_HLUTNM of \addr_step_q[10]_i_1\ : label is "soft_lutpair18";
-  attribute SOFT_HLUTNM of \addr_step_q[11]_i_1\ : label is "soft_lutpair15";
-  attribute SOFT_HLUTNM of \addr_step_q[5]_i_1\ : label is "soft_lutpair21";
-  attribute SOFT_HLUTNM of \addr_step_q[6]_i_1\ : label is "soft_lutpair15";
-  attribute SOFT_HLUTNM of \addr_step_q[7]_i_1\ : label is "soft_lutpair21";
-  attribute SOFT_HLUTNM of \addr_step_q[8]_i_1\ : label is "soft_lutpair17";
+  attribute SOFT_HLUTNM of \addr_step_q[10]_i_1\ : label is "soft_lutpair21";
+  attribute SOFT_HLUTNM of \addr_step_q[11]_i_1\ : label is "soft_lutpair20";
+  attribute SOFT_HLUTNM of \addr_step_q[5]_i_1\ : label is "soft_lutpair19";
+  attribute SOFT_HLUTNM of \addr_step_q[6]_i_1\ : label is "soft_lutpair16";
+  attribute SOFT_HLUTNM of \addr_step_q[7]_i_1\ : label is "soft_lutpair17";
+  attribute SOFT_HLUTNM of \addr_step_q[8]_i_1\ : label is "soft_lutpair19";
   attribute SOFT_HLUTNM of \addr_step_q[9]_i_1\ : label is "soft_lutpair13";
-  attribute SOFT_HLUTNM of \cmd_depth[5]_i_3\ : label is "soft_lutpair19";
-  attribute SOFT_HLUTNM of \cmd_depth[5]_i_4\ : label is "soft_lutpair19";
-  attribute SOFT_HLUTNM of \first_step_q[0]_i_1\ : label is "soft_lutpair11";
-  attribute SOFT_HLUTNM of \first_step_q[10]_i_1\ : label is "soft_lutpair22";
+  attribute SOFT_HLUTNM of \cmd_depth[5]_i_3\ : label is "soft_lutpair18";
+  attribute SOFT_HLUTNM of \cmd_depth[5]_i_4\ : label is "soft_lutpair18";
+  attribute SOFT_HLUTNM of \first_step_q[0]_i_1\ : label is "soft_lutpair12";
+  attribute SOFT_HLUTNM of \first_step_q[10]_i_1\ : label is "soft_lutpair23";
   attribute SOFT_HLUTNM of \first_step_q[11]_i_1\ : label is "soft_lutpair26";
-  attribute SOFT_HLUTNM of \first_step_q[1]_i_1\ : label is "soft_lutpair11";
-  attribute SOFT_HLUTNM of \first_step_q[3]_i_1\ : label is "soft_lutpair23";
-  attribute SOFT_HLUTNM of \first_step_q[4]_i_1\ : label is "soft_lutpair13";
-  attribute SOFT_HLUTNM of \first_step_q[6]_i_1\ : label is "soft_lutpair22";
-  attribute SOFT_HLUTNM of \first_step_q[7]_i_1\ : label is "soft_lutpair23";
+  attribute SOFT_HLUTNM of \first_step_q[1]_i_1\ : label is "soft_lutpair13";
+  attribute SOFT_HLUTNM of \first_step_q[3]_i_1\ : label is "soft_lutpair22";
+  attribute SOFT_HLUTNM of \first_step_q[4]_i_1\ : label is "soft_lutpair12";
+  attribute SOFT_HLUTNM of \first_step_q[6]_i_1\ : label is "soft_lutpair23";
+  attribute SOFT_HLUTNM of \first_step_q[7]_i_1\ : label is "soft_lutpair22";
   attribute SOFT_HLUTNM of \first_step_q[8]_i_1\ : label is "soft_lutpair25";
   attribute SOFT_HLUTNM of \first_step_q[9]_i_1\ : label is "soft_lutpair26";
-  attribute SOFT_HLUTNM of \m_axi_araddr[25]_INST_0\ : label is "soft_lutpair12";
+  attribute SOFT_HLUTNM of \m_axi_araddr[21]_INST_0\ : label is "soft_lutpair11";
   attribute SOFT_HLUTNM of multiple_id_non_split_i_2 : label is "soft_lutpair10";
   attribute SOFT_HLUTNM of \next_mi_addr[11]_i_6\ : label is "soft_lutpair14";
-  attribute SOFT_HLUTNM of \next_mi_addr[3]_i_6\ : label is "soft_lutpair12";
-  attribute SOFT_HLUTNM of \pushed_commands[1]_i_1\ : label is "soft_lutpair16";
-  attribute SOFT_HLUTNM of \pushed_commands[2]_i_1\ : label is "soft_lutpair16";
+  attribute SOFT_HLUTNM of \next_mi_addr[3]_i_6\ : label is "soft_lutpair11";
+  attribute SOFT_HLUTNM of \pushed_commands[1]_i_1\ : label is "soft_lutpair15";
+  attribute SOFT_HLUTNM of \pushed_commands[2]_i_1\ : label is "soft_lutpair15";
   attribute SOFT_HLUTNM of \pushed_commands[3]_i_2\ : label is "soft_lutpair14";
-  attribute SOFT_HLUTNM of \size_mask_q[0]_i_1\ : label is "soft_lutpair20";
+  attribute SOFT_HLUTNM of \size_mask_q[0]_i_1\ : label is "soft_lutpair21";
   attribute SOFT_HLUTNM of \size_mask_q[1]_i_1\ : label is "soft_lutpair24";
-  attribute SOFT_HLUTNM of \size_mask_q[2]_i_1\ : label is "soft_lutpair18";
+  attribute SOFT_HLUTNM of \size_mask_q[2]_i_1\ : label is "soft_lutpair16";
   attribute SOFT_HLUTNM of \size_mask_q[3]_i_1\ : label is "soft_lutpair25";
-  attribute SOFT_HLUTNM of \size_mask_q[4]_i_1\ : label is "soft_lutpair20";
+  attribute SOFT_HLUTNM of \size_mask_q[4]_i_1\ : label is "soft_lutpair17";
   attribute SOFT_HLUTNM of \size_mask_q[5]_i_1\ : label is "soft_lutpair24";
-  attribute SOFT_HLUTNM of \size_mask_q[6]_i_1\ : label is "soft_lutpair17";
+  attribute SOFT_HLUTNM of \size_mask_q[6]_i_1\ : label is "soft_lutpair20";
   attribute SOFT_HLUTNM of split_in_progress_i_2 : label is "soft_lutpair10";
 begin
   E(0) <= \^e\(0);
@@ -5031,7 +5035,10 @@ begin
       R => \USE_R_CHANNEL.cmd_queue_n_0\
     );
 S_AXI_AREADY_I_reg: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => '1',
       D => \USE_R_CHANNEL.cmd_queue_n_16\,
@@ -5062,7 +5069,7 @@ S_AXI_AREADY_I_reg: unisim.vcomponents.FDRE
       Q => m_axi_arsize(2),
       R => \USE_R_CHANNEL.cmd_queue_n_0\
     );
-\USE_R_CHANNEL.cmd_queue\: entity work.hdmi_out_auto_pc_0_axi_data_fifo_v2_1_10_axic_fifo
+\USE_R_CHANNEL.cmd_queue\: entity work.hdmi_out_auto_pc_0_axi_data_fifo_v2_1_12_axic_fifo
      port map (
       D(4) => \USE_R_CHANNEL.cmd_queue_n_4\,
       D(3) => \USE_R_CHANNEL.cmd_queue_n_5\,
@@ -5101,7 +5108,7 @@ S_AXI_AREADY_I_reg: unisim.vcomponents.FDRE
       multiple_id_non_split => multiple_id_non_split,
       multiple_id_non_split_reg => \USE_R_CHANNEL.cmd_queue_n_20\,
       need_to_split_q => need_to_split_q,
-      num_transactions_q(3 downto 0) => num_transactions_q(3 downto 0),
+      \num_transactions_q_reg[3]\(3 downto 0) => num_transactions_q(3 downto 0),
       \pushed_commands_reg[3]\(3 downto 0) => \pushed_commands_reg__0\(3 downto 0),
       pushed_new_cmd => pushed_new_cmd,
       queue_id => queue_id,
@@ -5124,7 +5131,10 @@ access_is_incr_q_i_1: unisim.vcomponents.LUT2
       O => access_is_incr
     );
 access_is_incr_q_reg: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => \^e\(0),
       D => access_is_incr,
@@ -5133,12 +5143,12 @@ access_is_incr_q_reg: unisim.vcomponents.FDRE
     );
 \addr_step_q[10]_i_1\: unisim.vcomponents.LUT3
     generic map(
-      INIT => X"08"
+      INIT => X"40"
     )
         port map (
-      I0 => s_axi_arsize(1),
+      I0 => s_axi_arsize(0),
       I1 => s_axi_arsize(2),
-      I2 => s_axi_arsize(0),
+      I2 => s_axi_arsize(1),
       O => addr_step(10)
     );
 \addr_step_q[11]_i_1\: unisim.vcomponents.LUT3
@@ -5146,30 +5156,30 @@ access_is_incr_q_reg: unisim.vcomponents.FDRE
       INIT => X"80"
     )
         port map (
-      I0 => s_axi_arsize(1),
+      I0 => s_axi_arsize(2),
       I1 => s_axi_arsize(0),
-      I2 => s_axi_arsize(2),
+      I2 => s_axi_arsize(1),
       O => addr_step(11)
     );
 \addr_step_q[5]_i_1\: unisim.vcomponents.LUT3
     generic map(
-      INIT => X"04"
+      INIT => X"02"
     )
         port map (
-      I0 => s_axi_arsize(2),
-      I1 => s_axi_arsize(0),
+      I0 => s_axi_arsize(0),
+      I1 => s_axi_arsize(2),
       I2 => s_axi_arsize(1),
       O => addr_step(5)
     );
 \addr_step_q[6]_i_1\: unisim.vcomponents.LUT3
     generic map(
-      INIT => X"04"
+      INIT => X"02"
     )
         port map (
-      I0 => s_axi_arsize(0),
-      I1 => s_axi_arsize(1),
+      I0 => s_axi_arsize(1),
+      I1 => s_axi_arsize(0),
       I2 => s_axi_arsize(2),
-      O => addr_step(6)
+      O => \addr_step_q[6]_i_1_n_0\
     );
 \addr_step_q[7]_i_1\: unisim.vcomponents.LUT3
     generic map(
@@ -5179,30 +5189,33 @@ access_is_incr_q_reg: unisim.vcomponents.FDRE
       I0 => s_axi_arsize(1),
       I1 => s_axi_arsize(0),
       I2 => s_axi_arsize(2),
-      O => addr_step(7)
+      O => \addr_step_q[7]_i_1_n_0\
     );
 \addr_step_q[8]_i_1\: unisim.vcomponents.LUT3
     generic map(
-      INIT => X"04"
+      INIT => X"02"
     )
         port map (
-      I0 => s_axi_arsize(0),
-      I1 => s_axi_arsize(2),
-      I2 => s_axi_arsize(1),
-      O => addr_step(8)
+      I0 => s_axi_arsize(2),
+      I1 => s_axi_arsize(1),
+      I2 => s_axi_arsize(0),
+      O => \addr_step_q[8]_i_1_n_0\
     );
 \addr_step_q[9]_i_1\: unisim.vcomponents.LUT3
     generic map(
       INIT => X"08"
     )
         port map (
-      I0 => s_axi_arsize(2),
-      I1 => s_axi_arsize(0),
+      I0 => s_axi_arsize(0),
+      I1 => s_axi_arsize(2),
       I2 => s_axi_arsize(1),
-      O => addr_step(9)
+      O => \addr_step_q[9]_i_1_n_0\
     );
 \addr_step_q_reg[10]\: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => \^e\(0),
       D => addr_step(10),
@@ -5210,7 +5223,10 @@ access_is_incr_q_reg: unisim.vcomponents.FDRE
       R => \USE_R_CHANNEL.cmd_queue_n_0\
     );
 \addr_step_q_reg[11]\: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => \^e\(0),
       D => addr_step(11),
@@ -5218,7 +5234,10 @@ access_is_incr_q_reg: unisim.vcomponents.FDRE
       R => \USE_R_CHANNEL.cmd_queue_n_0\
     );
 \addr_step_q_reg[5]\: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => \^e\(0),
       D => addr_step(5),
@@ -5226,39 +5245,54 @@ access_is_incr_q_reg: unisim.vcomponents.FDRE
       R => \USE_R_CHANNEL.cmd_queue_n_0\
     );
 \addr_step_q_reg[6]\: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => \^e\(0),
-      D => addr_step(6),
+      D => \addr_step_q[6]_i_1_n_0\,
       Q => addr_step_q(6),
       R => \USE_R_CHANNEL.cmd_queue_n_0\
     );
 \addr_step_q_reg[7]\: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => \^e\(0),
-      D => addr_step(7),
+      D => \addr_step_q[7]_i_1_n_0\,
       Q => addr_step_q(7),
       R => \USE_R_CHANNEL.cmd_queue_n_0\
     );
 \addr_step_q_reg[8]\: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => \^e\(0),
-      D => addr_step(8),
+      D => \addr_step_q[8]_i_1_n_0\,
       Q => addr_step_q(8),
       R => \USE_R_CHANNEL.cmd_queue_n_0\
     );
 \addr_step_q_reg[9]\: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => \^e\(0),
-      D => addr_step(9),
+      D => \addr_step_q[9]_i_1_n_0\,
       Q => addr_step_q(9),
       R => \USE_R_CHANNEL.cmd_queue_n_0\
     );
 \areset_d_reg[0]\: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => '1',
       D => \USE_R_CHANNEL.cmd_queue_n_0\,
@@ -5266,7 +5300,10 @@ access_is_incr_q_reg: unisim.vcomponents.FDRE
       R => '0'
     );
 \areset_d_reg[1]\: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => '1',
       D => areset_d(0),
@@ -5302,7 +5339,10 @@ access_is_incr_q_reg: unisim.vcomponents.FDRE
       O => \cmd_depth[5]_i_4_n_0\
     );
 \cmd_depth_reg[0]\: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => \USE_R_CHANNEL.cmd_queue_n_11\,
       D => \cmd_depth[0]_i_1_n_0\,
@@ -5310,7 +5350,10 @@ access_is_incr_q_reg: unisim.vcomponents.FDRE
       R => \USE_R_CHANNEL.cmd_queue_n_0\
     );
 \cmd_depth_reg[1]\: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => \USE_R_CHANNEL.cmd_queue_n_11\,
       D => \USE_R_CHANNEL.cmd_queue_n_8\,
@@ -5318,7 +5361,10 @@ access_is_incr_q_reg: unisim.vcomponents.FDRE
       R => \USE_R_CHANNEL.cmd_queue_n_0\
     );
 \cmd_depth_reg[2]\: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => \USE_R_CHANNEL.cmd_queue_n_11\,
       D => \USE_R_CHANNEL.cmd_queue_n_7\,
@@ -5326,7 +5372,10 @@ access_is_incr_q_reg: unisim.vcomponents.FDRE
       R => \USE_R_CHANNEL.cmd_queue_n_0\
     );
 \cmd_depth_reg[3]\: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => \USE_R_CHANNEL.cmd_queue_n_11\,
       D => \USE_R_CHANNEL.cmd_queue_n_6\,
@@ -5334,7 +5383,10 @@ access_is_incr_q_reg: unisim.vcomponents.FDRE
       R => \USE_R_CHANNEL.cmd_queue_n_0\
     );
 \cmd_depth_reg[4]\: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => \USE_R_CHANNEL.cmd_queue_n_11\,
       D => \USE_R_CHANNEL.cmd_queue_n_5\,
@@ -5342,7 +5394,10 @@ access_is_incr_q_reg: unisim.vcomponents.FDRE
       R => \USE_R_CHANNEL.cmd_queue_n_0\
     );
 \cmd_depth_reg[5]\: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => \USE_R_CHANNEL.cmd_queue_n_11\,
       D => \USE_R_CHANNEL.cmd_queue_n_4\,
@@ -5375,7 +5430,10 @@ cmd_empty_i_2: unisim.vcomponents.LUT6
       O => almost_empty
     );
 cmd_empty_reg: unisim.vcomponents.FDSE
-     port map (
+    generic map(
+      INIT => '1'
+    )
+        port map (
       C => aclk,
       CE => '1',
       D => cmd_empty_i_1_n_0,
@@ -5383,7 +5441,10 @@ cmd_empty_reg: unisim.vcomponents.FDSE
       S => \USE_R_CHANNEL.cmd_queue_n_0\
     );
 cmd_push_block_reg: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => '1',
       D => \USE_R_CHANNEL.cmd_queue_n_17\,
@@ -5400,7 +5461,10 @@ command_ongoing_i_2: unisim.vcomponents.LUT2
       O => command_ongoing_i_2_n_0
     );
 command_ongoing_reg: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => '1',
       D => \USE_R_CHANNEL.cmd_queue_n_19\,
@@ -5611,7 +5675,10 @@ command_ongoing_reg: unisim.vcomponents.FDRE
       O => \first_step_q[9]_i_2_n_0\
     );
 \first_step_q_reg[0]\: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => \^e\(0),
       D => \first_step_q[0]_i_1_n_0\,
@@ -5619,7 +5686,10 @@ command_ongoing_reg: unisim.vcomponents.FDRE
       R => \USE_R_CHANNEL.cmd_queue_n_0\
     );
 \first_step_q_reg[10]\: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => \^e\(0),
       D => first_step(10),
@@ -5627,7 +5697,10 @@ command_ongoing_reg: unisim.vcomponents.FDRE
       R => \USE_R_CHANNEL.cmd_queue_n_0\
     );
 \first_step_q_reg[11]\: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => \^e\(0),
       D => first_step(11),
@@ -5635,7 +5708,10 @@ command_ongoing_reg: unisim.vcomponents.FDRE
       R => \USE_R_CHANNEL.cmd_queue_n_0\
     );
 \first_step_q_reg[1]\: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => \^e\(0),
       D => \first_step_q[1]_i_1_n_0\,
@@ -5643,7 +5719,10 @@ command_ongoing_reg: unisim.vcomponents.FDRE
       R => \USE_R_CHANNEL.cmd_queue_n_0\
     );
 \first_step_q_reg[2]\: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => \^e\(0),
       D => \first_step_q[2]_i_1_n_0\,
@@ -5651,7 +5730,10 @@ command_ongoing_reg: unisim.vcomponents.FDRE
       R => \USE_R_CHANNEL.cmd_queue_n_0\
     );
 \first_step_q_reg[3]\: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => \^e\(0),
       D => \first_step_q[3]_i_1_n_0\,
@@ -5659,7 +5741,10 @@ command_ongoing_reg: unisim.vcomponents.FDRE
       R => \USE_R_CHANNEL.cmd_queue_n_0\
     );
 \first_step_q_reg[4]\: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => \^e\(0),
       D => first_step(4),
@@ -5667,7 +5752,10 @@ command_ongoing_reg: unisim.vcomponents.FDRE
       R => \USE_R_CHANNEL.cmd_queue_n_0\
     );
 \first_step_q_reg[5]\: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => \^e\(0),
       D => first_step(5),
@@ -5675,7 +5763,10 @@ command_ongoing_reg: unisim.vcomponents.FDRE
       R => \USE_R_CHANNEL.cmd_queue_n_0\
     );
 \first_step_q_reg[6]\: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => \^e\(0),
       D => first_step(6),
@@ -5683,7 +5774,10 @@ command_ongoing_reg: unisim.vcomponents.FDRE
       R => \USE_R_CHANNEL.cmd_queue_n_0\
     );
 \first_step_q_reg[7]\: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => \^e\(0),
       D => first_step(7),
@@ -5691,7 +5785,10 @@ command_ongoing_reg: unisim.vcomponents.FDRE
       R => \USE_R_CHANNEL.cmd_queue_n_0\
     );
 \first_step_q_reg[8]\: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => \^e\(0),
       D => first_step(8),
@@ -5699,7 +5796,10 @@ command_ongoing_reg: unisim.vcomponents.FDRE
       R => \USE_R_CHANNEL.cmd_queue_n_0\
     );
 \first_step_q_reg[9]\: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => \^e\(0),
       D => first_step(9),
@@ -5720,7 +5820,10 @@ incr_need_to_split: unisim.vcomponents.LUT6
       O => \incr_need_to_split__0\
     );
 incr_need_to_split_q_reg: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => \^e\(0),
       D => \incr_need_to_split__0\,
@@ -6185,7 +6288,10 @@ multiple_id_non_split_i_2: unisim.vcomponents.LUT5
       O => multiple_id_non_split_i_2_n_0
     );
 multiple_id_non_split_reg: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => '1',
       D => \USE_R_CHANNEL.cmd_queue_n_20\,
@@ -6641,7 +6747,10 @@ multiple_id_non_split_reg: unisim.vcomponents.FDRE
       O => \next_mi_addr[7]_i_5_n_0\
     );
 \next_mi_addr_reg[0]\: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => pushed_new_cmd,
       D => \next_mi_addr_reg[3]_i_1_n_7\,
@@ -6649,7 +6758,10 @@ multiple_id_non_split_reg: unisim.vcomponents.FDRE
       R => \USE_R_CHANNEL.cmd_queue_n_0\
     );
 \next_mi_addr_reg[10]\: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => pushed_new_cmd,
       D => \next_mi_addr_reg[11]_i_1_n_5\,
@@ -6657,7 +6769,10 @@ multiple_id_non_split_reg: unisim.vcomponents.FDRE
       R => \USE_R_CHANNEL.cmd_queue_n_0\
     );
 \next_mi_addr_reg[11]\: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => pushed_new_cmd,
       D => \next_mi_addr_reg[11]_i_1_n_4\,
@@ -6683,7 +6798,10 @@ multiple_id_non_split_reg: unisim.vcomponents.FDRE
       S(0) => \next_mi_addr[11]_i_5_n_0\
     );
 \next_mi_addr_reg[12]\: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => pushed_new_cmd,
       D => \next_mi_addr_reg[15]_i_1_n_7\,
@@ -6691,7 +6809,10 @@ multiple_id_non_split_reg: unisim.vcomponents.FDRE
       R => \USE_R_CHANNEL.cmd_queue_n_0\
     );
 \next_mi_addr_reg[13]\: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => pushed_new_cmd,
       D => \next_mi_addr_reg[15]_i_1_n_6\,
@@ -6699,7 +6820,10 @@ multiple_id_non_split_reg: unisim.vcomponents.FDRE
       R => \USE_R_CHANNEL.cmd_queue_n_0\
     );
 \next_mi_addr_reg[14]\: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => pushed_new_cmd,
       D => \next_mi_addr_reg[15]_i_1_n_5\,
@@ -6707,7 +6831,10 @@ multiple_id_non_split_reg: unisim.vcomponents.FDRE
       R => \USE_R_CHANNEL.cmd_queue_n_0\
     );
 \next_mi_addr_reg[15]\: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => pushed_new_cmd,
       D => \next_mi_addr_reg[15]_i_1_n_4\,
@@ -6736,7 +6863,10 @@ multiple_id_non_split_reg: unisim.vcomponents.FDRE
       S(0) => \next_mi_addr[15]_i_9_n_0\
     );
 \next_mi_addr_reg[16]\: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => pushed_new_cmd,
       D => \next_mi_addr_reg[19]_i_1_n_7\,
@@ -6744,7 +6874,10 @@ multiple_id_non_split_reg: unisim.vcomponents.FDRE
       R => \USE_R_CHANNEL.cmd_queue_n_0\
     );
 \next_mi_addr_reg[17]\: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => pushed_new_cmd,
       D => \next_mi_addr_reg[19]_i_1_n_6\,
@@ -6752,7 +6885,10 @@ multiple_id_non_split_reg: unisim.vcomponents.FDRE
       R => \USE_R_CHANNEL.cmd_queue_n_0\
     );
 \next_mi_addr_reg[18]\: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => pushed_new_cmd,
       D => \next_mi_addr_reg[19]_i_1_n_5\,
@@ -6760,7 +6896,10 @@ multiple_id_non_split_reg: unisim.vcomponents.FDRE
       R => \USE_R_CHANNEL.cmd_queue_n_0\
     );
 \next_mi_addr_reg[19]\: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => pushed_new_cmd,
       D => \next_mi_addr_reg[19]_i_1_n_4\,
@@ -6786,7 +6925,10 @@ multiple_id_non_split_reg: unisim.vcomponents.FDRE
       S(0) => \next_mi_addr[19]_i_5_n_0\
     );
 \next_mi_addr_reg[1]\: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => pushed_new_cmd,
       D => \next_mi_addr_reg[3]_i_1_n_6\,
@@ -6794,7 +6936,10 @@ multiple_id_non_split_reg: unisim.vcomponents.FDRE
       R => \USE_R_CHANNEL.cmd_queue_n_0\
     );
 \next_mi_addr_reg[20]\: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => pushed_new_cmd,
       D => \next_mi_addr_reg[23]_i_1_n_7\,
@@ -6802,7 +6947,10 @@ multiple_id_non_split_reg: unisim.vcomponents.FDRE
       R => \USE_R_CHANNEL.cmd_queue_n_0\
     );
 \next_mi_addr_reg[21]\: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => pushed_new_cmd,
       D => \next_mi_addr_reg[23]_i_1_n_6\,
@@ -6810,7 +6958,10 @@ multiple_id_non_split_reg: unisim.vcomponents.FDRE
       R => \USE_R_CHANNEL.cmd_queue_n_0\
     );
 \next_mi_addr_reg[22]\: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => pushed_new_cmd,
       D => \next_mi_addr_reg[23]_i_1_n_5\,
@@ -6818,7 +6969,10 @@ multiple_id_non_split_reg: unisim.vcomponents.FDRE
       R => \USE_R_CHANNEL.cmd_queue_n_0\
     );
 \next_mi_addr_reg[23]\: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => pushed_new_cmd,
       D => \next_mi_addr_reg[23]_i_1_n_4\,
@@ -6844,7 +6998,10 @@ multiple_id_non_split_reg: unisim.vcomponents.FDRE
       S(0) => \next_mi_addr[23]_i_5_n_0\
     );
 \next_mi_addr_reg[24]\: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => pushed_new_cmd,
       D => \next_mi_addr_reg[27]_i_1_n_7\,
@@ -6852,7 +7009,10 @@ multiple_id_non_split_reg: unisim.vcomponents.FDRE
       R => \USE_R_CHANNEL.cmd_queue_n_0\
     );
 \next_mi_addr_reg[25]\: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => pushed_new_cmd,
       D => \next_mi_addr_reg[27]_i_1_n_6\,
@@ -6860,7 +7020,10 @@ multiple_id_non_split_reg: unisim.vcomponents.FDRE
       R => \USE_R_CHANNEL.cmd_queue_n_0\
     );
 \next_mi_addr_reg[26]\: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => pushed_new_cmd,
       D => \next_mi_addr_reg[27]_i_1_n_5\,
@@ -6868,7 +7031,10 @@ multiple_id_non_split_reg: unisim.vcomponents.FDRE
       R => \USE_R_CHANNEL.cmd_queue_n_0\
     );
 \next_mi_addr_reg[27]\: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => pushed_new_cmd,
       D => \next_mi_addr_reg[27]_i_1_n_4\,
@@ -6894,7 +7060,10 @@ multiple_id_non_split_reg: unisim.vcomponents.FDRE
       S(0) => \next_mi_addr[27]_i_5_n_0\
     );
 \next_mi_addr_reg[28]\: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => pushed_new_cmd,
       D => \next_mi_addr_reg[31]_i_1_n_7\,
@@ -6902,7 +7071,10 @@ multiple_id_non_split_reg: unisim.vcomponents.FDRE
       R => \USE_R_CHANNEL.cmd_queue_n_0\
     );
 \next_mi_addr_reg[29]\: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => pushed_new_cmd,
       D => \next_mi_addr_reg[31]_i_1_n_6\,
@@ -6910,7 +7082,10 @@ multiple_id_non_split_reg: unisim.vcomponents.FDRE
       R => \USE_R_CHANNEL.cmd_queue_n_0\
     );
 \next_mi_addr_reg[2]\: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => pushed_new_cmd,
       D => \next_mi_addr_reg[3]_i_1_n_5\,
@@ -6918,7 +7093,10 @@ multiple_id_non_split_reg: unisim.vcomponents.FDRE
       R => \USE_R_CHANNEL.cmd_queue_n_0\
     );
 \next_mi_addr_reg[30]\: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => pushed_new_cmd,
       D => \next_mi_addr_reg[31]_i_1_n_5\,
@@ -6926,7 +7104,10 @@ multiple_id_non_split_reg: unisim.vcomponents.FDRE
       R => \USE_R_CHANNEL.cmd_queue_n_0\
     );
 \next_mi_addr_reg[31]\: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => pushed_new_cmd,
       D => \next_mi_addr_reg[31]_i_1_n_4\,
@@ -6952,7 +7133,10 @@ multiple_id_non_split_reg: unisim.vcomponents.FDRE
       S(0) => \next_mi_addr[31]_i_5_n_0\
     );
 \next_mi_addr_reg[3]\: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => pushed_new_cmd,
       D => \next_mi_addr_reg[3]_i_1_n_4\,
@@ -6978,7 +7162,10 @@ multiple_id_non_split_reg: unisim.vcomponents.FDRE
       S(0) => \next_mi_addr[3]_i_5_n_0\
     );
 \next_mi_addr_reg[4]\: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => pushed_new_cmd,
       D => \next_mi_addr_reg[7]_i_1_n_7\,
@@ -6986,7 +7173,10 @@ multiple_id_non_split_reg: unisim.vcomponents.FDRE
       R => \USE_R_CHANNEL.cmd_queue_n_0\
     );
 \next_mi_addr_reg[5]\: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => pushed_new_cmd,
       D => \next_mi_addr_reg[7]_i_1_n_6\,
@@ -6994,7 +7184,10 @@ multiple_id_non_split_reg: unisim.vcomponents.FDRE
       R => \USE_R_CHANNEL.cmd_queue_n_0\
     );
 \next_mi_addr_reg[6]\: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => pushed_new_cmd,
       D => \next_mi_addr_reg[7]_i_1_n_5\,
@@ -7002,7 +7195,10 @@ multiple_id_non_split_reg: unisim.vcomponents.FDRE
       R => \USE_R_CHANNEL.cmd_queue_n_0\
     );
 \next_mi_addr_reg[7]\: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => pushed_new_cmd,
       D => \next_mi_addr_reg[7]_i_1_n_4\,
@@ -7028,7 +7224,10 @@ multiple_id_non_split_reg: unisim.vcomponents.FDRE
       S(0) => \next_mi_addr[7]_i_5_n_0\
     );
 \next_mi_addr_reg[8]\: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => pushed_new_cmd,
       D => \next_mi_addr_reg[11]_i_1_n_7\,
@@ -7036,7 +7235,10 @@ multiple_id_non_split_reg: unisim.vcomponents.FDRE
       R => \USE_R_CHANNEL.cmd_queue_n_0\
     );
 \next_mi_addr_reg[9]\: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => pushed_new_cmd,
       D => \next_mi_addr_reg[11]_i_1_n_6\,
@@ -7044,7 +7246,10 @@ multiple_id_non_split_reg: unisim.vcomponents.FDRE
       R => \USE_R_CHANNEL.cmd_queue_n_0\
     );
 \num_transactions_q_reg[0]\: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => \^e\(0),
       D => s_axi_arlen(4),
@@ -7052,7 +7257,10 @@ multiple_id_non_split_reg: unisim.vcomponents.FDRE
       R => \USE_R_CHANNEL.cmd_queue_n_0\
     );
 \num_transactions_q_reg[1]\: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => \^e\(0),
       D => s_axi_arlen(5),
@@ -7060,7 +7268,10 @@ multiple_id_non_split_reg: unisim.vcomponents.FDRE
       R => \USE_R_CHANNEL.cmd_queue_n_0\
     );
 \num_transactions_q_reg[2]\: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => \^e\(0),
       D => s_axi_arlen(6),
@@ -7068,7 +7279,10 @@ multiple_id_non_split_reg: unisim.vcomponents.FDRE
       R => \USE_R_CHANNEL.cmd_queue_n_0\
     );
 \num_transactions_q_reg[3]\: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => \^e\(0),
       D => s_axi_arlen(7),
@@ -7123,7 +7337,10 @@ multiple_id_non_split_reg: unisim.vcomponents.FDRE
       O => p_0_in(3)
     );
 \pushed_commands_reg[0]\: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => pushed_new_cmd,
       D => p_0_in(0),
@@ -7131,7 +7348,10 @@ multiple_id_non_split_reg: unisim.vcomponents.FDRE
       R => \pushed_commands[3]_i_1_n_0\
     );
 \pushed_commands_reg[1]\: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => pushed_new_cmd,
       D => p_0_in(1),
@@ -7139,7 +7359,10 @@ multiple_id_non_split_reg: unisim.vcomponents.FDRE
       R => \pushed_commands[3]_i_1_n_0\
     );
 \pushed_commands_reg[2]\: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => pushed_new_cmd,
       D => p_0_in(2),
@@ -7147,7 +7370,10 @@ multiple_id_non_split_reg: unisim.vcomponents.FDRE
       R => \pushed_commands[3]_i_1_n_0\
     );
 \pushed_commands_reg[3]\: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => pushed_new_cmd,
       D => p_0_in(3),
@@ -7155,7 +7381,10 @@ multiple_id_non_split_reg: unisim.vcomponents.FDRE
       R => \pushed_commands[3]_i_1_n_0\
     );
 \queue_id_reg[0]\: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => '1',
       D => \USE_R_CHANNEL.cmd_queue_n_18\,
@@ -7167,9 +7396,9 @@ multiple_id_non_split_reg: unisim.vcomponents.FDRE
       INIT => X"01"
     )
         port map (
-      I0 => s_axi_arsize(2),
+      I0 => s_axi_arsize(1),
       I1 => s_axi_arsize(0),
-      I2 => s_axi_arsize(1),
+      I2 => s_axi_arsize(2),
       O => size_mask(0)
     );
 \size_mask_q[1]_i_1\: unisim.vcomponents.LUT2
@@ -7177,18 +7406,18 @@ multiple_id_non_split_reg: unisim.vcomponents.FDRE
       INIT => X"1"
     )
         port map (
-      I0 => s_axi_arsize(2),
-      I1 => s_axi_arsize(1),
+      I0 => s_axi_arsize(1),
+      I1 => s_axi_arsize(2),
       O => size_mask(1)
     );
 \size_mask_q[2]_i_1\: unisim.vcomponents.LUT3
     generic map(
-      INIT => X"07"
+      INIT => X"15"
     )
         port map (
-      I0 => s_axi_arsize(0),
+      I0 => s_axi_arsize(2),
       I1 => s_axi_arsize(1),
-      I2 => s_axi_arsize(2),
+      I2 => s_axi_arsize(0),
       O => size_mask(2)
     );
 \size_mask_q[3]_i_1\: unisim.vcomponents.LUT1
@@ -7205,8 +7434,8 @@ multiple_id_non_split_reg: unisim.vcomponents.FDRE
     )
         port map (
       I0 => s_axi_arsize(2),
-      I1 => s_axi_arsize(0),
-      I2 => s_axi_arsize(1),
+      I1 => s_axi_arsize(1),
+      I2 => s_axi_arsize(0),
       O => size_mask(4)
     );
 \size_mask_q[5]_i_1\: unisim.vcomponents.LUT2
@@ -7214,8 +7443,8 @@ multiple_id_non_split_reg: unisim.vcomponents.FDRE
       INIT => X"7"
     )
         port map (
-      I0 => s_axi_arsize(2),
-      I1 => s_axi_arsize(1),
+      I0 => s_axi_arsize(1),
+      I1 => s_axi_arsize(2),
       O => size_mask(5)
     );
 \size_mask_q[6]_i_1\: unisim.vcomponents.LUT3
@@ -7223,13 +7452,16 @@ multiple_id_non_split_reg: unisim.vcomponents.FDRE
       INIT => X"7F"
     )
         port map (
-      I0 => s_axi_arsize(2),
+      I0 => s_axi_arsize(1),
       I1 => s_axi_arsize(0),
-      I2 => s_axi_arsize(1),
+      I2 => s_axi_arsize(2),
       O => size_mask(6)
     );
 \size_mask_q_reg[0]\: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => \^e\(0),
       D => size_mask(0),
@@ -7237,7 +7469,10 @@ multiple_id_non_split_reg: unisim.vcomponents.FDRE
       R => \USE_R_CHANNEL.cmd_queue_n_0\
     );
 \size_mask_q_reg[1]\: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => \^e\(0),
       D => size_mask(1),
@@ -7245,7 +7480,10 @@ multiple_id_non_split_reg: unisim.vcomponents.FDRE
       R => \USE_R_CHANNEL.cmd_queue_n_0\
     );
 \size_mask_q_reg[2]\: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => \^e\(0),
       D => size_mask(2),
@@ -7253,7 +7491,10 @@ multiple_id_non_split_reg: unisim.vcomponents.FDRE
       R => \USE_R_CHANNEL.cmd_queue_n_0\
     );
 \size_mask_q_reg[31]\: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => \^e\(0),
       D => '1',
@@ -7261,7 +7502,10 @@ multiple_id_non_split_reg: unisim.vcomponents.FDRE
       R => \USE_R_CHANNEL.cmd_queue_n_0\
     );
 \size_mask_q_reg[3]\: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => \^e\(0),
       D => size_mask(3),
@@ -7269,7 +7513,10 @@ multiple_id_non_split_reg: unisim.vcomponents.FDRE
       R => \USE_R_CHANNEL.cmd_queue_n_0\
     );
 \size_mask_q_reg[4]\: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => \^e\(0),
       D => size_mask(4),
@@ -7277,7 +7524,10 @@ multiple_id_non_split_reg: unisim.vcomponents.FDRE
       R => \USE_R_CHANNEL.cmd_queue_n_0\
     );
 \size_mask_q_reg[5]\: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => \^e\(0),
       D => size_mask(5),
@@ -7285,7 +7535,10 @@ multiple_id_non_split_reg: unisim.vcomponents.FDRE
       R => \USE_R_CHANNEL.cmd_queue_n_0\
     );
 \size_mask_q_reg[6]\: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => \^e\(0),
       D => size_mask(6),
@@ -7303,7 +7556,10 @@ split_in_progress_i_2: unisim.vcomponents.LUT3
       O => split_in_progress_i_2_n_0
     );
 split_in_progress_reg: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => '1',
       D => \USE_R_CHANNEL.cmd_queue_n_21\,
@@ -7311,7 +7567,10 @@ split_in_progress_reg: unisim.vcomponents.FDRE
       R => '0'
     );
 split_ongoing_reg: unisim.vcomponents.FDRE
-     port map (
+    generic map(
+      INIT => '0'
+    )
+        port map (
       C => aclk,
       CE => pushed_new_cmd,
       D => \USE_R_CHANNEL.cmd_queue_n_1\,
@@ -7323,7 +7582,7 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 library UNISIM;
 use UNISIM.VCOMPONENTS.ALL;
-entity hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_11_axi3_conv is
+entity hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_13_axi3_conv is
   port (
     s_axi_arready : out STD_LOGIC;
     M_AXI_ARID : out STD_LOGIC_VECTOR ( 0 to 0 );
@@ -7357,12 +7616,12 @@ entity hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_11_axi3_conv is
     s_axi_arvalid : in STD_LOGIC
   );
   attribute ORIG_REF_NAME : string;
-  attribute ORIG_REF_NAME of hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_11_axi3_conv : entity is "axi_protocol_converter_v2_1_11_axi3_conv";
-end hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_11_axi3_conv;
+  attribute ORIG_REF_NAME of hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_13_axi3_conv : entity is "axi_protocol_converter_v2_1_13_axi3_conv";
+end hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_13_axi3_conv;
 
-architecture STRUCTURE of hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_11_axi3_conv is
+architecture STRUCTURE of hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_13_axi3_conv is
 begin
-\USE_READ.USE_SPLIT_R.read_addr_inst\: entity work.hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_11_a_axi3_conv
+\USE_READ.USE_SPLIT_R.read_addr_inst\: entity work.hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_13_a_axi3_conv
      port map (
       E(0) => s_axi_arready,
       M_AXI_ARID(0) => M_AXI_ARID(0),
@@ -7400,7 +7659,7 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 library UNISIM;
 use UNISIM.VCOMPONENTS.ALL;
-entity hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_11_axi_protocol_converter is
+entity hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_13_axi_protocol_converter is
   port (
     aclk : in STD_LOGIC;
     aresetn : in STD_LOGIC;
@@ -7496,62 +7755,62 @@ entity hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_11_axi_protocol_converter 
     m_axi_rready : out STD_LOGIC
   );
   attribute C_AXI_ADDR_WIDTH : integer;
-  attribute C_AXI_ADDR_WIDTH of hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_11_axi_protocol_converter : entity is 32;
+  attribute C_AXI_ADDR_WIDTH of hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_13_axi_protocol_converter : entity is 32;
   attribute C_AXI_ARUSER_WIDTH : integer;
-  attribute C_AXI_ARUSER_WIDTH of hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_11_axi_protocol_converter : entity is 1;
+  attribute C_AXI_ARUSER_WIDTH of hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_13_axi_protocol_converter : entity is 1;
   attribute C_AXI_AWUSER_WIDTH : integer;
-  attribute C_AXI_AWUSER_WIDTH of hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_11_axi_protocol_converter : entity is 1;
+  attribute C_AXI_AWUSER_WIDTH of hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_13_axi_protocol_converter : entity is 1;
   attribute C_AXI_BUSER_WIDTH : integer;
-  attribute C_AXI_BUSER_WIDTH of hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_11_axi_protocol_converter : entity is 1;
+  attribute C_AXI_BUSER_WIDTH of hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_13_axi_protocol_converter : entity is 1;
   attribute C_AXI_DATA_WIDTH : integer;
-  attribute C_AXI_DATA_WIDTH of hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_11_axi_protocol_converter : entity is 64;
+  attribute C_AXI_DATA_WIDTH of hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_13_axi_protocol_converter : entity is 64;
   attribute C_AXI_ID_WIDTH : integer;
-  attribute C_AXI_ID_WIDTH of hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_11_axi_protocol_converter : entity is 1;
+  attribute C_AXI_ID_WIDTH of hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_13_axi_protocol_converter : entity is 1;
   attribute C_AXI_RUSER_WIDTH : integer;
-  attribute C_AXI_RUSER_WIDTH of hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_11_axi_protocol_converter : entity is 1;
+  attribute C_AXI_RUSER_WIDTH of hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_13_axi_protocol_converter : entity is 1;
   attribute C_AXI_SUPPORTS_READ : integer;
-  attribute C_AXI_SUPPORTS_READ of hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_11_axi_protocol_converter : entity is 1;
+  attribute C_AXI_SUPPORTS_READ of hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_13_axi_protocol_converter : entity is 1;
   attribute C_AXI_SUPPORTS_USER_SIGNALS : integer;
-  attribute C_AXI_SUPPORTS_USER_SIGNALS of hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_11_axi_protocol_converter : entity is 0;
+  attribute C_AXI_SUPPORTS_USER_SIGNALS of hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_13_axi_protocol_converter : entity is 0;
   attribute C_AXI_SUPPORTS_WRITE : integer;
-  attribute C_AXI_SUPPORTS_WRITE of hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_11_axi_protocol_converter : entity is 0;
+  attribute C_AXI_SUPPORTS_WRITE of hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_13_axi_protocol_converter : entity is 0;
   attribute C_AXI_WUSER_WIDTH : integer;
-  attribute C_AXI_WUSER_WIDTH of hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_11_axi_protocol_converter : entity is 1;
+  attribute C_AXI_WUSER_WIDTH of hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_13_axi_protocol_converter : entity is 1;
   attribute C_FAMILY : string;
-  attribute C_FAMILY of hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_11_axi_protocol_converter : entity is "zynq";
+  attribute C_FAMILY of hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_13_axi_protocol_converter : entity is "zynq";
   attribute C_IGNORE_ID : integer;
-  attribute C_IGNORE_ID of hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_11_axi_protocol_converter : entity is 1;
+  attribute C_IGNORE_ID of hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_13_axi_protocol_converter : entity is 1;
   attribute C_M_AXI_PROTOCOL : integer;
-  attribute C_M_AXI_PROTOCOL of hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_11_axi_protocol_converter : entity is 1;
+  attribute C_M_AXI_PROTOCOL of hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_13_axi_protocol_converter : entity is 1;
   attribute C_S_AXI_PROTOCOL : integer;
-  attribute C_S_AXI_PROTOCOL of hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_11_axi_protocol_converter : entity is 0;
+  attribute C_S_AXI_PROTOCOL of hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_13_axi_protocol_converter : entity is 0;
   attribute C_TRANSLATION_MODE : integer;
-  attribute C_TRANSLATION_MODE of hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_11_axi_protocol_converter : entity is 2;
+  attribute C_TRANSLATION_MODE of hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_13_axi_protocol_converter : entity is 2;
   attribute DowngradeIPIdentifiedWarnings : string;
-  attribute DowngradeIPIdentifiedWarnings of hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_11_axi_protocol_converter : entity is "yes";
+  attribute DowngradeIPIdentifiedWarnings of hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_13_axi_protocol_converter : entity is "yes";
   attribute ORIG_REF_NAME : string;
-  attribute ORIG_REF_NAME of hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_11_axi_protocol_converter : entity is "axi_protocol_converter_v2_1_11_axi_protocol_converter";
+  attribute ORIG_REF_NAME of hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_13_axi_protocol_converter : entity is "axi_protocol_converter_v2_1_13_axi_protocol_converter";
   attribute P_AXI3 : integer;
-  attribute P_AXI3 of hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_11_axi_protocol_converter : entity is 1;
+  attribute P_AXI3 of hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_13_axi_protocol_converter : entity is 1;
   attribute P_AXI4 : integer;
-  attribute P_AXI4 of hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_11_axi_protocol_converter : entity is 0;
+  attribute P_AXI4 of hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_13_axi_protocol_converter : entity is 0;
   attribute P_AXILITE : integer;
-  attribute P_AXILITE of hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_11_axi_protocol_converter : entity is 2;
+  attribute P_AXILITE of hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_13_axi_protocol_converter : entity is 2;
   attribute P_AXILITE_SIZE : string;
-  attribute P_AXILITE_SIZE of hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_11_axi_protocol_converter : entity is "3'b011";
+  attribute P_AXILITE_SIZE of hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_13_axi_protocol_converter : entity is "3'b011";
   attribute P_CONVERSION : integer;
-  attribute P_CONVERSION of hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_11_axi_protocol_converter : entity is 2;
+  attribute P_CONVERSION of hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_13_axi_protocol_converter : entity is 2;
   attribute P_DECERR : string;
-  attribute P_DECERR of hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_11_axi_protocol_converter : entity is "2'b11";
+  attribute P_DECERR of hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_13_axi_protocol_converter : entity is "2'b11";
   attribute P_INCR : string;
-  attribute P_INCR of hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_11_axi_protocol_converter : entity is "2'b01";
+  attribute P_INCR of hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_13_axi_protocol_converter : entity is "2'b01";
   attribute P_PROTECTION : integer;
-  attribute P_PROTECTION of hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_11_axi_protocol_converter : entity is 1;
+  attribute P_PROTECTION of hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_13_axi_protocol_converter : entity is 1;
   attribute P_SLVERR : string;
-  attribute P_SLVERR of hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_11_axi_protocol_converter : entity is "2'b10";
-end hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_11_axi_protocol_converter;
+  attribute P_SLVERR of hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_13_axi_protocol_converter : entity is "2'b10";
+end hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_13_axi_protocol_converter;
 
-architecture STRUCTURE of hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_11_axi_protocol_converter is
+architecture STRUCTURE of hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_13_axi_protocol_converter is
   signal \<const0>\ : STD_LOGIC;
   signal \^m_axi_arlock\ : STD_LOGIC_VECTOR ( 0 to 0 );
   signal \^m_axi_rdata\ : STD_LOGIC_VECTOR ( 63 downto 0 );
@@ -7723,7 +7982,7 @@ GND: unisim.vcomponents.GND
      port map (
       G => \<const0>\
     );
-\gen_axi4_axi3.axi3_conv_inst\: entity work.hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_11_axi3_conv
+\gen_axi4_axi3.axi3_conv_inst\: entity work.hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_13_axi3_conv
      port map (
       M_AXI_ARID(0) => m_axi_arid(0),
       aclk => aclk,
@@ -7800,11 +8059,11 @@ entity hdmi_out_auto_pc_0 is
   attribute NotValidForBitStream : boolean;
   attribute NotValidForBitStream of hdmi_out_auto_pc_0 : entity is true;
   attribute CHECK_LICENSE_TYPE : string;
-  attribute CHECK_LICENSE_TYPE of hdmi_out_auto_pc_0 : entity is "hdmi_out_auto_pc_0,axi_protocol_converter_v2_1_11_axi_protocol_converter,{}";
+  attribute CHECK_LICENSE_TYPE of hdmi_out_auto_pc_0 : entity is "hdmi_out_auto_pc_0,axi_protocol_converter_v2_1_13_axi_protocol_converter,{}";
   attribute DowngradeIPIdentifiedWarnings : string;
   attribute DowngradeIPIdentifiedWarnings of hdmi_out_auto_pc_0 : entity is "yes";
   attribute X_CORE_INFO : string;
-  attribute X_CORE_INFO of hdmi_out_auto_pc_0 : entity is "axi_protocol_converter_v2_1_11_axi_protocol_converter,Vivado 2016.4";
+  attribute X_CORE_INFO of hdmi_out_auto_pc_0 : entity is "axi_protocol_converter_v2_1_13_axi_protocol_converter,Vivado 2017.2";
 end hdmi_out_auto_pc_0;
 
 architecture STRUCTURE of hdmi_out_auto_pc_0 is
@@ -7890,7 +8149,7 @@ architecture STRUCTURE of hdmi_out_auto_pc_0 is
   attribute P_SLVERR of inst : label is "2'b10";
   attribute downgradeipidentifiedwarnings of inst : label is "yes";
 begin
-inst: entity work.hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_11_axi_protocol_converter
+inst: entity work.hdmi_out_auto_pc_0_axi_protocol_converter_v2_1_13_axi_protocol_converter
      port map (
       aclk => aclk,
       aresetn => aresetn,

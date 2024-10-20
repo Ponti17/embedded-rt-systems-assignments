@@ -1,10 +1,10 @@
--- Copyright 1986-2016 Xilinx, Inc. All Rights Reserved.
+-- Copyright 1986-2017 Xilinx, Inc. All Rights Reserved.
 -- --------------------------------------------------------------------------------
--- Tool Version: Vivado v.2016.4 (win64) Build 1733598 Wed Dec 14 22:35:39 MST 2016
--- Date        : Wed Feb 22 16:51:43 2017
--- Host        : WK117 running 64-bit major release  (build 9200)
+-- Tool Version: Vivado v.2017.2 (win64) Build 1909853 Thu Jun 15 18:39:09 MDT 2017
+-- Date        : Sat Oct 19 11:46:51 2024
+-- Host        : andreas-xps15 running 64-bit major release  (build 9200)
 -- Command     : write_vhdl -force -mode funcsim
---               C:/Users/aholzer/Desktop/zybo-hdmi-out/src/bd/hdmi_out/ip/hdmi_out_processing_system7_0_0/hdmi_out_processing_system7_0_0_sim_netlist.vhdl
+--               C:/home/university/7-semester/embedded-rt-systems-assignments/project/src/bd/hdmi_out/ip/hdmi_out_processing_system7_0_0/hdmi_out_processing_system7_0_0_sim_netlist.vhdl
 -- Design      : hdmi_out_processing_system7_0_0
 -- Purpose     : This VHDL netlist is a functional simulation representation of the design and should not be modified or
 --               synthesized. This netlist cannot be used for SDF annotated simulation.
@@ -3467,7 +3467,7 @@ entity hdmi_out_processing_system7_0_0 is
   attribute DowngradeIPIdentifiedWarnings : string;
   attribute DowngradeIPIdentifiedWarnings of hdmi_out_processing_system7_0_0 : entity is "yes";
   attribute X_CORE_INFO : string;
-  attribute X_CORE_INFO of hdmi_out_processing_system7_0_0 : entity is "processing_system7_v5_5_processing_system7,Vivado 2016.4";
+  attribute X_CORE_INFO of hdmi_out_processing_system7_0_0 : entity is "processing_system7_v5_5_processing_system7,Vivado 2017.2";
 end hdmi_out_processing_system7_0_0;
 
 architecture STRUCTURE of hdmi_out_processing_system7_0_0 is
@@ -3852,42 +3852,6 @@ architecture STRUCTURE of hdmi_out_processing_system7_0_0 is
   attribute USE_TRACE_DATA_EDGE_DETECTOR : integer;
   attribute USE_TRACE_DATA_EDGE_DETECTOR of inst : label is 0;
 begin
-pullup_MIO_0inst: unisim.vcomponents.PULLUP
-    port map (
-      O => MIO(0)
-    );
-pullup_MIO_9inst: unisim.vcomponents.PULLUP
-    port map (
-      O => MIO(9)
-    );
-pullup_MIO_10inst: unisim.vcomponents.PULLUP
-    port map (
-      O => MIO(10)
-    );
-pullup_MIO_11inst: unisim.vcomponents.PULLUP
-    port map (
-      O => MIO(11)
-    );
-pullup_MIO_12inst: unisim.vcomponents.PULLUP
-    port map (
-      O => MIO(12)
-    );
-pullup_MIO_13inst: unisim.vcomponents.PULLUP
-    port map (
-      O => MIO(13)
-    );
-pullup_MIO_14inst: unisim.vcomponents.PULLUP
-    port map (
-      O => MIO(14)
-    );
-pullup_MIO_15inst: unisim.vcomponents.PULLUP
-    port map (
-      O => MIO(15)
-    );
-pullup_MIO_46inst: unisim.vcomponents.PULLUP
-    port map (
-      O => MIO(46)
-    );
 inst: entity work.hdmi_out_processing_system7_0_0_processing_system7_v5_5_processing_system7
      port map (
       CAN0_PHY_RX => '0',

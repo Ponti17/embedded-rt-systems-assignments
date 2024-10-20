@@ -1,4 +1,4 @@
--- (c) Copyright 1995-2017 Xilinx, Inc. All rights reserved.
+-- (c) Copyright 1995-2024 Xilinx, Inc. All rights reserved.
 -- 
 -- This file contains confidential and proprietary information
 -- of Xilinx, Inc. and is protected under U.S. and
@@ -46,15 +46,15 @@
 -- 
 -- DO NOT MODIFY THIS FILE.
 
--- IP VLNV: xilinx.com:ip:axi_vdma:6.2
--- IP Revision: 10
+-- IP VLNV: xilinx.com:ip:axi_vdma:6.3
+-- IP Revision: 1
 
 LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
 USE ieee.numeric_std.ALL;
 
-LIBRARY axi_vdma_v6_2_10;
-USE axi_vdma_v6_2_10.axi_vdma;
+LIBRARY axi_vdma_v6_3_1;
+USE axi_vdma_v6_3_1.axi_vdma;
 
 ENTITY hdmi_out_axi_vdma_0_0 IS
   PORT (

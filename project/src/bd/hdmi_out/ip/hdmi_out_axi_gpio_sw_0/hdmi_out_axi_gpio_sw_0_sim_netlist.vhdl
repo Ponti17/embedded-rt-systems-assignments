@@ -1,10 +1,10 @@
--- Copyright 1986-2016 Xilinx, Inc. All Rights Reserved.
+-- Copyright 1986-2017 Xilinx, Inc. All Rights Reserved.
 -- --------------------------------------------------------------------------------
--- Tool Version: Vivado v.2016.4 (win64) Build 1733598 Wed Dec 14 22:35:39 MST 2016
--- Date        : Wed Feb 22 16:50:34 2017
--- Host        : WK117 running 64-bit major release  (build 9200)
+-- Tool Version: Vivado v.2017.2 (win64) Build 1909853 Thu Jun 15 18:39:09 MDT 2017
+-- Date        : Sat Oct 19 11:46:44 2024
+-- Host        : andreas-xps15 running 64-bit major release  (build 9200)
 -- Command     : write_vhdl -force -mode funcsim
---               C:/Users/aholzer/Desktop/zybo-hdmi-out/src/bd/hdmi_out/ip/hdmi_out_axi_gpio_sw_0/hdmi_out_axi_gpio_sw_0_sim_netlist.vhdl
+--               C:/home/university/7-semester/embedded-rt-systems-assignments/project/src/bd/hdmi_out/ip/hdmi_out_axi_gpio_sw_0/hdmi_out_axi_gpio_sw_0_sim_netlist.vhdl
 -- Design      : hdmi_out_axi_gpio_sw_0
 -- Purpose     : This VHDL netlist is a functional simulation representation of the design and should not be modified or
 --               synthesized. This netlist cannot be used for SDF annotated simulation.
@@ -22,11 +22,11 @@ entity hdmi_out_axi_gpio_sw_0_address_decoder is
     s_axi_arready : out STD_LOGIC;
     s_axi_wready : out STD_LOGIC;
     GPIO_DBus_i : out STD_LOGIC_VECTOR ( 0 to 0 );
-    \Not_Dual.READ_REG_GEN[1].GPIO_DBus_i_reg[29]\ : out STD_LOGIC;
-    \Not_Dual.READ_REG_GEN[2].GPIO_DBus_i_reg[30]\ : out STD_LOGIC;
-    \Not_Dual.READ_REG_GEN[3].GPIO_DBus_i_reg[31]\ : out STD_LOGIC;
+    \Not_Dual.ALLIN1_ND.READ_REG_GEN[1].GPIO_DBus_i_reg[29]\ : out STD_LOGIC;
+    \Not_Dual.ALLIN1_ND.READ_REG_GEN[2].GPIO_DBus_i_reg[30]\ : out STD_LOGIC;
+    \Not_Dual.ALLIN1_ND.READ_REG_GEN[3].GPIO_DBus_i_reg[31]\ : out STD_LOGIC;
     D : out STD_LOGIC_VECTOR ( 3 downto 0 );
-    \Not_Dual.READ_REG_GEN[0].GPIO_DBus_i_reg[28]\ : out STD_LOGIC;
+    \Not_Dual.ALLIN1_ND.READ_REG_GEN[0].GPIO_DBus_i_reg[28]\ : out STD_LOGIC;
     s_axi_aclk : in STD_LOGIC;
     rst_reg : in STD_LOGIC;
     bus2ip_rnw_i_reg : in STD_LOGIC;
@@ -77,7 +77,7 @@ begin
       Q => \^mem_decode_gen[0].cs_out_i_reg[0]_0\,
       R => '0'
     );
-\Not_Dual.READ_REG_GEN[0].GPIO_DBus_i[28]_i_1\: unisim.vcomponents.LUT6
+\Not_Dual.ALLIN1_ND.READ_REG_GEN[0].GPIO_DBus_i[28]_i_1\: unisim.vcomponents.LUT6
     generic map(
       INIT => X"000000E000000020"
     )
@@ -90,7 +90,7 @@ begin
       I5 => gpio_io_t(3),
       O => GPIO_DBus_i(0)
     );
-\Not_Dual.READ_REG_GEN[1].GPIO_DBus_i[29]_i_1\: unisim.vcomponents.LUT6
+\Not_Dual.ALLIN1_ND.READ_REG_GEN[1].GPIO_DBus_i[29]_i_1\: unisim.vcomponents.LUT6
     generic map(
       INIT => X"000000E000000020"
     )
@@ -101,9 +101,9 @@ begin
       I3 => Q(2),
       I4 => Q(1),
       I5 => gpio_io_t(2),
-      O => \Not_Dual.READ_REG_GEN[1].GPIO_DBus_i_reg[29]\
+      O => \Not_Dual.ALLIN1_ND.READ_REG_GEN[1].GPIO_DBus_i_reg[29]\
     );
-\Not_Dual.READ_REG_GEN[2].GPIO_DBus_i[30]_i_1\: unisim.vcomponents.LUT6
+\Not_Dual.ALLIN1_ND.READ_REG_GEN[2].GPIO_DBus_i[30]_i_1\: unisim.vcomponents.LUT6
     generic map(
       INIT => X"000000E000000020"
     )
@@ -114,9 +114,9 @@ begin
       I3 => Q(2),
       I4 => Q(1),
       I5 => gpio_io_t(1),
-      O => \Not_Dual.READ_REG_GEN[2].GPIO_DBus_i_reg[30]\
+      O => \Not_Dual.ALLIN1_ND.READ_REG_GEN[2].GPIO_DBus_i_reg[30]\
     );
-\Not_Dual.READ_REG_GEN[3].GPIO_DBus_i[31]_i_1\: unisim.vcomponents.LUT4
+\Not_Dual.ALLIN1_ND.READ_REG_GEN[3].GPIO_DBus_i[31]_i_1\: unisim.vcomponents.LUT4
     generic map(
       INIT => X"FFF7"
     )
@@ -125,9 +125,9 @@ begin
       I1 => \^mem_decode_gen[0].cs_out_i_reg[0]_0\,
       I2 => gpio_xferAck_Reg,
       I3 => GPIO_xferAck_i,
-      O => \Not_Dual.READ_REG_GEN[0].GPIO_DBus_i_reg[28]\
+      O => \Not_Dual.ALLIN1_ND.READ_REG_GEN[0].GPIO_DBus_i_reg[28]\
     );
-\Not_Dual.READ_REG_GEN[3].GPIO_DBus_i[31]_i_2\: unisim.vcomponents.LUT6
+\Not_Dual.ALLIN1_ND.READ_REG_GEN[3].GPIO_DBus_i[31]_i_2\: unisim.vcomponents.LUT6
     generic map(
       INIT => X"000000E000000020"
     )
@@ -138,7 +138,7 @@ begin
       I3 => Q(2),
       I4 => Q(1),
       I5 => gpio_io_t(0),
-      O => \Not_Dual.READ_REG_GEN[3].GPIO_DBus_i_reg[31]\
+      O => \Not_Dual.ALLIN1_ND.READ_REG_GEN[3].GPIO_DBus_i_reg[31]\
     );
 \Not_Dual.gpio_Data_Out[0]_i_1\: unisim.vcomponents.LUT6
     generic map(
@@ -155,46 +155,46 @@ begin
     );
 \Not_Dual.gpio_Data_Out[0]_i_2\: unisim.vcomponents.LUT4
     generic map(
-      INIT => X"CCAC"
+      INIT => X"FB08"
     )
         port map (
       I0 => s_axi_wdata(3),
-      I1 => s_axi_wdata(7),
-      I2 => \^mem_decode_gen[0].cs_out_i_reg[0]_0\,
-      I3 => Q(1),
+      I1 => \^mem_decode_gen[0].cs_out_i_reg[0]_0\,
+      I2 => Q(1),
+      I3 => s_axi_wdata(7),
       O => D(3)
     );
 \Not_Dual.gpio_Data_Out[1]_i_1\: unisim.vcomponents.LUT4
     generic map(
-      INIT => X"CCAC"
+      INIT => X"FB08"
     )
         port map (
       I0 => s_axi_wdata(2),
-      I1 => s_axi_wdata(6),
-      I2 => \^mem_decode_gen[0].cs_out_i_reg[0]_0\,
-      I3 => Q(1),
+      I1 => \^mem_decode_gen[0].cs_out_i_reg[0]_0\,
+      I2 => Q(1),
+      I3 => s_axi_wdata(6),
       O => D(2)
     );
 \Not_Dual.gpio_Data_Out[2]_i_1\: unisim.vcomponents.LUT4
     generic map(
-      INIT => X"CCAC"
+      INIT => X"FB08"
     )
         port map (
       I0 => s_axi_wdata(1),
-      I1 => s_axi_wdata(5),
-      I2 => \^mem_decode_gen[0].cs_out_i_reg[0]_0\,
-      I3 => Q(1),
+      I1 => \^mem_decode_gen[0].cs_out_i_reg[0]_0\,
+      I2 => Q(1),
+      I3 => s_axi_wdata(5),
       O => D(1)
     );
 \Not_Dual.gpio_Data_Out[3]_i_1\: unisim.vcomponents.LUT4
     generic map(
-      INIT => X"CCAC"
+      INIT => X"FB08"
     )
         port map (
       I0 => s_axi_wdata(0),
-      I1 => s_axi_wdata(4),
-      I2 => \^mem_decode_gen[0].cs_out_i_reg[0]_0\,
-      I3 => Q(1),
+      I1 => \^mem_decode_gen[0].cs_out_i_reg[0]_0\,
+      I2 => Q(1),
+      I3 => s_axi_wdata(4),
       O => D(0)
     );
 \Not_Dual.gpio_OE[0]_i_1\: unisim.vcomponents.LUT6
@@ -536,6 +536,38 @@ architecture STRUCTURE of hdmi_out_axi_gpio_sw_0_GPIO_Core is
 begin
   GPIO_xferAck_i <= \^gpio_xferack_i\;
   gpio_xferAck_Reg <= \^gpio_xferack_reg\;
+\Not_Dual.ALLIN1_ND.READ_REG_GEN[0].GPIO_DBus_i_reg[28]\: unisim.vcomponents.FDRE
+     port map (
+      C => s_axi_aclk,
+      CE => '1',
+      D => GPIO_DBus_i(0),
+      Q => D(3),
+      R => bus2ip_rnw_i_reg
+    );
+\Not_Dual.ALLIN1_ND.READ_REG_GEN[1].GPIO_DBus_i_reg[29]\: unisim.vcomponents.FDRE
+     port map (
+      C => s_axi_aclk,
+      CE => '1',
+      D => \Not_Dual.gpio_Data_In_reg[1]_0\,
+      Q => D(2),
+      R => bus2ip_rnw_i_reg
+    );
+\Not_Dual.ALLIN1_ND.READ_REG_GEN[2].GPIO_DBus_i_reg[30]\: unisim.vcomponents.FDRE
+     port map (
+      C => s_axi_aclk,
+      CE => '1',
+      D => \Not_Dual.gpio_Data_In_reg[2]_0\,
+      Q => D(1),
+      R => bus2ip_rnw_i_reg
+    );
+\Not_Dual.ALLIN1_ND.READ_REG_GEN[3].GPIO_DBus_i_reg[31]\: unisim.vcomponents.FDRE
+     port map (
+      C => s_axi_aclk,
+      CE => '1',
+      D => \Not_Dual.gpio_Data_In_reg[3]_0\,
+      Q => D(0),
+      R => bus2ip_rnw_i_reg
+    );
 \Not_Dual.INPUT_DOUBLE_REGS3\: entity work.hdmi_out_axi_gpio_sw_0_cdc_sync
      port map (
       gpio_io_i(3 downto 0) => gpio_io_i(3 downto 0),
@@ -544,38 +576,6 @@ begin
       scndry_vect_out(2) => gpio_io_i_d2(1),
       scndry_vect_out(1) => gpio_io_i_d2(2),
       scndry_vect_out(0) => gpio_io_i_d2(3)
-    );
-\Not_Dual.READ_REG_GEN[0].GPIO_DBus_i_reg[28]\: unisim.vcomponents.FDRE
-     port map (
-      C => s_axi_aclk,
-      CE => '1',
-      D => GPIO_DBus_i(0),
-      Q => D(3),
-      R => bus2ip_rnw_i_reg
-    );
-\Not_Dual.READ_REG_GEN[1].GPIO_DBus_i_reg[29]\: unisim.vcomponents.FDRE
-     port map (
-      C => s_axi_aclk,
-      CE => '1',
-      D => \Not_Dual.gpio_Data_In_reg[1]_0\,
-      Q => D(2),
-      R => bus2ip_rnw_i_reg
-    );
-\Not_Dual.READ_REG_GEN[2].GPIO_DBus_i_reg[30]\: unisim.vcomponents.FDRE
-     port map (
-      C => s_axi_aclk,
-      CE => '1',
-      D => \Not_Dual.gpio_Data_In_reg[2]_0\,
-      Q => D(1),
-      R => bus2ip_rnw_i_reg
-    );
-\Not_Dual.READ_REG_GEN[3].GPIO_DBus_i_reg[31]\: unisim.vcomponents.FDRE
-     port map (
-      C => s_axi_aclk,
-      CE => '1',
-      D => \Not_Dual.gpio_Data_In_reg[3]_0\,
-      Q => D(0),
-      R => bus2ip_rnw_i_reg
     );
 \Not_Dual.gpio_Data_In_reg[0]\: unisim.vcomponents.FDRE
      port map (
@@ -758,11 +758,11 @@ entity hdmi_out_axi_gpio_sw_0_slave_attachment is
     \Not_Dual.gpio_OE_reg[0]\ : out STD_LOGIC_VECTOR ( 0 to 0 );
     s_axi_wready : out STD_LOGIC;
     GPIO_DBus_i : out STD_LOGIC_VECTOR ( 0 to 0 );
-    \Not_Dual.READ_REG_GEN[1].GPIO_DBus_i_reg[29]\ : out STD_LOGIC;
-    \Not_Dual.READ_REG_GEN[2].GPIO_DBus_i_reg[30]\ : out STD_LOGIC;
-    \Not_Dual.READ_REG_GEN[3].GPIO_DBus_i_reg[31]\ : out STD_LOGIC;
+    \Not_Dual.ALLIN1_ND.READ_REG_GEN[1].GPIO_DBus_i_reg[29]\ : out STD_LOGIC;
+    \Not_Dual.ALLIN1_ND.READ_REG_GEN[2].GPIO_DBus_i_reg[30]\ : out STD_LOGIC;
+    \Not_Dual.ALLIN1_ND.READ_REG_GEN[3].GPIO_DBus_i_reg[31]\ : out STD_LOGIC;
     D : out STD_LOGIC_VECTOR ( 3 downto 0 );
-    \Not_Dual.READ_REG_GEN[0].GPIO_DBus_i_reg[28]\ : out STD_LOGIC;
+    \Not_Dual.ALLIN1_ND.READ_REG_GEN[0].GPIO_DBus_i_reg[28]\ : out STD_LOGIC;
     s_axi_rdata : out STD_LOGIC_VECTOR ( 3 downto 0 );
     s_axi_aclk : in STD_LOGIC;
     s_axi_arvalid : in STD_LOGIC;
@@ -920,10 +920,10 @@ I_DECODER: entity work.hdmi_out_axi_gpio_sw_0_address_decoder
       GPIO_xferAck_i => GPIO_xferAck_i,
       \INCLUDE_DPHASE_TIMER.dpto_cnt_reg[3]\(3 downto 0) => \INCLUDE_DPHASE_TIMER.dpto_cnt_reg__0\(3 downto 0),
       \MEM_DECODE_GEN[0].cs_out_i_reg[0]_0\ => \MEM_DECODE_GEN[0].cs_out_i_reg[0]\,
-      \Not_Dual.READ_REG_GEN[0].GPIO_DBus_i_reg[28]\ => \Not_Dual.READ_REG_GEN[0].GPIO_DBus_i_reg[28]\,
-      \Not_Dual.READ_REG_GEN[1].GPIO_DBus_i_reg[29]\ => \Not_Dual.READ_REG_GEN[1].GPIO_DBus_i_reg[29]\,
-      \Not_Dual.READ_REG_GEN[2].GPIO_DBus_i_reg[30]\ => \Not_Dual.READ_REG_GEN[2].GPIO_DBus_i_reg[30]\,
-      \Not_Dual.READ_REG_GEN[3].GPIO_DBus_i_reg[31]\ => \Not_Dual.READ_REG_GEN[3].GPIO_DBus_i_reg[31]\,
+      \Not_Dual.ALLIN1_ND.READ_REG_GEN[0].GPIO_DBus_i_reg[28]\ => \Not_Dual.ALLIN1_ND.READ_REG_GEN[0].GPIO_DBus_i_reg[28]\,
+      \Not_Dual.ALLIN1_ND.READ_REG_GEN[1].GPIO_DBus_i_reg[29]\ => \Not_Dual.ALLIN1_ND.READ_REG_GEN[1].GPIO_DBus_i_reg[29]\,
+      \Not_Dual.ALLIN1_ND.READ_REG_GEN[2].GPIO_DBus_i_reg[30]\ => \Not_Dual.ALLIN1_ND.READ_REG_GEN[2].GPIO_DBus_i_reg[30]\,
+      \Not_Dual.ALLIN1_ND.READ_REG_GEN[3].GPIO_DBus_i_reg[31]\ => \Not_Dual.ALLIN1_ND.READ_REG_GEN[3].GPIO_DBus_i_reg[31]\,
       \Not_Dual.gpio_Data_In_reg[0]\(3 downto 0) => Q(3 downto 0),
       \Not_Dual.gpio_OE_reg[0]\(0) => \Not_Dual.gpio_OE_reg[0]\(0),
       Q(2) => bus2ip_addr(0),
@@ -1301,11 +1301,11 @@ entity hdmi_out_axi_gpio_sw_0_axi_lite_ipif is
     \Not_Dual.gpio_OE_reg[0]\ : out STD_LOGIC_VECTOR ( 0 to 0 );
     s_axi_wready : out STD_LOGIC;
     GPIO_DBus_i : out STD_LOGIC_VECTOR ( 0 to 0 );
-    \Not_Dual.READ_REG_GEN[1].GPIO_DBus_i_reg[29]\ : out STD_LOGIC;
-    \Not_Dual.READ_REG_GEN[2].GPIO_DBus_i_reg[30]\ : out STD_LOGIC;
-    \Not_Dual.READ_REG_GEN[3].GPIO_DBus_i_reg[31]\ : out STD_LOGIC;
+    \Not_Dual.ALLIN1_ND.READ_REG_GEN[1].GPIO_DBus_i_reg[29]\ : out STD_LOGIC;
+    \Not_Dual.ALLIN1_ND.READ_REG_GEN[2].GPIO_DBus_i_reg[30]\ : out STD_LOGIC;
+    \Not_Dual.ALLIN1_ND.READ_REG_GEN[3].GPIO_DBus_i_reg[31]\ : out STD_LOGIC;
     D : out STD_LOGIC_VECTOR ( 3 downto 0 );
-    \Not_Dual.READ_REG_GEN[0].GPIO_DBus_i_reg[28]\ : out STD_LOGIC;
+    \Not_Dual.ALLIN1_ND.READ_REG_GEN[0].GPIO_DBus_i_reg[28]\ : out STD_LOGIC;
     s_axi_rdata : out STD_LOGIC_VECTOR ( 3 downto 0 );
     s_axi_aclk : in STD_LOGIC;
     s_axi_arvalid : in STD_LOGIC;
@@ -1338,10 +1338,10 @@ I_SLAVE_ATTACHMENT: entity work.hdmi_out_axi_gpio_sw_0_slave_attachment
       GPIO_DBus_i(0) => GPIO_DBus_i(0),
       GPIO_xferAck_i => GPIO_xferAck_i,
       \MEM_DECODE_GEN[0].cs_out_i_reg[0]\ => bus2ip_cs,
-      \Not_Dual.READ_REG_GEN[0].GPIO_DBus_i_reg[28]\ => \Not_Dual.READ_REG_GEN[0].GPIO_DBus_i_reg[28]\,
-      \Not_Dual.READ_REG_GEN[1].GPIO_DBus_i_reg[29]\ => \Not_Dual.READ_REG_GEN[1].GPIO_DBus_i_reg[29]\,
-      \Not_Dual.READ_REG_GEN[2].GPIO_DBus_i_reg[30]\ => \Not_Dual.READ_REG_GEN[2].GPIO_DBus_i_reg[30]\,
-      \Not_Dual.READ_REG_GEN[3].GPIO_DBus_i_reg[31]\ => \Not_Dual.READ_REG_GEN[3].GPIO_DBus_i_reg[31]\,
+      \Not_Dual.ALLIN1_ND.READ_REG_GEN[0].GPIO_DBus_i_reg[28]\ => \Not_Dual.ALLIN1_ND.READ_REG_GEN[0].GPIO_DBus_i_reg[28]\,
+      \Not_Dual.ALLIN1_ND.READ_REG_GEN[1].GPIO_DBus_i_reg[29]\ => \Not_Dual.ALLIN1_ND.READ_REG_GEN[1].GPIO_DBus_i_reg[29]\,
+      \Not_Dual.ALLIN1_ND.READ_REG_GEN[2].GPIO_DBus_i_reg[30]\ => \Not_Dual.ALLIN1_ND.READ_REG_GEN[2].GPIO_DBus_i_reg[30]\,
+      \Not_Dual.ALLIN1_ND.READ_REG_GEN[3].GPIO_DBus_i_reg[31]\ => \Not_Dual.ALLIN1_ND.READ_REG_GEN[3].GPIO_DBus_i_reg[31]\,
       \Not_Dual.gpio_Data_Out_reg[0]\ => bus2ip_rnw,
       \Not_Dual.gpio_OE_reg[0]\(0) => \Not_Dual.gpio_OE_reg[0]\(0),
       Q(3 downto 0) => Q(3 downto 0),
@@ -1576,10 +1576,10 @@ AXI_LITE_IPIF_I: entity work.hdmi_out_axi_gpio_sw_0_axi_lite_ipif
       E(0) => AXI_LITE_IPIF_I_n_6,
       GPIO_DBus_i(0) => GPIO_DBus_i(28),
       GPIO_xferAck_i => GPIO_xferAck_i,
-      \Not_Dual.READ_REG_GEN[0].GPIO_DBus_i_reg[28]\ => AXI_LITE_IPIF_I_n_17,
-      \Not_Dual.READ_REG_GEN[1].GPIO_DBus_i_reg[29]\ => AXI_LITE_IPIF_I_n_10,
-      \Not_Dual.READ_REG_GEN[2].GPIO_DBus_i_reg[30]\ => AXI_LITE_IPIF_I_n_11,
-      \Not_Dual.READ_REG_GEN[3].GPIO_DBus_i_reg[31]\ => AXI_LITE_IPIF_I_n_12,
+      \Not_Dual.ALLIN1_ND.READ_REG_GEN[0].GPIO_DBus_i_reg[28]\ => AXI_LITE_IPIF_I_n_17,
+      \Not_Dual.ALLIN1_ND.READ_REG_GEN[1].GPIO_DBus_i_reg[29]\ => AXI_LITE_IPIF_I_n_10,
+      \Not_Dual.ALLIN1_ND.READ_REG_GEN[2].GPIO_DBus_i_reg[30]\ => AXI_LITE_IPIF_I_n_11,
+      \Not_Dual.ALLIN1_ND.READ_REG_GEN[3].GPIO_DBus_i_reg[31]\ => AXI_LITE_IPIF_I_n_12,
       \Not_Dual.gpio_OE_reg[0]\(0) => AXI_LITE_IPIF_I_n_7,
       Q(3) => gpio_Data_In(0),
       Q(2) => gpio_Data_In(1),
@@ -1739,7 +1739,7 @@ entity hdmi_out_axi_gpio_sw_0 is
   attribute downgradeipidentifiedwarnings : string;
   attribute downgradeipidentifiedwarnings of hdmi_out_axi_gpio_sw_0 : entity is "yes";
   attribute x_core_info : string;
-  attribute x_core_info of hdmi_out_axi_gpio_sw_0 : entity is "axi_gpio,Vivado 2016.4";
+  attribute x_core_info of hdmi_out_axi_gpio_sw_0 : entity is "axi_gpio,Vivado 2017.2";
 end hdmi_out_axi_gpio_sw_0;
 
 architecture STRUCTURE of hdmi_out_axi_gpio_sw_0 is

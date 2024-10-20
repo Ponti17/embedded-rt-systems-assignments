@@ -1,4 +1,4 @@
-// (c) Copyright 1995-2017 Xilinx, Inc. All rights reserved.
+// (c) Copyright 1995-2024 Xilinx, Inc. All rights reserved.
 // 
 // This file contains confidential and proprietary information
 // of Xilinx, Inc. and is protected under U.S. and
@@ -48,11 +48,11 @@
 
 
 // IP VLNV: xilinx.com:ip:axi_data_fifo:2.1
-// IP Revision: 10
+// IP Revision: 12
 
-(* X_CORE_INFO = "axi_data_fifo_v2_1_10_axi_data_fifo,Vivado 2016.4" *)
-(* CHECK_LICENSE_TYPE = "hdmi_out_s00_data_fifo_0,axi_data_fifo_v2_1_10_axi_data_fifo,{}" *)
-(* CORE_GENERATION_INFO = "hdmi_out_s00_data_fifo_0,axi_data_fifo_v2_1_10_axi_data_fifo,{x_ipProduct=Vivado 2016.4,x_ipVendor=xilinx.com,x_ipLibrary=ip,x_ipName=axi_data_fifo,x_ipVersion=2.1,x_ipCoreRevision=10,x_ipLanguage=VHDL,x_ipSimLanguage=MIXED,C_FAMILY=zynq,C_AXI_PROTOCOL=1,C_AXI_ID_WIDTH=1,C_AXI_ADDR_WIDTH=32,C_AXI_DATA_WIDTH=64,C_AXI_SUPPORTS_USER_SIGNALS=0,C_AXI_AWUSER_WIDTH=1,C_AXI_ARUSER_WIDTH=1,C_AXI_WUSER_WIDTH=1,C_AXI_RUSER_WIDTH=1,C_AXI_BUSER_WIDTH=1,C_AXI_WRITE_FIFO_DEPTH=0,C_AXI_WRITE_FIFO_TYPE=lut,C_AXI\
+(* X_CORE_INFO = "axi_data_fifo_v2_1_12_axi_data_fifo,Vivado 2017.2" *)
+(* CHECK_LICENSE_TYPE = "hdmi_out_s00_data_fifo_0,axi_data_fifo_v2_1_12_axi_data_fifo,{}" *)
+(* CORE_GENERATION_INFO = "hdmi_out_s00_data_fifo_0,axi_data_fifo_v2_1_12_axi_data_fifo,{x_ipProduct=Vivado 2017.2,x_ipVendor=xilinx.com,x_ipLibrary=ip,x_ipName=axi_data_fifo,x_ipVersion=2.1,x_ipCoreRevision=12,x_ipLanguage=VHDL,x_ipSimLanguage=MIXED,C_FAMILY=zynq,C_AXI_PROTOCOL=1,C_AXI_ID_WIDTH=1,C_AXI_ADDR_WIDTH=32,C_AXI_DATA_WIDTH=64,C_AXI_SUPPORTS_USER_SIGNALS=0,C_AXI_AWUSER_WIDTH=1,C_AXI_ARUSER_WIDTH=1,C_AXI_WUSER_WIDTH=1,C_AXI_RUSER_WIDTH=1,C_AXI_BUSER_WIDTH=1,C_AXI_WRITE_FIFO_DEPTH=0,C_AXI_WRITE_FIFO_TYPE=lut,C_AXI\
 _WRITE_FIFO_DELAY=0,C_AXI_READ_FIFO_DEPTH=512,C_AXI_READ_FIFO_TYPE=bram,C_AXI_READ_FIFO_DELAY=1}" *)
 (* DowngradeIPIdentifiedWarnings = "yes" *)
 module hdmi_out_s00_data_fifo_0 (
@@ -155,7 +155,7 @@ input wire m_axi_rvalid;
 (* X_INTERFACE_INFO = "xilinx.com:interface:aximm:1.0 M_AXI RREADY" *)
 output wire m_axi_rready;
 
-  axi_data_fifo_v2_1_10_axi_data_fifo #(
+  axi_data_fifo_v2_1_12_axi_data_fifo #(
     .C_FAMILY("zynq"),
     .C_AXI_PROTOCOL(1),
     .C_AXI_ID_WIDTH(1),

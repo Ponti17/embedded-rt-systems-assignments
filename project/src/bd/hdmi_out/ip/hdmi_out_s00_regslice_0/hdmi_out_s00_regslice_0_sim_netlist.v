@@ -1,10 +1,10 @@
-// Copyright 1986-2016 Xilinx, Inc. All Rights Reserved.
+// Copyright 1986-2017 Xilinx, Inc. All Rights Reserved.
 // --------------------------------------------------------------------------------
-// Tool Version: Vivado v.2016.4 (win64) Build 1733598 Wed Dec 14 22:35:39 MST 2016
-// Date        : Fri Feb 24 14:45:49 2017
-// Host        : WK117 running 64-bit major release  (build 9200)
+// Tool Version: Vivado v.2017.2 (win64) Build 1909853 Thu Jun 15 18:39:09 MDT 2017
+// Date        : Sat Oct 19 11:46:43 2024
+// Host        : andreas-xps15 running 64-bit major release  (build 9200)
 // Command     : write_verilog -force -mode funcsim
-//               c:/Users/aholzer/Desktop/zybo-hdmi-out/src/bd/hdmi_out/ip/hdmi_out_s00_regslice_0/hdmi_out_s00_regslice_0_sim_netlist.v
+//               c:/home/university/7-semester/embedded-rt-systems-assignments/project/src/bd/hdmi_out/ip/hdmi_out_s00_regslice_0/hdmi_out_s00_regslice_0_sim_netlist.v
 // Design      : hdmi_out_s00_regslice_0
 // Purpose     : This verilog netlist is a functional simulation representation of the design and should not be modified
 //               or synthesized. This netlist cannot be used for SDF annotated simulation.
@@ -12,7 +12,7 @@
 // --------------------------------------------------------------------------------
 `timescale 1 ps / 1 ps
 
-(* CHECK_LICENSE_TYPE = "hdmi_out_s00_regslice_0,axi_register_slice_v2_1_11_axi_register_slice,{}" *) (* DowngradeIPIdentifiedWarnings = "yes" *) (* X_CORE_INFO = "axi_register_slice_v2_1_11_axi_register_slice,Vivado 2016.4" *) 
+(* CHECK_LICENSE_TYPE = "hdmi_out_s00_regslice_0,axi_register_slice_v2_1_13_axi_register_slice,{}" *) (* DowngradeIPIdentifiedWarnings = "yes" *) (* X_CORE_INFO = "axi_register_slice_v2_1_13_axi_register_slice,Vivado 2017.2" *) 
 (* NotValidForBitStream *)
 module hdmi_out_s00_regslice_0
    (aclk,
@@ -241,7 +241,7 @@ module hdmi_out_s00_regslice_0
   (* G_AXI_WSTRB_WIDTH = "8" *) 
   (* G_AXI_WUSER_INDEX = "73" *) 
   (* G_AXI_WUSER_WIDTH = "0" *) 
-  hdmi_out_s00_regslice_0_axi_register_slice_v2_1_11_axi_register_slice inst
+  hdmi_out_s00_regslice_0_axi_register_slice_v2_1_13_axi_register_slice inst
        (.aclk(aclk),
         .aresetn(aresetn),
         .m_axi_araddr(m_axi_araddr),
@@ -367,8 +367,8 @@ endmodule
 (* G_AXI_WID_INDEX = "73" *) (* G_AXI_WID_WIDTH = "0" *) (* G_AXI_WLAST_INDEX = "72" *) 
 (* G_AXI_WLAST_WIDTH = "1" *) (* G_AXI_WPAYLOAD_WIDTH = "73" *) (* G_AXI_WSTRB_INDEX = "64" *) 
 (* G_AXI_WSTRB_WIDTH = "8" *) (* G_AXI_WUSER_INDEX = "73" *) (* G_AXI_WUSER_WIDTH = "0" *) 
-(* ORIG_REF_NAME = "axi_register_slice_v2_1_11_axi_register_slice" *) 
-module hdmi_out_s00_regslice_0_axi_register_slice_v2_1_11_axi_register_slice
+(* ORIG_REF_NAME = "axi_register_slice_v2_1_13_axi_register_slice" *) 
+module hdmi_out_s00_regslice_0_axi_register_slice_v2_1_13_axi_register_slice
    (aclk,
     aresetn,
     s_axi_awid,
@@ -646,7 +646,7 @@ module hdmi_out_s00_regslice_0_axi_register_slice_v2_1_11_axi_register_slice
   assign s_axi_wready = m_axi_wready;
   GND GND
        (.G(\<const0> ));
-  hdmi_out_s00_regslice_0_axi_register_slice_v2_1_11_axic_register_slice__parameterized2 ar_pipe
+  hdmi_out_s00_regslice_0_axi_register_slice_v2_1_13_axic_register_slice__parameterized2 ar_pipe
        (.D({s_axi_arregion,s_axi_arqos,s_axi_arid,s_axi_arlock,s_axi_arlen,s_axi_arcache,s_axi_arburst,s_axi_arsize,s_axi_arprot,s_axi_araddr}),
         .Q({m_axi_arregion,m_axi_arqos,m_axi_arid,m_axi_arlock,m_axi_arlen,m_axi_arcache,m_axi_arburst,m_axi_arsize,m_axi_arprot,m_axi_araddr}),
         .aclk(aclk),
@@ -657,7 +657,7 @@ module hdmi_out_s00_regslice_0_axi_register_slice_v2_1_11_axi_register_slice
         .p_0_in(p_0_in),
         .s_axi_arready(s_axi_arready),
         .s_axi_arvalid(s_axi_arvalid));
-  hdmi_out_s00_regslice_0_axi_register_slice_v2_1_11_axic_register_slice__parameterized3 r_pipe
+  hdmi_out_s00_regslice_0_axi_register_slice_v2_1_13_axic_register_slice__parameterized3 r_pipe
        (.Q({s_axi_rid,s_axi_rlast,s_axi_rresp,s_axi_rdata}),
         .aclk(aclk),
         .\aresetn_d_reg[1] (ar_pipe_n_2),
@@ -672,8 +672,8 @@ module hdmi_out_s00_regslice_0_axi_register_slice_v2_1_11_axi_register_slice
         .s_axi_rvalid(s_axi_rvalid));
 endmodule
 
-(* ORIG_REF_NAME = "axi_register_slice_v2_1_11_axic_register_slice" *) 
-module hdmi_out_s00_regslice_0_axi_register_slice_v2_1_11_axic_register_slice__parameterized2
+(* ORIG_REF_NAME = "axi_register_slice_v2_1_13_axic_register_slice" *) 
+module hdmi_out_s00_regslice_0_axi_register_slice_v2_1_13_axic_register_slice__parameterized2
    (m_axi_arvalid,
     p_0_in,
     m_valid_i_reg_0,
@@ -1117,7 +1117,9 @@ module hdmi_out_s00_regslice_0_axi_register_slice_v2_1_11_axic_register_slice__p
         .I2(s_axi_arvalid),
         .I3(m_valid_i_reg_0),
         .O(m_valid_i_i_1__0_n_0));
-  FDRE m_valid_i_reg
+  FDRE #(
+    .INIT(1'b0)) 
+    m_valid_i_reg
        (.C(aclk),
         .CE(1'b1),
         .D(m_valid_i_i_1__0_n_0),
@@ -1132,7 +1134,9 @@ module hdmi_out_s00_regslice_0_axi_register_slice_v2_1_11_axic_register_slice__p
         .I3(s_axi_arvalid),
         .I4(p_0_in),
         .O(s_ready_i_i_1_n_0));
-  FDRE s_ready_i_reg
+  FDRE #(
+    .INIT(1'b0)) 
+    s_ready_i_reg
        (.C(aclk),
         .CE(1'b1),
         .D(s_ready_i_i_1_n_0),
@@ -1140,8 +1144,8 @@ module hdmi_out_s00_regslice_0_axi_register_slice_v2_1_11_axic_register_slice__p
         .R(1'b0));
 endmodule
 
-(* ORIG_REF_NAME = "axi_register_slice_v2_1_11_axic_register_slice" *) 
-module hdmi_out_s00_regslice_0_axi_register_slice_v2_1_11_axic_register_slice__parameterized3
+(* ORIG_REF_NAME = "axi_register_slice_v2_1_13_axic_register_slice" *) 
+module hdmi_out_s00_regslice_0_axi_register_slice_v2_1_13_axic_register_slice__parameterized3
    (s_axi_rvalid,
     m_axi_rready,
     Q,
@@ -2219,7 +2223,9 @@ module hdmi_out_s00_regslice_0_axi_register_slice_v2_1_11_axic_register_slice__p
         .I3(m_axi_rready),
         .I4(\aresetn_d_reg[1] ),
         .O(m_valid_i_i_1_n_0));
-  FDRE m_valid_i_reg
+  FDRE #(
+    .INIT(1'b0)) 
+    m_valid_i_reg
        (.C(aclk),
         .CE(1'b1),
         .D(m_valid_i_i_1_n_0),
@@ -2234,7 +2240,9 @@ module hdmi_out_s00_regslice_0_axi_register_slice_v2_1_11_axic_register_slice__p
         .I3(s_axi_rvalid),
         .I4(p_0_in),
         .O(s_ready_i_i_1_n_0));
-  FDRE s_ready_i_reg
+  FDRE #(
+    .INIT(1'b0)) 
+    s_ready_i_reg
        (.C(aclk),
         .CE(1'b1),
         .D(s_ready_i_i_1_n_0),
@@ -2699,8 +2707,8 @@ module glbl ();
     reg JTAG_USER_TDO3_GLBL = 1'bz;
     reg JTAG_USER_TDO4_GLBL = 1'bz;
 
-    assign (weak1, weak0) GSR = GSR_int;
-    assign (weak1, weak0) GTS = GTS_int;
+    assign (strong1, weak0) GSR = GSR_int;
+    assign (strong1, weak0) GTS = GTS_int;
     assign (weak1, weak0) PRLD = PRLD_int;
 
     initial begin

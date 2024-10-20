@@ -1,10 +1,10 @@
--- Copyright 1986-2016 Xilinx, Inc. All Rights Reserved.
+-- Copyright 1986-2017 Xilinx, Inc. All Rights Reserved.
 -- --------------------------------------------------------------------------------
--- Tool Version: Vivado v.2016.4 (win64) Build 1733598 Wed Dec 14 22:35:39 MST 2016
--- Date        : Wed Feb 22 16:50:34 2017
--- Host        : WK117 running 64-bit major release  (build 9200)
+-- Tool Version: Vivado v.2017.2 (win64) Build 1909853 Thu Jun 15 18:39:09 MDT 2017
+-- Date        : Sat Oct 19 11:46:46 2024
+-- Host        : andreas-xps15 running 64-bit major release  (build 9200)
 -- Command     : write_vhdl -force -mode funcsim
---               C:/Users/aholzer/Desktop/zybo-hdmi-out/src/bd/hdmi_out/ip/hdmi_out_axi_gpio_hdmi_0/hdmi_out_axi_gpio_hdmi_0_sim_netlist.vhdl
+--               C:/home/university/7-semester/embedded-rt-systems-assignments/project/src/bd/hdmi_out/ip/hdmi_out_axi_gpio_hdmi_0/hdmi_out_axi_gpio_hdmi_0_sim_netlist.vhdl
 -- Design      : hdmi_out_axi_gpio_hdmi_0
 -- Purpose     : This VHDL netlist is a functional simulation representation of the design and should not be modified or
 --               synthesized. This netlist cannot be used for SDF annotated simulation.
@@ -1051,8 +1051,8 @@ end hdmi_out_axi_gpio_hdmi_0_GPIO_Core;
 
 architecture STRUCTURE of hdmi_out_axi_gpio_hdmi_0_GPIO_Core is
   signal \^gpio_xferack_i\ : STD_LOGIC;
-  signal \Not_Dual.READ_REG_GEN[0].GPIO_DBus_i[31]_i_1_n_0\ : STD_LOGIC;
-  signal \Not_Dual.READ_REG_GEN[0].GPIO_DBus_i[31]_i_2_n_0\ : STD_LOGIC;
+  signal \Not_Dual.ALLIN1_ND.READ_REG_GEN[0].GPIO_DBus_i[31]_i_1_n_0\ : STD_LOGIC;
+  signal \Not_Dual.ALLIN1_ND.READ_REG_GEN[0].GPIO_DBus_i[31]_i_2_n_0\ : STD_LOGIC;
   signal gpio_Data_In : STD_LOGIC;
   signal gpio_data_in_xor : STD_LOGIC;
   signal gpio_io_i_d2 : STD_LOGIC;
@@ -1061,11 +1061,41 @@ architecture STRUCTURE of hdmi_out_axi_gpio_hdmi_0_GPIO_Core is
   signal iGPIO_xferAck : STD_LOGIC;
   signal l : STD_LOGIC;
   attribute SOFT_HLUTNM : string;
-  attribute SOFT_HLUTNM of \Not_Dual.READ_REG_GEN[0].GPIO_DBus_i[31]_i_2\ : label is "soft_lutpair9";
+  attribute SOFT_HLUTNM of \Not_Dual.ALLIN1_ND.READ_REG_GEN[0].GPIO_DBus_i[31]_i_2\ : label is "soft_lutpair9";
   attribute SOFT_HLUTNM of iGPIO_xferAck_i_1 : label is "soft_lutpair9";
 begin
   GPIO_xferAck_i <= \^gpio_xferack_i\;
   gpio_io_t(0) <= \^gpio_io_t\(0);
+\Not_Dual.ALLIN1_ND.READ_REG_GEN[0].GPIO_DBus_i[31]_i_1\: unisim.vcomponents.LUT6
+    generic map(
+      INIT => X"0000E20000000000"
+    )
+        port map (
+      I0 => gpio_Data_In,
+      I1 => Q(0),
+      I2 => \^gpio_io_t\(0),
+      I3 => \Not_Dual.ALLIN1_ND.READ_REG_GEN[0].GPIO_DBus_i[31]_i_2_n_0\,
+      I4 => \MEM_DECODE_GEN[0].cs_out_i_reg[0]\,
+      I5 => bus2ip_rnw,
+      O => \Not_Dual.ALLIN1_ND.READ_REG_GEN[0].GPIO_DBus_i[31]_i_1_n_0\
+    );
+\Not_Dual.ALLIN1_ND.READ_REG_GEN[0].GPIO_DBus_i[31]_i_2\: unisim.vcomponents.LUT2
+    generic map(
+      INIT => X"1"
+    )
+        port map (
+      I0 => \^gpio_xferack_i\,
+      I1 => gpio_xferAck_Reg,
+      O => \Not_Dual.ALLIN1_ND.READ_REG_GEN[0].GPIO_DBus_i[31]_i_2_n_0\
+    );
+\Not_Dual.ALLIN1_ND.READ_REG_GEN[0].GPIO_DBus_i_reg[31]\: unisim.vcomponents.FDRE
+     port map (
+      C => s_axi_aclk,
+      CE => '1',
+      D => \Not_Dual.ALLIN1_ND.READ_REG_GEN[0].GPIO_DBus_i[31]_i_1_n_0\,
+      Q => ip2bus_data(0),
+      R => '0'
+    );
 \Not_Dual.GEN_INTERRUPT.GPIO_intr_reg\: unisim.vcomponents.FDRE
      port map (
       C => s_axi_aclk,
@@ -1089,36 +1119,6 @@ begin
       gpio_io_i(0) => gpio_io_i(0),
       s_axi_aclk => s_axi_aclk,
       scndry_vect_out(0) => gpio_io_i_d2
-    );
-\Not_Dual.READ_REG_GEN[0].GPIO_DBus_i[31]_i_1\: unisim.vcomponents.LUT6
-    generic map(
-      INIT => X"0000E20000000000"
-    )
-        port map (
-      I0 => gpio_Data_In,
-      I1 => Q(0),
-      I2 => \^gpio_io_t\(0),
-      I3 => \Not_Dual.READ_REG_GEN[0].GPIO_DBus_i[31]_i_2_n_0\,
-      I4 => \MEM_DECODE_GEN[0].cs_out_i_reg[0]\,
-      I5 => bus2ip_rnw,
-      O => \Not_Dual.READ_REG_GEN[0].GPIO_DBus_i[31]_i_1_n_0\
-    );
-\Not_Dual.READ_REG_GEN[0].GPIO_DBus_i[31]_i_2\: unisim.vcomponents.LUT2
-    generic map(
-      INIT => X"1"
-    )
-        port map (
-      I0 => \^gpio_xferack_i\,
-      I1 => gpio_xferAck_Reg,
-      O => \Not_Dual.READ_REG_GEN[0].GPIO_DBus_i[31]_i_2_n_0\
-    );
-\Not_Dual.READ_REG_GEN[0].GPIO_DBus_i_reg[31]\: unisim.vcomponents.FDRE
-     port map (
-      C => s_axi_aclk,
-      CE => '1',
-      D => \Not_Dual.READ_REG_GEN[0].GPIO_DBus_i[31]_i_1_n_0\,
-      Q => ip2bus_data(0),
-      R => '0'
     );
 \Not_Dual.gpio_Data_In_reg[0]\: unisim.vcomponents.FDRE
      port map (
@@ -2376,7 +2376,7 @@ entity hdmi_out_axi_gpio_hdmi_0 is
   attribute downgradeipidentifiedwarnings : string;
   attribute downgradeipidentifiedwarnings of hdmi_out_axi_gpio_hdmi_0 : entity is "yes";
   attribute x_core_info : string;
-  attribute x_core_info of hdmi_out_axi_gpio_hdmi_0 : entity is "axi_gpio,Vivado 2016.4";
+  attribute x_core_info of hdmi_out_axi_gpio_hdmi_0 : entity is "axi_gpio,Vivado 2017.2";
 end hdmi_out_axi_gpio_hdmi_0;
 
 architecture STRUCTURE of hdmi_out_axi_gpio_hdmi_0 is

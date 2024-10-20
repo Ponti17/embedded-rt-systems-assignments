@@ -1,4 +1,4 @@
--- (c) Copyright 1995-2017 Xilinx, Inc. All rights reserved.
+-- (c) Copyright 1995-2024 Xilinx, Inc. All rights reserved.
 -- 
 -- This file contains confidential and proprietary information
 -- of Xilinx, Inc. and is protected under U.S. and
@@ -47,14 +47,14 @@
 -- DO NOT MODIFY THIS FILE.
 
 -- IP VLNV: xilinx.com:ip:proc_sys_reset:5.0
--- IP Revision: 10
+-- IP Revision: 11
 
 LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
 USE ieee.numeric_std.ALL;
 
-LIBRARY proc_sys_reset_v5_0_10;
-USE proc_sys_reset_v5_0_10.proc_sys_reset;
+LIBRARY proc_sys_reset_v5_0_11;
+USE proc_sys_reset_v5_0_11.proc_sys_reset;
 
 ENTITY hdmi_out_proc_sys_reset_1_0 IS
   PORT (

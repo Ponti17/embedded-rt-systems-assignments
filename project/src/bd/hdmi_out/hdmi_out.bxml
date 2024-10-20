@@ -2,9 +2,9 @@
 <Root MajorVersion="0" MinorVersion="33">
   <CompositeFile CompositeFileTopName="hdmi_out" CanBeSetAsTop="false" CanDisplayChildGraph="true">
     <Description>Composite Fileset</Description>
-    <Generation Name="SYNTHESIS" State="GENERATED" Timestamp="1487976319"/>
-    <Generation Name="IMPLEMENTATION" State="GENERATED" Timestamp="1487976319"/>
-    <Generation Name="SIMULATION" State="GENERATED" Timestamp="1487976319"/>
+    <Generation Name="SYNTHESIS" State="GENERATED" Timestamp="1729331120"/>
+    <Generation Name="IMPLEMENTATION" State="GENERATED" Timestamp="1729331120"/>
+    <Generation Name="SIMULATION" State="GENERATED" Timestamp="1729331120"/>
     <FileCollection Name="SOURCES" Type="SOURCES">
       <File Name="ip\hdmi_out_axi_dynclk_0_0\hdmi_out_axi_dynclk_0_0.xci" Type="IP">
         <Instance HierarchyPath="axi_dynclk_0"/>
@@ -158,10 +158,12 @@
         <UsedIn Val="IMPLEMENTATION"/>
         <UsedIn Val="SIMULATION"/>
       </File>
-      <File Name="hdl\hdmi_out.vhd" Type="VHDL">
-        <Properties IsEditable="false" IsVisible="true" Timestamp="0" IsTrackable="false" IsStatusTracked="false"/>
+      <File Name="ip\hdmi_out_auto_pc_1\hdmi_out_auto_pc_1.xci" Type="IP">
+        <Instance HierarchyPath="processing_system7_0_axi_periph/s00_couplers/auto_pc"/>
+        <Properties IsEditable="false" IsVisible="true" Timestamp="0" IsTrackable="true" IsStatusTracked="true"/>
         <Library Name="xil_defaultlib"/>
         <UsedIn Val="SYNTHESIS"/>
+        <UsedIn Val="IMPLEMENTATION"/>
         <UsedIn Val="SIMULATION"/>
       </File>
       <File Name="ip\hdmi_out_s00_regslice_0\hdmi_out_s00_regslice_0.xci" Type="IP">
@@ -188,12 +190,10 @@
         <UsedIn Val="IMPLEMENTATION"/>
         <UsedIn Val="SIMULATION"/>
       </File>
-      <File Name="ip\hdmi_out_auto_pc_1\hdmi_out_auto_pc_1.xci" Type="IP">
-        <Instance HierarchyPath="processing_system7_0_axi_periph/s00_couplers/auto_pc"/>
-        <Properties IsEditable="false" IsVisible="true" Timestamp="0" IsTrackable="true" IsStatusTracked="true"/>
+      <File Name="hdl\hdmi_out.vhd" Type="VHDL">
+        <Properties IsEditable="false" IsVisible="true" Timestamp="0" IsTrackable="false" IsStatusTracked="false"/>
         <Library Name="xil_defaultlib"/>
         <UsedIn Val="SYNTHESIS"/>
-        <UsedIn Val="IMPLEMENTATION"/>
         <UsedIn Val="SIMULATION"/>
       </File>
       <File Name="hdmi_out_ooc.xdc" Type="XDC">

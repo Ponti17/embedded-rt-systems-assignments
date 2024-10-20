@@ -1,10 +1,10 @@
-// Copyright 1986-2016 Xilinx, Inc. All Rights Reserved.
+// Copyright 1986-2017 Xilinx, Inc. All Rights Reserved.
 // --------------------------------------------------------------------------------
-// Tool Version: Vivado v.2016.4 (win64) Build 1733598 Wed Dec 14 22:35:39 MST 2016
-// Date        : Wed Feb 22 16:51:43 2017
-// Host        : WK117 running 64-bit major release  (build 9200)
+// Tool Version: Vivado v.2017.2 (win64) Build 1909853 Thu Jun 15 18:39:09 MDT 2017
+// Date        : Sat Oct 19 11:46:51 2024
+// Host        : andreas-xps15 running 64-bit major release  (build 9200)
 // Command     : write_verilog -force -mode funcsim
-//               C:/Users/aholzer/Desktop/zybo-hdmi-out/src/bd/hdmi_out/ip/hdmi_out_processing_system7_0_0/hdmi_out_processing_system7_0_0_sim_netlist.v
+//               C:/home/university/7-semester/embedded-rt-systems-assignments/project/src/bd/hdmi_out/ip/hdmi_out_processing_system7_0_0/hdmi_out_processing_system7_0_0_sim_netlist.v
 // Design      : hdmi_out_processing_system7_0_0
 // Purpose     : This verilog netlist is a functional simulation representation of the design and should not be modified
 //               or synthesized. This netlist cannot be used for SDF annotated simulation.
@@ -12,7 +12,7 @@
 // --------------------------------------------------------------------------------
 `timescale 1 ps / 1 ps
 
-(* CHECK_LICENSE_TYPE = "hdmi_out_processing_system7_0_0,processing_system7_v5_5_processing_system7,{}" *) (* DowngradeIPIdentifiedWarnings = "yes" *) (* X_CORE_INFO = "processing_system7_v5_5_processing_system7,Vivado 2016.4" *) 
+(* CHECK_LICENSE_TYPE = "hdmi_out_processing_system7_0_0,processing_system7_v5_5_processing_system7,{}" *) (* DowngradeIPIdentifiedWarnings = "yes" *) (* X_CORE_INFO = "processing_system7_v5_5_processing_system7,Vivado 2017.2" *) 
 (* NotValidForBitStream *)
 module hdmi_out_processing_system7_0_0
    (I2C0_SDA_I,
@@ -664,24 +664,6 @@ module hdmi_out_processing_system7_0_0
   wire [7:0]NLW_inst_S_AXI_HP3_WCOUNT_UNCONNECTED;
   wire [1:0]NLW_inst_TRACE_DATA_UNCONNECTED;
   wire [1:0]NLW_inst_USB1_PORT_INDCTL_UNCONNECTED;
-PULLUP pullup_MIO_0
-       (.O(MIO[0]));
-PULLUP pullup_MIO_9
-       (.O(MIO[9]));
-PULLUP pullup_MIO_10
-       (.O(MIO[10]));
-PULLUP pullup_MIO_11
-       (.O(MIO[11]));
-PULLUP pullup_MIO_12
-       (.O(MIO[12]));
-PULLUP pullup_MIO_13
-       (.O(MIO[13]));
-PULLUP pullup_MIO_14
-       (.O(MIO[14]));
-PULLUP pullup_MIO_15
-       (.O(MIO[15]));
-PULLUP pullup_MIO_46
-       (.O(MIO[46]));
 
   (* C_DM_WIDTH = "4" *) 
   (* C_DQS_WIDTH = "4" *) 
@@ -5343,8 +5325,8 @@ module glbl ();
     reg JTAG_USER_TDO3_GLBL = 1'bz;
     reg JTAG_USER_TDO4_GLBL = 1'bz;
 
-    assign (weak1, weak0) GSR = GSR_int;
-    assign (weak1, weak0) GTS = GTS_int;
+    assign (strong1, weak0) GSR = GSR_int;
+    assign (strong1, weak0) GTS = GTS_int;
     assign (weak1, weak0) PRLD = PRLD_int;
 
     initial begin
