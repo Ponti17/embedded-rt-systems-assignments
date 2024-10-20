@@ -19,8 +19,8 @@
 /*																		*/
 /************************************************************************/
 
-#ifndef DISPLAY_DEMO_H_
-#define DISPLAY_DEMO_H_
+#ifndef MAIN_H
+#define MAIN_H
 
 /* ------------------------------------------------------------ */
 /*				Include File Definitions						*/
@@ -54,4 +54,4 @@ void DemoPrintTest(u8 *frame, u32 width, u32 height, u32 stride, int pattern);
 
 /************************************************************************/
 
-#endif /* DISPLAY_DEMO_H_ */
+#endif /* MAIN_H */

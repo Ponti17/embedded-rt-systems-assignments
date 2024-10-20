@@ -23,7 +23,7 @@
 /*				Include File Definitions						*/
 /* ------------------------------------------------------------ */
 
-#include "display_demo.h"
+#include "main.h"
 #include "display_ctrl/display_ctrl.h"
 #include <stdio.h>
 #include "xuartps.h"
