@@ -12,6 +12,15 @@ public:
   virtual void draw() = 0;
 };
 
+class Circle : public Shape {
+
+
+}; // Engine
+
+class Rectrangle : public Shape {
+
+}; // Engine
+
 } // Engine
 
 #endif //SHAPE_HPP

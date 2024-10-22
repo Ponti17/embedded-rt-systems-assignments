@@ -11,6 +11,8 @@
 namespace Engine {
 
 class GameState {
+      public:
+              GameScene * currentScene;
 
 };
 
