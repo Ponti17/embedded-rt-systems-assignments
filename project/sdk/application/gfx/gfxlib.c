@@ -12,7 +12,8 @@
 /*		20/10/2024(AP)	        										*/
 /************************************************************************/
 
-#include "display_ctrl/display_ctrl.h"
+#include "main.h"
+#include "display_ctrl.h"
 #include "gfxlib.h"
 
 void gfx_init(DisplayCtrl *dispCtrl)
@@ -27,16 +28,15 @@ void swap_buffer()
     // This function is not implemented yet
 }
 
-#define RESX 1920
-#define RESY 1080
-
 /**
  * Blit a rectangle of color at position x, y with width w and height h
+ * @param frame pointer to the frame buffer
  * @param x x-coordinate of the top-left corner of the rectangle
  * @param y y-coordinate of the top-left corner of the rectangle
  * @param w width of the rectangle
  * @param h height of the rectangle
  * @param color color of the rectangle (BGRA8888)
+ * @return void
  */
 void blit_rect(u8 *frame, u32 x, u32 y, u16 w, u16 h, u32 color)
 {
@@ -54,11 +54,20 @@ void blit_rect(u8 *frame, u32 x, u32 y, u16 w, u16 h, u32 color)
 			}
 		}
 	}
-	Xil_DCacheFlushRange((unsigned int) frame, DEMO_MAX_FRAME);
 }
 
 void blit_circ(uint32_t x, uint32_t y, uint32_t r, uint32_t color)
 {
     // Blit a circle of color at position x, y with radius r
     // This function is not implemented yet
+}
+
+/**
+ * Flushes the data cache for the frame buffer
+ * @param frame pointer to the frame buffer
+ * @return void
+ */
+void flush_fb(u8 *frame)
+{
+	Xil_DCacheFlushRange((unsigned int) frame, FB_SIZE);
 }
