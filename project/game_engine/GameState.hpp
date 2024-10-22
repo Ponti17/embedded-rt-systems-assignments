@@ -11,8 +11,21 @@
 namespace Engine {
 
 class GameState {
-      public:
-              GameScene * currentScene;
+      
+public:
+      GameScene * currentScene;
+      
+      void update(float deltaTime) {
+        
+        currentScene->update(deltaTime);
+        
+      }
+
+      void render() {
+        
+        currentScene->render();
+        
+      }
 
 };
 

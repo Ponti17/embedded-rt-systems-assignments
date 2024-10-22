@@ -1,7 +1,3 @@
-//
-// Created by alext on 22/10/2024.
-//
-
 #ifndef GAMESCENE_H
 #define GAMESCENE_H
 
@@ -12,18 +8,41 @@
 
 namespace Engine {
 
-class GameScene {
+  
+  class GameScene {
 
     public:
-        std::vector<GameObject *> gameObjects;
+      std::vector<GameObject *> gameObjects;
 
-        void update(float deltaTime) {
-          for (auto & object : this->gameObjects) {
-            object->update(deltaTime);
-            };
+      void update(float deltaTime) {
 
-};
+        for (auto &gameObject : gameObjects) {
+            
+            gameObject->update(deltaTime);
+            
+        }
+        
+      }
 
-} // Engine
+      void render() {
 
-#endif //GAMESCENE_H
+          for (auto & gameObject : gameObjects) {
+
+            gameObject->render();
+
+          }
+
+      }
+
+      void addGameObject(GameObject * gameObject) {
+
+        gameObjects.push_back(gameObject);
+
+      }
+
+
+  };
+
+}
+
+#endif

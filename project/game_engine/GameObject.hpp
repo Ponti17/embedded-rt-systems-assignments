@@ -1,7 +1,3 @@
-//
-// Created by alext on 22/10/2024.
-//
-
 #ifndef GAMEOBJECT_HPP
 #define GAMEOBJECT_HPP
 
@@ -20,6 +16,6 @@ namespace Engine {
 			virtual void render() = 0;
 	};
 
-} // Engine
+}
 
-#endif //GAMEOBJECT_HPP
+#endif
