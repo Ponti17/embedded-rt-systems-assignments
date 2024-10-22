@@ -9,8 +9,11 @@ namespace Engine {
 	class GameObject {
 
   		public:
-		    Vec2 position;
-	        Vec2 velocity;
+
+			GameObject(): model(nullptr) {}
+
+		    Vec2f position;
+	        Vec2f velocity;
             Shape * model;
 			virtual void update(float deltaTime) = 0;
 			virtual void render() = 0;
