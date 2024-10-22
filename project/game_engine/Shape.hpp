@@ -1,43 +1,42 @@
 #ifndef SHAPE_HPP
 #define SHAPE_HPP
 
+#include "types.hpp"
+
 namespace Engine {
 
-	class Shape {
-		public:
-		virtual void draw() = 0;
-	};
+    class Shape {
+    public:
+        virtual void draw(Vec2 position) = 0;  // Pure virtual function for drawing
+    };
 
-namespace Shapes {
+    namespace Shapes2D {
 
-		class Circle : public Shape {
-			
-			float radius;
+        class Circle : public Shape {
+        public:
+            float radius;
 
-			Circle(float radius) : radius(radius) {}
+           
+            Circle(float radius) : radius(radius) {}
 
-			void draw() override {
-				
-				//todo: GPU API CALL
+            void draw(Vec2 position) override {
+                // TODO: GPU API CALL for Circle
+            }
+        };
 
-			}
+        class Rectangle : public Shape {
+        public:
+            int width, height;
 
-		};
+            
+            Rectangle(int width, int height) : width(width), height(height) {}
 
-		class Rectrangle : public Shape {
+            void draw(Vec2 position) override {
+                // TODO: GPU API CALL for Rectangle
+            }
+        };
 
-			int width, height;
+    } // namespace Shapes2D
+} // namespace Engine
 
-			Rectrangle(int width, int height) : width(width), height(height) {}
-
-			void draw() override {
-
-				//todo: GPU API CALL 
-
-			}
-
-		};
-	}
-}
-
-#endif
+#endif // SHAPE_HPP
