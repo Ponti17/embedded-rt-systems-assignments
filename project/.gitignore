@@ -2,14 +2,8 @@
 /*
 
 # whitelist the necessary files and folders, this gets everything from inside them too
-!.gitignore
-!.gitmodules
-!README.md
-!hw_handoff/
-!proj/
-!repo/
-!sdk/
-!src/
+!/vivado
+!/gaphor/
 
 #Digilent Added ignore rules for Vivado projects
 
