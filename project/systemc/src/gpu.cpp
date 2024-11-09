@@ -69,7 +69,7 @@ void gpu_blit_rect(cl_type& cl)
     std::cout << "color: " << color << std::endl;
 
     for (int y_idx = y; y_idx < y+h; ++y_idx) {
-        int idx = y_idx * 400;
+        int idx = y_idx * bound_fb->width;
         for (int x_idx = x; x_idx < x+w; ++x_idx) {
             bound_fb->fb_array[idx + x_idx] = color;
         }

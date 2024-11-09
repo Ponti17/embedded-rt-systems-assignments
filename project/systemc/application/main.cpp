@@ -15,13 +15,13 @@ int sc_main(int sc_argc, char* sc_argv[])
 
 void cl_test()
 {
-	fb_type* fb1 = allocate_fb(400, 400, BGRA8888);
-
 	/* Initialize the GPU */
-	sc_uint<16> RESX = 400;
+	sc_uint<16> RESX = 800;
 	sc_uint<16> RESY = 400;
-	sc_uint<16> STRIDE = 400 * 4;
+	sc_uint<16> STRIDE = RESX * 4;
 	gpu_init(STRIDE, RESX, RESY);
+
+	fb_type* fb1 = allocate_fb(RESX, RESY, BGRA8888);
 
 	/* Create command list instance */
     cl_type cl_instance;
