@@ -37,13 +37,22 @@ void bind_fb(fb_type* fb)
     bound_fb = fb;
 }
 
+sc_uint<32> read_cl(cl_type* cl)
+{
+    return cl->array[cl->idx++];
+}
+
 void gpu_blit_rect(cl_type cl)
 {
-    sc_uint<16> x = cl.array[cl.idx] >> 16;
-    sc_uint<16> y = cl.array[cl.idx + 1] & 0xFFFF;
-    sc_uint<16> w = cl.array[cl.idx + 1] >> 16;
-    sc_uint<16> h = cl.array[cl.idx + 2] & 0xFFFF;
-    sc_uint<32> color = cl.array[cl.idx + 3];
+    sc_uint<32> dword_0 = read_cl(&cl);
+    sc_uint<32> dword_1 = read_cl(&cl);
+    sc_uint<32> dword_2 = read_cl(&cl);
+    sc_uint<32> dword_3 = read_cl(&cl);
+    sc_uint<16> x = dword_0 >> 16;
+    sc_uint<16> y = dword_1 & 0xFFFF;
+    sc_uint<16> w = dword_1 >> 16;
+    sc_uint<16> h = dword_2 & 0xFFFF;
+    sc_uint<32> color = dword_3;
 
     std::cout << "x: " << x << std::endl;
     std::cout << "y: " << y << std::endl;
