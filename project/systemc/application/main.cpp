@@ -1,16 +1,36 @@
 #include "systemc.h"
 #include "gpu.hpp"
+#include "cl.hpp"
 
-#define SIMULATION_TIME 200
-#define SIMULATION_TIME_UNIT SC_MS
+/* Function Prototypes */
+void cl_test(void);
 
 int sc_main(int sc_argc, char* sc_argv[])
 {
-	// Create instance of the SystemC module
-	ModuleSingle ModuleSingle_i("ModuleSingle_i");
-
-	// Invoke the simulator
-	sc_start(SIMULATION_TIME, SIMULATION_TIME_UNIT);
-	std::cout << "Simulation finished at " << sc_time_stamp() << std::endl;
+	cl_test();
 	return 0;
+}
+
+void cl_test()
+{
+	/* Create command list instance */
+    cl_type cl_instance;
+
+    /* Create command list of size 16 */
+	int size = 16;
+    create_cl(cl_instance, size);
+
+	/* Add values to array */
+	for (int i = 0; i < cl_instance.size; ++i) {
+		cl_instance.array[i] = i;
+	}
+
+    /* Loop through array */
+    for (int i = 0; i < cl_instance.size; ++i) {
+        std::cout << cl_instance.array[i] << " ";
+    }
+    std::cout << std::endl;
+
+    /* Delete the cl_instance */
+    delete_cl(cl_instance);
 }
