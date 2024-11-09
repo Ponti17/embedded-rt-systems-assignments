@@ -36,7 +36,17 @@ void cl_test()
 	/* Bind FB */
 	bind_fb(fb1);
 
-	blit_rect(0x32, 0x32, 0x64, 0x64, 0x0000FFFF);
+	/* Blit black background */
+	blit_rect(0, 0, RESX, RESY, 0x000000FF);
+
+	/* Blit red square */
+	blit_rect(50, 50, 100, 100, 0x0000FFFF);
+
+	/* Blit green square */
+	blit_rect(50, 200, 200, 100, 0x00FF00FF);
+
+	/* Blit blue square */
+	blit_rect(200, 50, 100, 200, 0xFF0000FF);
 
 	/* Print all 32-bit entries in cl_instance.array as 4-byte hex */
 	/* Be vary of leading 0 */
