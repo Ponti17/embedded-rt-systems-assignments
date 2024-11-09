@@ -3,15 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35222.181
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "a1_31", "A1_31\a1_31.vcxproj", "{4263A52E-9CC7-4016-AEDB-B9BEB2257020}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "a1_32", "A1_32\a1_32.vcxproj", "{24C39CB3-4FA5-4C4B-8807-DD53AB2D31F3}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "a1_33", "A1_33\a1_33.vcxproj", "{294F5CBF-9EFB-4C4C-B205-7D8FED4DF4E7}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "a1_34", "A1_34\a1_34.vcxproj", "{E1A88679-50C1-492C-95EC-C0ACB7C45D79}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "a1_35", "A1_35\a1_35.vcxproj", "{5BAEE456-EA61-445F-B890-F96EECB8A0BB}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gpu_model", "application\gpu.vcxproj", "{4263A52E-9CC7-4016-AEDB-B9BEB2257020}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

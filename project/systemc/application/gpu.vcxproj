@@ -19,11 +19,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\ModuleSingle.cpp" />
+    <ClCompile Include="..\src\gpu.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\inc\ModuleSingle.hpp" />
+    <ClInclude Include="..\inc\gpu.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
@@ -31,7 +31,7 @@
     <ProjectGuid>{4263a52e-9cc7-4016-aedb-b9beb2257020}</ProjectGuid>
     <RootNamespace>systemctemplate</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>a1_31</ProjectName>
+    <ProjectName>gpu</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
