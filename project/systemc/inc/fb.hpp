@@ -30,4 +30,12 @@ struct fb_type {
  */
 fb_type* allocate_fb(sc_uint<16> width, sc_uint<16> height, sc_uint<8> format);
 
+/**
+ * Save a frame buffer as an image
+ * @param fb Frame buffer
+ * @param filename Filename
+ * @return void
+ */
+void save_fb_as_image(fb_type* fb, const std::string& filename);
+
 #endif // FB_HPP

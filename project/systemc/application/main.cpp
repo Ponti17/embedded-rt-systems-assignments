@@ -1,6 +1,7 @@
 #include "systemc.h"
 #include "cl.hpp"
 #include "gpu.hpp"
+#include "fb.hpp"
 #include <iomanip>
 
 /* Function Prototypes */
@@ -14,6 +15,8 @@ int sc_main(int sc_argc, char* sc_argv[])
 
 void cl_test()
 {
+	fb_type* fb1 = allocate_fb(400, 400, BGRA8888);
+
 	/* Initialize the GPU */
 	sc_uint<16> RESX = 400;
 	sc_uint<16> RESY = 400;
@@ -42,6 +45,8 @@ void cl_test()
 
 	/* Submit the command list */
 	submit_cl();
+
+	save_fb_as_image(fb1, "framebuffer_image.png");
 
     /* Delete the cl_instance */
     delete_cl(cl_instance);
