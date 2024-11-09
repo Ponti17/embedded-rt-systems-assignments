@@ -51,6 +51,7 @@ void cl_test()
 	/* Blit cyan circle */
 	blit_circ(600, 200, 100, 0xFFFF00FF);
 
+	/* Blit yellow line */
 	blit_line(300, 0, 500, 400, 20, 0x00FFFFFF);
 
 	/* Print all 32-bit entries in cl_instance.array as 4-byte hex */

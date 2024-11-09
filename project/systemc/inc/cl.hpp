@@ -73,7 +73,6 @@ cl_type& get_bound_cl();
 /**
  * Construct a blit rectangle command.
  * Will be put in the currently bound command list.
- * @param cl Command list
  * @param x X coordinate
  * @param y Y coordinate
  * @param w Width
@@ -86,7 +85,6 @@ void blit_rect(sc_uint<16> x, sc_uint<16> y, sc_uint<16> w, sc_uint<16> h, sc_ui
 /**
  * Construct a blit circ command.
  * Will be put in the currently bound command list.
- * @param cl Command list
  * @param x X coordinate
  * @param y Y coordinate
  * @param r Radius
@@ -98,7 +96,6 @@ void blit_circ(sc_uint<16> x, sc_uint<16> y, sc_uint<16> r, sc_uint<32> color);
 /**
  * Construct a blit line command.
  * Will be put in the currently bound command list.
- * @param cl Command list
  * @param x0 Start X coordinate
  * @param y0 Start Y coordinate
  * @param x1 End X coordinate

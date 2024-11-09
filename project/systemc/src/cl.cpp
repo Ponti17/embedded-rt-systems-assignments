@@ -1,6 +1,20 @@
 /*
  * cl.cpp
  * Date Created: 09/11/24
+ * 
+ * DESCRIPTION:
+ * This file contains the implementation for the command list API.
+ * 
+ * A command list uses the same concept as the CPU stack, but lists GPU commands
+ * to be executed. The command list is a simple array of 32-bit values.
+ * 
+ * The cl object is allocated in memory and "bound". When the cl object is bound,
+ * the GPU stores the address of the cl object and can read the commands from it.
+ * 
+ * New commands can be added to a bound cl object.
+ * 
+ * In the final implementation the construction and binding of command lists
+ * will be handled by the CPU.
 */
 
 #include "cl.hpp"

@@ -1,6 +1,14 @@
 /*
  * fb.cpp
  * Date Created: 09/11/24
+ * 
+ * DESCRIPTION:
+ * This file contains the implementation for the frame buffer API.
+ * 
+ * A frame buffer is a memory buffer that holds the pixel data for a frame.
+ * The stride is the number of bytes in a row of pixels.
+ * 
+ * A helper function is provided to save the frame buffer as an image.
 */
 
 #include "fb.hpp"
@@ -36,14 +44,6 @@ fb_type* allocate_fb(sc_uint<16> width, sc_uint<16> height, sc_uint<8> format)
     }
 
     fb->fb_array = new sc_uint<32>[fb->stride * height]();
-
-    // Set the entire frame buffer to blue
-    for (int y = 0; y < height; ++y) {
-        for (int x = 0; x < width; ++x) {
-            int idx = y * width + x;
-            fb->fb_array[idx] = (0xFF000000); // Blue channel set to 255, others set to 0
-        }
-    }
 
     return fb;
 }

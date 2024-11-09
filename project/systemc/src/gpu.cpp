@@ -1,6 +1,19 @@
 /*
  * gpu.cpp
  * Date Created: 09/11/24
+ * 
+ * DESCRIPTION:
+ * This file contains a software model of the GPU.
+ * 
+ * Ideally this should be converted to a somewhat accurate SystemC model.
+ * 
+ * The GPU can have one bound command list at a time.
+ * 
+ * The command submit_cl() will execute all commands in the bound command list.
+ * Note that submitting will "rewind" the command list i.e. the index will be reset.
+ * 
+ * The GPU can also have one bound framebuffer at a time. This framebuffer will be
+ * the target of all blit commands.
 */
 
 #include "gpu.hpp"
