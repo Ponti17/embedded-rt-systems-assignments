@@ -1,9 +1,9 @@
 /*
- * ModuleDouble.cpp
- * Date Created: 29/08/24
+ * gpu.cpp
+ * Date Created: 09/11/24
 */
 
-#include "ModuleSingle.hpp"
+#include "gpu.hpp"
 
 /* Constructor */
 ModuleSingle::ModuleSingle(sc_module_name name) 

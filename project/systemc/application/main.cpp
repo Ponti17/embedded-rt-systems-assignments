@@ -1,5 +1,5 @@
 #include "systemc.h"
-#include "ModuleSingle.hpp"
+#include "gpu.hpp"
 
 #define SIMULATION_TIME 200
 #define SIMULATION_TIME_UNIT SC_MS

@@ -1,10 +1,10 @@
 /*
- * ModuleSingle.hpp
- * Date Created: 29/08/24
+ * gpu.hpp
+ * Date Created: 09/11/24
 */
 
-#ifndef MODULE_SINGLE_HPP
-#define MODULE_SINGLE_HPP
+#ifndef GPU_HPP
+#define GPU_HPP
 
 #include "systemc.h"
 #include <iostream>
@@ -34,4 +34,4 @@ private:
     void trigger();
 };
 
-#endif // MODULE_SINGLE_HPP
+#endif // GPU_HPP
