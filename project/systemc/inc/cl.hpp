@@ -95,4 +95,18 @@ void blit_rect(sc_uint<16> x, sc_uint<16> y, sc_uint<16> w, sc_uint<16> h, sc_ui
  */
 void blit_circ(sc_uint<16> x, sc_uint<16> y, sc_uint<16> r, sc_uint<32> color);
 
+/**
+ * Construct a blit line command.
+ * Will be put in the currently bound command list.
+ * @param cl Command list
+ * @param x0 Start X coordinate
+ * @param y0 Start Y coordinate
+ * @param x1 End X coordinate
+ * @param y1 End Y coordinate
+ * @param t Thickness
+ * @param color Color (BGRA8888)
+ * @return void
+ */
+void blit_line(sc_uint<16> x0, sc_uint<16> y0, sc_uint<16> x1, sc_uint<16> y1, sc_uint<16> t, sc_uint<32> color);
+
 #endif // CL_HPP

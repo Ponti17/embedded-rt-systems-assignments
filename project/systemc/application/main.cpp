@@ -51,6 +51,8 @@ void cl_test()
 	/* Blit cyan circle */
 	blit_circ(600, 200, 100, 0xFFFF00FF);
 
+	blit_line(300, 0, 500, 400, 20, 0x00FFFFFF);
+
 	/* Print all 32-bit entries in cl_instance.array as 4-byte hex */
 	/* Be vary of leading 0 */
     for (int i = 0; i < cl_instance.size; ++i) {

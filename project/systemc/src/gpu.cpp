@@ -13,6 +13,7 @@ void error_handler(const char* message);
 /* Private function prototypes */
 void gpu_blit_rect(cl_type& cl);
 void gpu_blit_circ(cl_type& cl);
+void gpu_blit_line(cl_type& cl);
 
 static fb_type* bound_fb = nullptr;
 
@@ -32,6 +33,10 @@ void submit_cl()
             case BLIT_CIRC_CMD:
                 std::cout << "BLIT_CIRC_CMD" << std::endl;
                 gpu_blit_circ(cl);
+                break;
+            case BLIT_LINE_CMD:
+                std::cout << "BLIT_LINE_CMD" << std::endl;
+                gpu_blit_line(cl);
                 break;
             case CMD_NONE:
                 std::cout << "CMD_NONE" << std::endl;
@@ -55,6 +60,12 @@ sc_uint<32> read_cl(cl_type& cl)
     return cl.array[cl.idx++];
 }
 
+/**
+ * Blits a rectangle to the framebuffer.
+ * Loops through all pixels in the bounding box of the rectangle
+ * and sets the pixel to the specified color.
+ * Only for demonstration purposes.
+ */
 void gpu_blit_rect(cl_type& cl)
 {
     sc_uint<32> dword_0 = read_cl(cl);
@@ -83,6 +94,12 @@ void gpu_blit_rect(cl_type& cl)
     }
 }
 
+/**
+ * Blits a circle to the framebuffer.
+ * Loops through all pixels in the bounding box of the circle
+ * and checks if the pixel is inside the circle.
+ * Only for demonstration purposes.
+ */
 void gpu_blit_circ(cl_type& cl)
 {
     sc_uint<32> dword_0 = read_cl(cl);
@@ -107,5 +124,49 @@ void gpu_blit_circ(cl_type& cl)
                 bound_fb->fb_array[idx + x_idx] = color;
             }
         }
+    }
+}
+
+/**
+ * Uses DDA algorithm to draw a line.
+ * Super slow, uses floating point arithmetic.
+ * Thickness not implemented.
+ * Only for demonstration purposes.
+ */
+void gpu_blit_line(cl_type& cl)
+{
+    sc_uint<32> dword_0 = read_cl(cl);
+    sc_uint<32> dword_1 = read_cl(cl);
+    sc_uint<32> dword_2 = read_cl(cl);
+    sc_uint<32> dword_3 = read_cl(cl);
+    sc_uint<16> x0 = dword_0 >> 16;
+    sc_uint<16> y0 = dword_1 & 0xFFFF;
+    sc_uint<16> x1 = dword_1 >> 16;
+    sc_uint<16> y1 = dword_2 & 0xFFFF;
+    sc_uint<16> t = dword_2 >> 16;
+    sc_uint<32> color = dword_3;
+
+#ifdef DEBUG_GPU
+    std::cout << "x0: " << x0 << std::endl;
+    std::cout << "y0: " << y0 << std::endl;
+    std::cout << "x1: " << x1 << std::endl;
+    std::cout << "y1: " << y1 << std::endl;
+    std::cout << "t: " << t << std::endl;
+    std::cout << "color: " << color << std::endl;
+#endif
+
+    int dx = x1 - x0;
+    int dy = y1 - y0;
+    int steps = abs(dx) > abs(dy) ? abs(dx) : abs(dy);
+    float x_inc = dx / (float)steps;
+    float y_inc = dy / (float)steps;
+    float x = x0;
+    float y = y0;
+
+    for (int i = 0; i <= steps; ++i) {
+        int idx = (int)y * bound_fb->width + (int)x;
+        bound_fb->fb_array[idx] = color;
+        x += x_inc;
+        y += y_inc;
     }
 }
