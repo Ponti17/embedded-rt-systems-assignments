@@ -1,5 +1,6 @@
 #include "systemc.h"
 #include "cl.hpp"
+#include <iomanip>
 
 /* Function Prototypes */
 void cl_test(void);
@@ -12,6 +13,12 @@ int sc_main(int sc_argc, char* sc_argv[])
 
 void cl_test()
 {
+	/* Initialize the GPU */
+	sc_uint<16> RESX = 400;
+	sc_uint<16> RESY = 400;
+	sc_uint<16> STRIDE = 400 * 4;
+	gpu_init(STRIDE, RESX, RESY);
+
 	/* Create command list instance */
     cl_type cl_instance;
 
@@ -19,16 +26,18 @@ void cl_test()
 	int size = 16;
     create_cl(cl_instance, size);
 
-	/* Add values to array */
-	for (int i = 0; i < cl_instance.size; ++i) {
-		cl_instance.array[i] = i;
-	}
+	/* Bind command list */
+	bind_cl(cl_instance);
 
-    /* Loop through array */
+	blit_rect(0x32, 0x32, 0x64, 0x64, 0xFAFAFAFA);
+
+	/* Print all 32-bit entries in cl_instance.array as 4-byte hex */
+	/* Be vary of leading 0 */
     for (int i = 0; i < cl_instance.size; ++i) {
-        std::cout << cl_instance.array[i] << " ";
+        std::cout << "Entry " << i << ": 0x" 
+                  << std::hex << std::uppercase 
+                  << cl_instance.array[i] << std::endl;
     }
-    std::cout << std::endl;
 
     /* Delete the cl_instance */
     delete_cl(cl_instance);
