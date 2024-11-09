@@ -41,7 +41,7 @@ fb_type* allocate_fb(sc_uint<16> width, sc_uint<16> height, sc_uint<8> format)
     for (int y = 0; y < height; ++y) {
         for (int x = 0; x < width; ++x) {
             int idx = y * width + x;
-            fb->fb_array[idx] = (0xFF0000FF); // Blue channel set to 255, others set to 0
+            fb->fb_array[idx] = (0xFF000000); // Blue channel set to 255, others set to 0
         }
     }
 
@@ -63,7 +63,7 @@ void save_fb_as_image(fb_type* fb, const std::string& filename)
             unsigned char b = static_cast<unsigned char>((pixel >> 24) & 0xFF); // Blue
             unsigned char g = static_cast<unsigned char>((pixel >> 16) & 0xFF); // Green
             unsigned char r = static_cast<unsigned char>((pixel >> 8) & 0xFF);  // Red
-            unsigned char a = static_cast<unsigned char>(pixel & 0xFF);         // Alpha
+            unsigned char a = static_cast<unsigned char>(0xFF); // Alpha
 
             // Set the corresponding RGBA value in the image data
             int img_idx = (y * fb->width + x) * 4;
