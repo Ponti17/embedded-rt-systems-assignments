@@ -4,46 +4,32 @@
 */
 
 #include "gpu.hpp"
+#include "cl.hpp"
 
-/* Constructor */
-ModuleSingle::ModuleSingle(sc_module_name name) 
-    : sc_module(name), moduleName(name), counter(0b0000)
+/* External function prototypes */
+void error_handler(const char* message);
+
+/* Private function prototypes */
+void gpu_blit_rect();
+
+void submit_cl()
 {
-    /* Register a thread process */
-    SC_THREAD(moduleSingleThread);
+    cl_type* cl = get_bound_cl();
+    rewind_cl(*cl);
+    sc_uint<16> cmd = cl->array[cl->idx] & 0xFFFF;
 
-    /* Register a method process */
-    SC_METHOD(trigger);
-
-    /* The method is sensitive to 'event' */
-    sensitive << event;
-}
-
-/* Destructor */
-ModuleSingle::~ModuleSingle() 
-{
-    std::cout << std::flush;
-}
-
-/* Thread */
-void ModuleSingle::moduleSingleThread() 
-{
-    while (true) 
-    {
-        wait(2, SC_MS); 
-        incrementCounter();
-        event.notify();
+    switch (cmd) {
+        case BLIT_RECT_CMD:
+            std::cout << "BLIT_RECT_CMD" << std::endl;
+            gpu_blit_rect();
+            break;
+        default:
+            error_handler("Unknown command");
+            break;
     }
 }
 
-void ModuleSingle::incrementCounter() 
+void gpu_blit_rect()
 {
-    ++counter;
-}
-
-/* Trigger */
-void ModuleSingle::trigger() 
-{
-    std::cout << "Module " << moduleName << " - Counter: " << counter
-              << " at time " << sc_time_stamp() << "\n";
+    std::cout << "Blitting rectangle" << std::endl;
 }

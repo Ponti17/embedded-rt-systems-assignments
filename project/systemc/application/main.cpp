@@ -1,5 +1,6 @@
 #include "systemc.h"
 #include "cl.hpp"
+#include "gpu.hpp"
 #include <iomanip>
 
 /* Function Prototypes */
@@ -38,6 +39,9 @@ void cl_test()
                   << std::hex << std::uppercase 
                   << cl_instance.array[i] << std::endl;
     }
+
+	/* Submit the command list */
+	submit_cl();
 
     /* Delete the cl_instance */
     delete_cl(cl_instance);

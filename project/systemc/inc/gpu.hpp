@@ -9,29 +9,8 @@
 #include "systemc.h"
 #include <iostream>
 #include <string>
+#include "cl.hpp"
 
-class ModuleSingle : public sc_module {
-
-public:
-    /* Constructor */
-    ModuleSingle(sc_module_name name);
-
-    /* Destructor */
-    ~ModuleSingle();
-
-private:
-    std::string moduleName;
-    sc_uint<4> counter;
-    sc_event event;
-
-    /* Main thread entry */
-    void moduleSingleThread();
-
-    /* Increment */
-    void incrementCounter();
-
-    // Trigger function
-    void trigger();
-};
+void submit_cl();
 
 #endif // GPU_HPP

@@ -89,6 +89,14 @@ void unbind_cl()
     bound_cl = nullptr;
 }
 
+cl_type* get_bound_cl()
+{
+    init_check();
+    cl_bound_check();
+
+    return bound_cl;
+}
+
 /**
  * Construct a blit rectangle command.
  * Will be put in the currently bound command list.

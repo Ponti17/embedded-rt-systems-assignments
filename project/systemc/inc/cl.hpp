@@ -64,6 +64,12 @@ void bind_cl(cl_type& cl);
 void unbind_cl();
 
 /**
+ * Get the currently bound command list
+ * @return Command list
+ */
+cl_type* get_bound_cl();
+
+/**
  * Construct a blit rectangle command.
  * Will be put in the currently bound command list.
  * @param cl Command list
