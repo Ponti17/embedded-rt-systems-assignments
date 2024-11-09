@@ -4,6 +4,7 @@
 # whitelist the necessary files and folders, this gets everything from inside them too
 !/vivado
 !/gaphor/
+!/systemc/
 
 #Digilent Added ignore rules for Vivado projects
 
