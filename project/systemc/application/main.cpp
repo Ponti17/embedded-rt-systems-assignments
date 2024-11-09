@@ -1,5 +1,4 @@
 #include "systemc.h"
-#include "gpu.hpp"
 #include "cl.hpp"
 
 /* Function Prototypes */
@@ -33,4 +32,10 @@ void cl_test()
 
     /* Delete the cl_instance */
     delete_cl(cl_instance);
+}
+
+void error_handler(const char* message)
+{
+	std::cerr << message << std::endl;
+	exit(1);
 }
