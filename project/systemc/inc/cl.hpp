@@ -9,6 +9,7 @@
 /* Includes */
 #include "systemc.h"
 
+#define CMD_NONE        0x0000
 #define BLIT_RECT_CMD   0x0001
 #define BLIT_LINE_CMD   0x0002
 #define BLIT_CIRCLE_CMD 0x0003
@@ -67,7 +68,7 @@ void unbind_cl();
  * Get the currently bound command list
  * @return Command list
  */
-cl_type* get_bound_cl();
+cl_type& get_bound_cl();
 
 /**
  * Construct a blit rectangle command.
