@@ -26,8 +26,8 @@ void cl_test()
 	/* Create command list instance */
     cl_type cl_instance;
 
-    /* Create command list of size 16 */
-	int size = 16;
+    /* Create command list of size */
+	int size = 128;
     create_cl(cl_instance, size);
 
 	/* Bind command list */
@@ -47,6 +47,9 @@ void cl_test()
 
 	/* Blit blue square */
 	blit_rect(200, 50, 100, 200, 0xFF0000FF);
+
+	/* Blit cyan circle */
+	blit_circ(600, 200, 100, 0xFFFF00FF);
 
 	/* Print all 32-bit entries in cl_instance.array as 4-byte hex */
 	/* Be vary of leading 0 */

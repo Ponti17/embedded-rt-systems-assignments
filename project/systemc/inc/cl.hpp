@@ -11,8 +11,8 @@
 
 #define CMD_NONE        0x0000
 #define BLIT_RECT_CMD   0x0001
-#define BLIT_LINE_CMD   0x0002
-#define BLIT_CIRCLE_CMD 0x0003
+#define BLIT_CIRC_CMD   0x0002
+#define BLIT_LINE_CMD   0x0003
 
 struct cl_type {
     sc_uint<32> idx  = 0;
@@ -82,5 +82,17 @@ cl_type& get_bound_cl();
  * @return void
  */
 void blit_rect(sc_uint<16> x, sc_uint<16> y, sc_uint<16> w, sc_uint<16> h, sc_uint<32> color);
+
+/**
+ * Construct a blit circ command.
+ * Will be put in the currently bound command list.
+ * @param cl Command list
+ * @param x X coordinate
+ * @param y Y coordinate
+ * @param r Radius
+ * @param color Color (BGRA8888)
+ * @return void
+ */
+void blit_circ(sc_uint<16> x, sc_uint<16> y, sc_uint<16> r, sc_uint<32> color);
 
 #endif // CL_HPP

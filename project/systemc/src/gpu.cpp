@@ -12,6 +12,7 @@ void error_handler(const char* message);
 
 /* Private function prototypes */
 void gpu_blit_rect(cl_type& cl);
+void gpu_blit_circ(cl_type& cl);
 
 static fb_type* bound_fb = nullptr;
 
@@ -27,6 +28,10 @@ void submit_cl()
             case BLIT_RECT_CMD:
                 std::cout << "BLIT_RECT_CMD" << std::endl;
                 gpu_blit_rect(cl);
+                break;
+            case BLIT_CIRC_CMD:
+                std::cout << "BLIT_CIRC_CMD" << std::endl;
+                gpu_blit_circ(cl);
                 break;
             case CMD_NONE:
                 std::cout << "CMD_NONE" << std::endl;
@@ -62,16 +67,45 @@ void gpu_blit_rect(cl_type& cl)
     sc_uint<16> h = dword_2 & 0xFFFF;
     sc_uint<32> color = dword_3;
 
+#ifdef DEBUG_GPU
     std::cout << "x: " << x << std::endl;
     std::cout << "y: " << y << std::endl;
     std::cout << "w: " << w << std::endl;
     std::cout << "h: " << h << std::endl;
     std::cout << "color: " << color << std::endl;
+#endif
 
     for (int y_idx = y; y_idx < y+h; ++y_idx) {
         int idx = y_idx * bound_fb->width;
         for (int x_idx = x; x_idx < x+w; ++x_idx) {
             bound_fb->fb_array[idx + x_idx] = color;
+        }
+    }
+}
+
+void gpu_blit_circ(cl_type& cl)
+{
+    sc_uint<32> dword_0 = read_cl(cl);
+    sc_uint<32> dword_1 = read_cl(cl);
+    sc_uint<32> dword_2 = read_cl(cl);
+    sc_uint<16> x = dword_0 >> 16;
+    sc_uint<16> y = dword_1 & 0xFFFF;
+    sc_uint<16> r = dword_1 >> 16;
+    sc_uint<32> color = dword_2;
+
+#ifdef DEBUG_GPU
+    std::cout << "x: " << x << std::endl;
+    std::cout << "y: " << y << std::endl;
+    std::cout << "r: " << r << std::endl;
+    std::cout << "color: " << color << std::endl;
+#endif
+
+    for (int y_idx = y-r; y_idx < y+r; ++y_idx) {
+        int idx = y_idx * bound_fb->width;
+        for (int x_idx = x-r; x_idx < x+r; ++x_idx) {
+            if ((x_idx - x) * (x_idx - x) + (y_idx - y) * (y_idx - y) < r * r) {
+                bound_fb->fb_array[idx + x_idx] = color;
+            }
         }
     }
 }

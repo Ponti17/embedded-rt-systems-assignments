@@ -113,6 +113,23 @@ void blit_rect(sc_uint<16> x, sc_uint<16> y, sc_uint<16> w, sc_uint<16> h, sc_ui
 }
 
 /**
+ * Construct a blit circle command.
+ * Will be put in the currently bound command list.
+ * Byte 0: [31:16] = x, [15:0] = Command
+ * Byte 1: [31:16] = r, [15:0] = y
+ * Byte 2: [31:0] = color
+ */
+void blit_circ(sc_uint<16> x, sc_uint<16> y, sc_uint<16> r, sc_uint<32> color)
+{
+    init_check();
+    cl_bound_check();
+
+    set_cl_entry_split(x, BLIT_CIRC_CMD);
+    set_cl_entry_split(r, y);
+    set_cl_entry_full(color);
+}
+
+/**
  * Sets a 32 bit value in the command list and increments the index.
  */
 void set_cl_entry_split(sc_uint<16> msb, sc_uint<16> lsb)
