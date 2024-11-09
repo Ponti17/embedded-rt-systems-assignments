@@ -33,7 +33,10 @@ void cl_test()
 	/* Bind command list */
 	bind_cl(cl_instance);
 
-	blit_rect(0x32, 0x32, 0x64, 0x64, 0xFAFAFAFA);
+	/* Bind FB */
+	bind_fb(fb1);
+
+	blit_rect(0x32, 0x32, 0x64, 0x64, 0x0000FFFF);
 
 	/* Print all 32-bit entries in cl_instance.array as 4-byte hex */
 	/* Be vary of leading 0 */

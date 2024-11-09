@@ -10,7 +10,9 @@
 #include <iostream>
 #include <string>
 #include "cl.hpp"
+#include "fb.hpp"
 
 void submit_cl();
+void bind_fb(fb_type* fb);
 
 #endif // GPU_HPP
