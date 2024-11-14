@@ -5,5 +5,7 @@
 !/vivado/
 !/vivado/sdk/
 !/vivado/sdk/**
+!/vivado/src/
+!vivado/src/**
 !/gaphor/
 !/systemc/
