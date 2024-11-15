@@ -401,8 +401,8 @@ FodyWeavers.xsd
 *.sln.iml
 
 # Latex ignores
-**\build
-**\out
+**/latex/build
+**/latex/out
 *.gz
 
-**\lab4
+**/assignment_2/lab4
