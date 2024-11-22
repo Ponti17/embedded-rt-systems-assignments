@@ -1,6 +1,7 @@
 #include "states.h"
 
 using namespace states;
+using namespace states::operational;
 
 // Singleton instances
 PowerOnSelfTest* PowerOnSelfTest::instance = nullptr;
@@ -13,7 +14,7 @@ Suspended* Suspended::instance = nullptr;
 
 void PowerOnSelfTest::selfTestOk(EmbeddedSystemX* context) {
     context->changeState(Initializing::getInstance());
-} 
+}   
 
 void PowerOnSelfTest::selfTestFailed(EmbeddedSystemX* context, int errno) {
     context->displayError(errno);

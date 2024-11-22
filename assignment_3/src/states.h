@@ -27,13 +27,7 @@ namespace states {
     class PowerOnSelfTest;
     class Failure;
     class Initializing;
-    class Ready;
-    class Configuration;
-    class RealTimeLoop;
-    class Suspended;
-
-
-
+    
     class PowerOnSelfTest : public State {
 
     private: 
@@ -98,89 +92,98 @@ namespace states {
         void initialized(EmbeddedSystemX* context) override;
     };
 
-    class Ready : public State {
-    private:
-        static Ready* instance;
-        Ready(){};
+    namespace operational {
+        class Ready;
+        class Configuration;
+        class RealTimeLoop;
+        class Suspended;
 
-    public:
-        static Ready* getInstance() {
-            if(instance == nullptr) {
-                
-                instance = new Ready();
+        
 
+        class Ready : public State {
+        private:
+            static Ready* instance;
+            Ready(){};
+
+        public:
+            static Ready* getInstance() {
+                if(instance == nullptr) {
+                    
+                    instance = new Ready();
+
+                }
+
+                return instance;
             }
 
-            return instance;
-        }
+            void configure(EmbeddedSystemX* context) override;
+            void start(EmbeddedSystemX* context) override;
+        };
 
-        void configure(EmbeddedSystemX* context) override;
-        void start(EmbeddedSystemX* context) override;
-    };
+        class Configuration : public State {
 
-    class Configuration : public State {
+        private:
+            static Configuration* instance;
+            Configuration(){};
 
-    private:
-        static Configuration* instance;
-        Configuration(){};
+        public:
+            static Configuration* getInstance() {
+                if(instance == nullptr) {
+                    
+                    instance = new Configuration();
 
-    public:
-        static Configuration* getInstance() {
-            if(instance == nullptr) {
-                
-                instance = new Configuration();
+                }
 
+                return instance;
             }
 
-            return instance;
-        }
+            void configurationEnded(EmbeddedSystemX* context) override;
 
-        void configurationEnded(EmbeddedSystemX* context) override;
+        };
 
-    };
+        class RealTimeLoop : public State {
 
-    class RealTimeLoop : public State {
+        private:
+            static RealTimeLoop* instance;
+            RealTimeLoop(){};
 
-    private:
-        static RealTimeLoop* instance;
-        RealTimeLoop(){};
+        public:
+            static RealTimeLoop* getInstance() {
+                if(instance == nullptr) {
+                    
+                    instance = new RealTimeLoop();
 
-    public:
-        static RealTimeLoop* getInstance() {
-            if(instance == nullptr) {
-                
-                instance = new RealTimeLoop();
+                }
 
+                return instance;
             }
 
-            return instance;
-        }
+            void stop(EmbeddedSystemX* context) override;
+            void suspend(EmbeddedSystemX* context) override;
 
-        void stop(EmbeddedSystemX* context) override;
-        void suspend(EmbeddedSystemX* context) override;
+        };
 
-    };
+        class Suspended : public State {
 
-    class Suspended : public State {
+        private:
+            static Suspended* instance;
+            Suspended(){};
 
-    private:
-        static Suspended* instance;
-        Suspended(){};
+        public:
+            static Suspended* getInstance() {
+                if(instance == nullptr) {
+                    
+                    instance = new Suspended();
 
-    public:
-        static Suspended* getInstance() {
-            if(instance == nullptr) {
-                
-                instance = new Suspended();
+                }
 
+                return instance;
             }
 
-            return instance;
-        }
+            void resume(EmbeddedSystemX* context) override;
+            void stop(EmbeddedSystemX* context) override;
 
-        void resume(EmbeddedSystemX* context) override;
-        void stop(EmbeddedSystemX* context) override;
-
-    };
+            };
+    }
 }
 #endif
