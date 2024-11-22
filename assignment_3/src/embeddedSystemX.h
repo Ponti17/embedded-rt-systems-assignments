@@ -15,8 +15,6 @@ public:
     void selfTestOk();
     void selfTestFailed(int errno);
     void displayError(int errno);
-    
-
 
 };
 

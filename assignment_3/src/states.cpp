@@ -20,3 +20,45 @@ void PowerOnSelfTest::selfTestFailed(EmbeddedSystemX* context, int errno) {
     context->changeState(Failure::getInstance());
 }
 
+void Failure::restart(EmbeddedSystemX* context) {
+    context->changeState(Initializing::getInstance());
+}
+
+void Failure::exit(EmbeddedSystemX* context) {
+    //exit? 
+}
+
+void Initializing::initialized(EmbeddedSystemX* context) {
+    context->changeState(Ready::getInstance());
+}
+
+void Ready::configure(EmbeddedSystemX* context) {
+    context->changeState(Configuration::getInstance());
+}
+
+void Ready::start(EmbeddedSystemX* context) {
+    context->changeState(RealTimeLoop::getInstance());
+}
+
+void Configuration::configurationEnded(EmbeddedSystemX* context) {
+    context->changeState(Ready::getInstance());
+}
+
+void RealTimeLoop::stop(EmbeddedSystemX* context) {
+    context->changeState(Ready::getInstance());
+}
+
+void RealTimeLoop::suspend(EmbeddedSystemX* context) {
+    context->changeState(Suspended::getInstance());
+}
+
+void Suspended::resume(EmbeddedSystemX* context) {
+    context->changeState(RealTimeLoop::getInstance());
+}
+
+void Suspended::stop(EmbeddedSystemX* context) {
+    context->changeState(Ready::getInstance());
+}
+
+
+
