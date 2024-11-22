@@ -1,13 +1,20 @@
 #ifndef STATES_H
 #define STATES_H
 
+#include <string>
+
 #include "embeddedSystemX.h"
 
+using std::string;
+
 class State {
+private:
+    string stateName;
+
 public:
     // Triggable events
     virtual void selfTestOk(EmbeddedSystemX* context){};
-    virtual void selfTestFailed(EmbeddedSystemX* context, int errno){};
+    virtual void selfTestFailed(EmbeddedSystemX* context, int errorNo){};
     virtual void restart(EmbeddedSystemX* context){};
     virtual void exit(EmbeddedSystemX* context){};
     virtual void initialized(EmbeddedSystemX* context){};
@@ -17,6 +24,10 @@ public:
     virtual void stop(EmbeddedSystemX* context){};
     virtual void suspend(EmbeddedSystemX* context){};
     virtual void resume(EmbeddedSystemX* context){};
+
+    virtual string getStateName(){
+        return stateName;
+    };
 
     virtual ~State() = default;
 };
@@ -31,6 +42,7 @@ namespace states {
     class PowerOnSelfTest : public State {
 
     private: 
+        string stateName = "PowerOnSelfTest";
         static PowerOnSelfTest* instance;
         PowerOnSelfTest(){};
 
@@ -47,7 +59,7 @@ namespace states {
 
 
         void selfTestOk(EmbeddedSystemX* context) override;
-        void selfTestFailed(EmbeddedSystemX* context, int errno) override;
+        void selfTestFailed(EmbeddedSystemX* context, int errorNo) override;
 
 
     };
@@ -55,6 +67,7 @@ namespace states {
     class Failure : public State {
 
     private:
+        string stateName = "Failure";
         static Failure* instance;
         Failure(){};
 
@@ -75,6 +88,7 @@ namespace states {
 
     class Initializing : public State {
     private:
+        string stateName = "Initializing";
         static Initializing* instance;
         Initializing(){};
 
@@ -102,6 +116,7 @@ namespace states {
 
         class Ready : public State {
         private:
+            string stateName = "Ready";
             static Ready* instance;
             Ready(){};
 
@@ -123,6 +138,7 @@ namespace states {
         class Configuration : public State {
 
         private:
+            string stateName = "Configuration";
             static Configuration* instance;
             Configuration(){};
 
@@ -144,6 +160,7 @@ namespace states {
         class RealTimeLoop : public State {
 
         private:
+            string stateName = "RealTimeLoop";
             static RealTimeLoop* instance;
             RealTimeLoop(){};
 
@@ -166,6 +183,7 @@ namespace states {
         class Suspended : public State {
 
         private:
+            string stateName = "Suspended";
             static Suspended* instance;
             Suspended(){};
 

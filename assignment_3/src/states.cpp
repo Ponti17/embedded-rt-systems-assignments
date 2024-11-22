@@ -16,8 +16,8 @@ void PowerOnSelfTest::selfTestOk(EmbeddedSystemX* context) {
     context->changeState(Initializing::getInstance());
 }   
 
-void PowerOnSelfTest::selfTestFailed(EmbeddedSystemX* context, int errno) {
-    context->displayError(errno);
+void PowerOnSelfTest::selfTestFailed(EmbeddedSystemX* context, int errorNo) {
+    context->displayError(errorNo);
     context->changeState(Failure::getInstance());
 }
 
