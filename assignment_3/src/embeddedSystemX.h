@@ -4,6 +4,7 @@
 #include "states.h"
 #include <iostream>
 
+class State;
 class EmbeddedSystemX {
 
 private:

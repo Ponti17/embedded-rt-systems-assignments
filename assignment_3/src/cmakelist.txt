@@ -1,7 +1,0 @@
-cmake_minimum_required(VERSION 3.10)
-
-# Set the project name
-project(EmbeddedRTSystemsAssignment3)
-
-# Add the executable
-add_executable(assignment_3 main.cpp)

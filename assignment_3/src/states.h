@@ -7,9 +7,9 @@
 
 using std::string;
 
+class EmbeddedSystemX;
+
 class State {
-private:
-    string stateName;
 
 public:
     // Triggable events
@@ -25,9 +25,7 @@ public:
     virtual void suspend(EmbeddedSystemX* context){};
     virtual void resume(EmbeddedSystemX* context){};
 
-    virtual string getStateName(){
-        return stateName;
-    };
+    virtual string getStateName() const = 0;
 
     virtual ~State() = default;
 };
@@ -42,7 +40,6 @@ namespace states {
     class PowerOnSelfTest : public State {
 
     private: 
-        string stateName = "PowerOnSelfTest";
         static PowerOnSelfTest* instance;
         PowerOnSelfTest(){};
 
@@ -57,6 +54,10 @@ namespace states {
             return instance;
         }
 
+        string getStateName() const override {
+            return "PowerOnSelfTest";
+        }
+
 
         void selfTestOk(EmbeddedSystemX* context) override;
         void selfTestFailed(EmbeddedSystemX* context, int errorNo) override;
@@ -67,7 +68,6 @@ namespace states {
     class Failure : public State {
 
     private:
-        string stateName = "Failure";
         static Failure* instance;
         Failure(){};
 
@@ -82,13 +82,16 @@ namespace states {
             return instance;
         }
 
+        string getStateName() const override {
+            return "Failure";
+        }
+
         void restart(EmbeddedSystemX* context) override;
         void exit(EmbeddedSystemX* context) override;
     };
 
     class Initializing : public State {
     private:
-        string stateName = "Initializing";
         static Initializing* instance;
         Initializing(){};
 
@@ -102,8 +105,12 @@ namespace states {
 
             return instance;
         }
+        string getStateName() const override {
+            return "Initializing";
+        }
 
         void initialized(EmbeddedSystemX* context) override;
+
     };
 
     namespace operational {
@@ -116,7 +123,6 @@ namespace states {
 
         class Ready : public State {
         private:
-            string stateName = "Ready";
             static Ready* instance;
             Ready(){};
 
@@ -131,6 +137,10 @@ namespace states {
                 return instance;
             }
 
+            string getStateName() const override {
+                return "Ready\t";
+            }
+
             void configure(EmbeddedSystemX* context) override;
             void start(EmbeddedSystemX* context) override;
         };
@@ -138,7 +148,6 @@ namespace states {
         class Configuration : public State {
 
         private:
-            string stateName = "Configuration";
             static Configuration* instance;
             Configuration(){};
 
@@ -153,6 +162,10 @@ namespace states {
                 return instance;
             }
 
+            string getStateName() const override {
+                return "Configuration";
+            }
+
             void configurationEnded(EmbeddedSystemX* context) override;
 
         };
@@ -160,7 +173,6 @@ namespace states {
         class RealTimeLoop : public State {
 
         private:
-            string stateName = "RealTimeLoop";
             static RealTimeLoop* instance;
             RealTimeLoop(){};
 
@@ -175,6 +187,10 @@ namespace states {
                 return instance;
             }
 
+            string getStateName() const override {
+                return "RealTimeLoop";
+            }
+
             void stop(EmbeddedSystemX* context) override;
             void suspend(EmbeddedSystemX* context) override;
 
@@ -183,7 +199,6 @@ namespace states {
         class Suspended : public State {
 
         private:
-            string stateName = "Suspended";
             static Suspended* instance;
             Suspended(){};
 
@@ -196,6 +211,10 @@ namespace states {
                 }
 
                 return instance;
+            }
+
+            string getStateName() const override {
+                return "Suspended";
             }
 
             void resume(EmbeddedSystemX* context) override;

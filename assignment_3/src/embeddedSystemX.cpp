@@ -12,7 +12,7 @@ void EmbeddedSystemX::changeState(State* nextState) {
     std::cout << "Current state\tNext state\n"
     << state->getStateName() << "\t" 
     << nextState->getStateName() 
-    << std::endl;
+    << "\n " << std::endl;
     
     state = nextState;
 
