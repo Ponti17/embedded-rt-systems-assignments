@@ -2,6 +2,7 @@
 #define EMBEDDED_SYSTEM_X_H
 
 #include "states.h"
+#include <iostream>
 
 class EmbeddedSystemX {
 
@@ -13,8 +14,18 @@ public:
 
     void changeState(State* nextState);
     void selfTestOk();
-    void selfTestFailed(int errno);
-    void displayError(int errno);
+    void selfTestFailed(int errorNo);
+    void restart();
+    void exit();
+    void initialized();
+    void configure();
+    void configurationEnded();
+    void start();
+    void stop();
+    void suspend();
+    void resume();
+
+    void displayError(int errorNo);
 
 };
 
