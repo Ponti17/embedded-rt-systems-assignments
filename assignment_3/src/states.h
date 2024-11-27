@@ -2,8 +2,13 @@
 #define STATES_H
 
 #include <string>
+#include <thread>
+#include <mutex>
+#include <queue>
+#include <future>
 
 #include "embeddedSystemX.h"
+#include "RealTimeLoopModes.h"
 
 using std::string;
 
@@ -170,31 +175,6 @@ namespace states {
 
         };
 
-        class RealTimeLoop : public State {
-
-        private:
-            static RealTimeLoop* instance;
-            RealTimeLoop(){};
-
-        public:
-            static RealTimeLoop* getInstance() {
-                if(instance == nullptr) {
-                    
-                    instance = new RealTimeLoop();
-
-                }
-
-                return instance;
-            }
-
-            string getStateName() const override {
-                return "RealTimeLoop";
-            }
-
-            void stop(EmbeddedSystemX* context) override;
-            void suspend(EmbeddedSystemX* context) override;
-
-        };
 
         class Suspended : public State {
 
@@ -220,7 +200,69 @@ namespace states {
             void resume(EmbeddedSystemX* context) override;
             void stop(EmbeddedSystemX* context) override;
 
-            };
+        };
+
+        class DispatchQueue {
+            std::mutex queue_lock;
+            std::queue<std::function<void()>> queue_operations;
+            std::condition_variable queue_empty;
+            
+        public:
+            void insert(std::function<void()> operation) {
+                std::lock_guard<std::mutex> lock(queue_lock);
+                queue_operations.push(operation);
+                queue_empty.notify_one();
+            }
+
+            std::function<void()> remove() {
+                std::unique_lock<std::mutex> lock(queue_lock);
+                queue_empty.wait(
+                    lock,
+                    [&] { return !queue_operations.empty();}
+                );
+                std::function<void()> operation = queue_operations.front();
+                queue_operations.pop();
+                return operation;
+            }
+
+        };
+        
+        class RealTimeLoop : public State {
+
+        private:
+            static RealTimeLoop* instance;
+            RealTimeLoop(){};
+
+            std::atomic<bool> done;
+            std::thread runnable;
+            DispatchQueue dispatchQueue;
+
+        public:
+            static RealTimeLoop* getInstance() {
+                if(instance == nullptr) {
+                    
+                    instance = new RealTimeLoop();
+
+                }
+
+                return instance;
+            }
+
+            string getStateName() const override {
+                return "RealTimeLoop";
+            }
+
+            void restart(EmbeddedSystemX* context) override;
+            void stop(EmbeddedSystemX* context) override;
+            void suspend(EmbeddedSystemX* context) override;
+
+            void dispatch();
+
+            
+
+        };
+
+       
     }
 }
 #endif

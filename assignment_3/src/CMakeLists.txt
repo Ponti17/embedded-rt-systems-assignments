@@ -13,6 +13,7 @@ set(SOURCES
     states.cpp
     main.cpp
     commands.cpp
+    RealTimeLoopModes.cpp
 )
 
 # Add the executable
