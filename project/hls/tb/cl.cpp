@@ -66,7 +66,7 @@ void create_cl(cl_type& cl, ap_uint<32> size)
 {
     init_check();
 
-    cl.array = new ap_uint<32>[size]();
+    cl.cl_array = new ap_uint<32>[size]();
     cl.size  = size;
     cl.cl_idx   = 0;
 }
@@ -75,8 +75,8 @@ void delete_cl(cl_type& cl)
 {
     init_check();
 
-    delete[] cl.array;
-    cl.array = 0;
+    delete[] cl.cl_array;
+    cl.cl_array = 0;
     cl.size = 0;
     cl.cl_idx = 0;
 }
@@ -171,7 +171,7 @@ void set_cl_entry_split(ap_uint<16> msb, ap_uint<16> lsb)
     init_check();
     cl_bound_check();
 
-    bound_cl->array[bound_cl->cl_idx] = (static_cast<uint32_t>(msb) << 16) | (static_cast<uint32_t>(lsb));
+    bound_cl->cl_array[bound_cl->cl_idx] = (static_cast<uint32_t>(msb) << 16) | (static_cast<uint32_t>(lsb));
     bound_cl->cl_idx++;
 }
 
@@ -184,6 +184,6 @@ void set_cl_entry_full(ap_uint<32> value)
     cl_bound_check();
 
     // Directly set the 32-bit value
-    bound_cl->array[bound_cl->cl_idx] = static_cast<uint32_t>(value);
+    bound_cl->cl_array[bound_cl->cl_idx] = static_cast<uint32_t>(value);
     bound_cl->cl_idx++;
 }
