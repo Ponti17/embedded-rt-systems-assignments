@@ -10,15 +10,16 @@
 #include <iostream>
 #include <string>
 #include "cl.hpp"
+#include <ap_int.h>
 
 /* Color formats */
 #define BGRA8888 0x01
 
 struct fb_type {
-    sc_uint<16> stride = 0;
-    sc_uint<16> height = 0;
-    sc_uint<16> width  = 0;
-    sc_uint<32> *fb_array = nullptr;
+    ap_uint<16> stride = 0;
+    ap_uint<16> height = 0;
+    ap_uint<16> width  = 0;
+    ap_uint<32> *fb_array = nullptr;
 };
 
 /**
@@ -28,7 +29,7 @@ struct fb_type {
  * @param format Format
  * @return fb_type* Frame buffer
  */
-fb_type* allocate_fb(sc_uint<16> width, sc_uint<16> height, sc_uint<8> format);
+fb_type* allocate_fb(ap_uint<16> width, ap_uint<16> height, ap_uint<8> format);
 
 /**
  * Save a frame buffer as an image

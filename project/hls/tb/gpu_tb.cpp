@@ -12,9 +12,9 @@ void gpu(ap_int<32> frameBuffer[FB_SIZE], ap_int<32> cl[CL_SIZE], ap_int<8> stat
 int main()
 {
 	/* Initialize the GPU */
-	sc_uint<16> RESX = 800;
-	sc_uint<16> RESY = 400;
-	sc_uint<16> STRIDE = RESX * 4;
+	ap_uint<16> RESX = 800;
+	ap_uint<16> RESY = 400;
+	ap_uint<16> STRIDE = RESX * 4;
 	gpu_init(STRIDE, RESX, RESY);
 
 	fb_type* fb1 = allocate_fb(RESX, RESY, BGRA8888);

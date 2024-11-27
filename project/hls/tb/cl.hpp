@@ -7,7 +7,7 @@
 #define CL_HPP
 
 /* Includes */
-#include "systemc.h"
+#include <ap_int.h>
 
 #define CMD_NONE        0x0000
 #define BLIT_RECT_CMD   0x0001
@@ -15,9 +15,9 @@
 #define BLIT_LINE_CMD   0x0003
 
 struct cl_type {
-    sc_uint<32> idx  = 0;
-    sc_uint<32> size = 0;
-    sc_uint<32> *array = nullptr;
+    ap_uint<32> idx  = 0;
+    ap_uint<32> size = 0;
+    ap_uint<32> *array = nullptr;
 };
 
 /**
@@ -27,7 +27,7 @@ struct cl_type {
  * @param height Height
  * @return void
  */
-void gpu_init(sc_uint<16> stride, sc_uint<16> width, sc_uint<16> height);
+void gpu_init(ap_uint<16> stride, ap_uint<16> width, ap_uint<16> height);
 
 /**
  * Create a command list
@@ -35,7 +35,7 @@ void gpu_init(sc_uint<16> stride, sc_uint<16> width, sc_uint<16> height);
  * @param size Size of the command list
  * @return void
  */
-void create_cl(cl_type& cl, sc_uint<32> size);
+void create_cl(cl_type& cl, ap_uint<32> size);
 
 /**
  * Delete a command list
@@ -80,7 +80,7 @@ cl_type& get_bound_cl();
  * @param color Color (BGRA8888)
  * @return void
  */
-void blit_rect(sc_uint<16> x, sc_uint<16> y, sc_uint<16> w, sc_uint<16> h, sc_uint<32> color);
+void blit_rect(ap_uint<16> x, ap_uint<16> y, ap_uint<16> w, ap_uint<16> h, ap_uint<32> color);
 
 /**
  * Construct a blit circ command.
@@ -91,7 +91,7 @@ void blit_rect(sc_uint<16> x, sc_uint<16> y, sc_uint<16> w, sc_uint<16> h, sc_ui
  * @param color Color (BGRA8888)
  * @return void
  */
-void blit_circ(sc_uint<16> x, sc_uint<16> y, sc_uint<16> r, sc_uint<32> color);
+void blit_circ(ap_uint<16> x, ap_uint<16> y, ap_uint<16> r, ap_uint<32> color);
 
 /**
  * Construct a blit line command.
@@ -104,6 +104,6 @@ void blit_circ(sc_uint<16> x, sc_uint<16> y, sc_uint<16> r, sc_uint<32> color);
  * @param color Color (BGRA8888)
  * @return void
  */
-void blit_line(sc_uint<16> x0, sc_uint<16> y0, sc_uint<16> x1, sc_uint<16> y1, sc_uint<16> t, sc_uint<32> color);
+void blit_line(ap_uint<16> x0, ap_uint<16> y0, ap_uint<16> x1, ap_uint<16> y1, ap_uint<16> t, ap_uint<32> color);
 
 #endif // CL_HPP

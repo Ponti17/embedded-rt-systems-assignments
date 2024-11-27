@@ -20,6 +20,7 @@
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #define __STDC_LIB_EXT1__
 #include "stb_image_write.h"
+#include <ap_int.h>
 
 /* External function prototypes */
 void error_handler(const char* message);
@@ -28,7 +29,7 @@ void error_handler(const char* message);
  * Allocate a frame buffer
  * A frame buffer is a memory buffer that holds the pixel data for a frame.
  */
-fb_type* allocate_fb(sc_uint<16> width, sc_uint<16> height, sc_uint<8> format)
+fb_type* allocate_fb(ap_uint<16> width, ap_uint<16> height, ap_uint<8> format)
 {
     fb_type* fb = new fb_type();
     fb->width = width;
@@ -43,7 +44,7 @@ fb_type* allocate_fb(sc_uint<16> width, sc_uint<16> height, sc_uint<8> format)
             break;
     }
 
-    fb->fb_array = new sc_uint<32>[fb->stride * height]();
+    fb->fb_array = new ap_uint<32>[fb->stride * height]();
 
     return fb;
 }
@@ -57,7 +58,7 @@ void save_fb_as_image(fb_type* fb, const std::string& filename)
     for (int y = 0; y < fb->height; ++y) {
         for (int x = 0; x < fb->width; ++x) {
             int idx = y * fb->width + x;
-            sc_uint<32> pixel = fb->fb_array[idx];
+            ap_uint<32> pixel = fb->fb_array[idx];
 
             // Extract BGRA components from the pixel
             unsigned char b = static_cast<unsigned char>((pixel >> 24) & 0xFF); // Blue

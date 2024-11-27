@@ -17,6 +17,7 @@
  * will be handled by the CPU.
 */
 
+#include <ap_int.h>
 #include "cl.hpp"
 
 /* External function prototypes */
@@ -25,17 +26,17 @@ void error_handler(const char* message);
 /* Private function prototypes */
 void init_check();
 void cl_bound_check();
-void set_cl_entry_split(sc_uint<16> msb, sc_uint<16> lsb);
-void set_cl_entry_full(sc_uint<32> value);
+void set_cl_entry_split(ap_uint<16> msb, ap_uint<16> lsb);
+void set_cl_entry_full(ap_uint<32> value);
 
 /* Static variables */
-static cl_type* bound_cl = nullptr;
-static sc_uint<16> STRIDE   = 0;
-static sc_uint<16> RESX     = 0;
-static sc_uint<16> RESY     = 0;
+static cl_type* bound_cl 	= 0;
+static ap_uint<16> STRIDE   = 0;
+static ap_uint<16> RESX     = 0;
+static ap_uint<16> RESY     = 0;
 static bool INIT = false;
 
-void gpu_init(sc_uint<16> stride, sc_uint<16> width, sc_uint<16> height)
+void gpu_init(ap_uint<16> stride, ap_uint<16> width, ap_uint<16> height)
 {
     STRIDE = stride;
     RESX   = width;
@@ -54,18 +55,18 @@ void init_check()
 
 void cl_bound_check()
 {
-    if (bound_cl != nullptr) {
+    if (bound_cl != 0) {
         return; 
     }
 
     error_handler("No command list bound");
 }
 
-void create_cl(cl_type& cl, sc_uint<32> size)
+void create_cl(cl_type& cl, ap_uint<32> size)
 {
     init_check();
 
-    cl.array = new sc_uint<32>[size]();
+    cl.array = new ap_uint<32>[size]();
     cl.size  = size;
     cl.idx   = 0;
 }
@@ -115,7 +116,7 @@ cl_type& get_bound_cl() {
  * Byte 2: [31:16] = 0, [15:0] = h
  * Byte 3: [31:0] = color
  */
-void blit_rect(sc_uint<16> x, sc_uint<16> y, sc_uint<16> w, sc_uint<16> h, sc_uint<32> color)
+void blit_rect(ap_uint<16> x, ap_uint<16> y, ap_uint<16> w, ap_uint<16> h, ap_uint<32> color)
 {
     init_check();
     cl_bound_check();
@@ -133,7 +134,7 @@ void blit_rect(sc_uint<16> x, sc_uint<16> y, sc_uint<16> w, sc_uint<16> h, sc_ui
  * Byte 1: [31:16] = r, [15:0] = y
  * Byte 2: [31:0] = color
  */
-void blit_circ(sc_uint<16> x, sc_uint<16> y, sc_uint<16> r, sc_uint<32> color)
+void blit_circ(ap_uint<16> x, ap_uint<16> y, ap_uint<16> r, ap_uint<32> color)
 {
     init_check();
     cl_bound_check();
@@ -151,7 +152,7 @@ void blit_circ(sc_uint<16> x, sc_uint<16> y, sc_uint<16> r, sc_uint<32> color)
  * Byte 2: [31:16] = t, [15:0] = y2
  * Byte 2: [31:0] = color
  */
-void blit_line(sc_uint<16> x0, sc_uint<16> y0, sc_uint<16> x1, sc_uint<16> y1, sc_uint<16> t, sc_uint<32> color)
+void blit_line(ap_uint<16> x0, ap_uint<16> y0, ap_uint<16> x1, ap_uint<16> y1, ap_uint<16> t, ap_uint<32> color)
 {
     init_check();
     cl_bound_check();
@@ -165,7 +166,7 @@ void blit_line(sc_uint<16> x0, sc_uint<16> y0, sc_uint<16> x1, sc_uint<16> y1, s
 /**
  * Sets a 32 bit value in the command list and increments the index.
  */
-void set_cl_entry_split(sc_uint<16> msb, sc_uint<16> lsb)
+void set_cl_entry_split(ap_uint<16> msb, ap_uint<16> lsb)
 {
     init_check();
     cl_bound_check();
@@ -177,7 +178,7 @@ void set_cl_entry_split(sc_uint<16> msb, sc_uint<16> lsb)
 /**
  * Sets a full 32-bit value in the command list and increments the index.
  */
-void set_cl_entry_full(sc_uint<32> value)
+void set_cl_entry_full(ap_uint<32> value)
 {
     init_check();
     cl_bound_check();

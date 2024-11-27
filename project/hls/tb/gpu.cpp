@@ -19,6 +19,7 @@
 #include "gpu.hpp"
 #include "cl.hpp"
 #include "fb.hpp"
+#include <ap_int.h>
 
 /* External function prototypes */
 void error_handler(const char* message);
@@ -36,7 +37,7 @@ void submit_cl()
     rewind_cl(cl);
 
     while (cl.idx < cl.size) {
-        sc_uint<16> cmd = cl.array[cl.idx] & 0xFFFF;
+        ap_uint<16> cmd = cl.array[cl.idx] & 0xFFFF;
 
         switch (cmd) {
             case BLIT_RECT_CMD:
@@ -68,7 +69,7 @@ void bind_fb(fb_type* fb)
     bound_fb = fb;
 }
 
-sc_uint<32> read_cl(cl_type& cl)
+ap_uint<32> read_cl(cl_type& cl)
 {
     return cl.array[cl.idx++];
 }
@@ -81,15 +82,15 @@ sc_uint<32> read_cl(cl_type& cl)
  */
 void gpu_blit_rect(cl_type& cl)
 {
-    sc_uint<32> dword_0 = read_cl(cl);
-    sc_uint<32> dword_1 = read_cl(cl);
-    sc_uint<32> dword_2 = read_cl(cl);
-    sc_uint<32> dword_3 = read_cl(cl);
-    sc_uint<16> x = dword_0 >> 16;
-    sc_uint<16> y = dword_1 & 0xFFFF;
-    sc_uint<16> w = dword_1 >> 16;
-    sc_uint<16> h = dword_2 & 0xFFFF;
-    sc_uint<32> color = dword_3;
+    ap_uint<32> dword_0 = read_cl(cl);
+    ap_uint<32> dword_1 = read_cl(cl);
+    ap_uint<32> dword_2 = read_cl(cl);
+    ap_uint<32> dword_3 = read_cl(cl);
+    ap_uint<16> x = dword_0 >> 16;
+    ap_uint<16> y = dword_1 & 0xFFFF;
+    ap_uint<16> w = dword_1 >> 16;
+    ap_uint<16> h = dword_2 & 0xFFFF;
+    ap_uint<32> color = dword_3;
 
 #ifdef DEBUG_GPU
     std::cout << "x: " << x << std::endl;
@@ -115,13 +116,13 @@ void gpu_blit_rect(cl_type& cl)
  */
 void gpu_blit_circ(cl_type& cl)
 {
-    sc_uint<32> dword_0 = read_cl(cl);
-    sc_uint<32> dword_1 = read_cl(cl);
-    sc_uint<32> dword_2 = read_cl(cl);
-    sc_uint<16> x = dword_0 >> 16;
-    sc_uint<16> y = dword_1 & 0xFFFF;
-    sc_uint<16> r = dword_1 >> 16;
-    sc_uint<32> color = dword_2;
+    ap_uint<32> dword_0 = read_cl(cl);
+    ap_uint<32> dword_1 = read_cl(cl);
+    ap_uint<32> dword_2 = read_cl(cl);
+    ap_uint<16> x = dword_0 >> 16;
+    ap_uint<16> y = dword_1 & 0xFFFF;
+    ap_uint<16> r = dword_1 >> 16;
+    ap_uint<32> color = dword_2;
 
 #ifdef DEBUG_GPU
     std::cout << "x: " << x << std::endl;
@@ -148,16 +149,16 @@ void gpu_blit_circ(cl_type& cl)
  */
 void gpu_blit_line(cl_type& cl)
 {
-    sc_uint<32> dword_0 = read_cl(cl);
-    sc_uint<32> dword_1 = read_cl(cl);
-    sc_uint<32> dword_2 = read_cl(cl);
-    sc_uint<32> dword_3 = read_cl(cl);
-    sc_uint<16> x0 = dword_0 >> 16;
-    sc_uint<16> y0 = dword_1 & 0xFFFF;
-    sc_uint<16> x1 = dword_1 >> 16;
-    sc_uint<16> y1 = dword_2 & 0xFFFF;
-    sc_uint<16> t = dword_2 >> 16;
-    sc_uint<32> color = dword_3;
+    ap_uint<32> dword_0 = read_cl(cl);
+    ap_uint<32> dword_1 = read_cl(cl);
+    ap_uint<32> dword_2 = read_cl(cl);
+    ap_uint<32> dword_3 = read_cl(cl);
+    ap_uint<16> x0 = dword_0 >> 16;
+    ap_uint<16> y0 = dword_1 & 0xFFFF;
+    ap_uint<16> x1 = dword_1 >> 16;
+    ap_uint<16> y1 = dword_2 & 0xFFFF;
+    ap_uint<16> t = dword_2 >> 16;
+    ap_uint<32> color = dword_3;
 
 #ifdef DEBUG_GPU
     std::cout << "x0: " << x0 << std::endl;
