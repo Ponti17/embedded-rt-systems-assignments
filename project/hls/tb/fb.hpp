@@ -16,11 +16,16 @@
 #define BGRA8888 0x01
 
 struct fb_type {
-    ap_uint<16> stride = 0;
-    ap_uint<16> height = 0;
-    ap_uint<16> width  = 0;
-    ap_uint<32> *fb_array = 0;
+    static ap_uint<16> stride;
+    static ap_uint<16> height;
+    static ap_uint<16> width;
+    static ap_uint<32> *fb_array;
 };
+
+ap_uint<16> fb_type::stride     = 0;
+ap_uint<16> fb_type::height     = 0;
+ap_uint<16> fb_type::width      = 0;
+ap_uint<32>* fb_type::fb_array  = 0;
 
 /**
  * Allocate a frame buffer

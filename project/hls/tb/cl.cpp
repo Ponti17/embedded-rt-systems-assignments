@@ -67,7 +67,7 @@ void create_cl(cl_type& cl, ap_uint<32> size)
     init_check();
 
     cl.cl_array = new ap_uint<32>[size]();
-    cl.size  = size;
+    cl.cl_size  = size;
     cl.cl_idx   = 0;
 }
 
@@ -77,7 +77,7 @@ void delete_cl(cl_type& cl)
 
     delete[] cl.cl_array;
     cl.cl_array = 0;
-    cl.size = 0;
+    cl.cl_size = 0;
     cl.cl_idx = 0;
 }
 
