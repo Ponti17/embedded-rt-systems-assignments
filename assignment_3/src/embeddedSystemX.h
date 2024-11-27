@@ -2,6 +2,8 @@
 #define EMBEDDED_SYSTEM_X_H
 
 #include "states.h"
+#include "commands.h"
+
 #include <iostream>
 
 class State;

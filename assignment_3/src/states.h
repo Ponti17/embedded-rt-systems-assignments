@@ -28,6 +28,7 @@ public:
     virtual string getStateName() const = 0;
 
     virtual ~State() = default;
+
 };
 
 namespace states {
@@ -114,12 +115,11 @@ namespace states {
     };
 
     namespace operational {
+
         class Ready;
         class Configuration;
         class RealTimeLoop;
         class Suspended;
-
-        
 
         class Ready : public State {
         private:

@@ -12,6 +12,7 @@ set(SOURCES
     embeddedSystemX.cpp
     states.cpp
     main.cpp
+    commands.cpp
 )
 
 # Add the executable

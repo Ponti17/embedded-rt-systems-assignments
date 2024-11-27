@@ -26,7 +26,7 @@ void Failure::restart(EmbeddedSystemX* context) {
 }
 
 void Failure::exit(EmbeddedSystemX* context) {
-    //exit? 
+    std::cout << "Exiting system" << std::endl;
 }
 
 void Initializing::initialized(EmbeddedSystemX* context) {

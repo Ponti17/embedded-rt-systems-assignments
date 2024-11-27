@@ -1,5 +1,6 @@
 #include "states.h"
 #include "embeddedSystemX.h"
+#include "commands.h"
 
 #include <iostream>
 
@@ -19,6 +20,7 @@ int main(int argc, char const *argv[])
     system.suspend();
     system.resume();
     system.stop();
+
 
     return 0;
 }

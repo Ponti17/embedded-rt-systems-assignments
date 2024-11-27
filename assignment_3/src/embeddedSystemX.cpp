@@ -51,15 +51,17 @@ void EmbeddedSystemX::start() {
 }
 
 void EmbeddedSystemX::stop() {
-    state->stop(this);
+    commands::CommandStop req(&(this->state));
+    req.execute();
+}
+
+void EmbeddedSystemX::resume() {
+    commands::CommandResume req(&(this->state));
+    req.execute();
 }
 
 void EmbeddedSystemX::suspend() {
     state->suspend(this);
-}
-
-void EmbeddedSystemX::resume() {
-    state->resume(this);
 }
 
 void EmbeddedSystemX::displayError(int errorNo) {
