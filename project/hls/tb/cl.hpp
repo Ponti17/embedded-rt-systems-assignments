@@ -15,10 +15,14 @@
 #define BLIT_LINE_CMD   0x0003
 
 struct cl_type {
-    ap_uint<32> cl_idx  = 0;
-    ap_uint<32> cl_size = 0;
-    ap_uint<32> *cl_array = 0;
+    static ap_uint<32> cl_idx;
+    static ap_uint<32> cl_size;
+    static ap_uint<32> *cl_array;
 };
+
+ap_uint<32> cl_type::cl_idx     = 0;
+ap_uint<32> cl_type::cl_size    = 0;
+ap_uint<32>* cl_type::cl_array  = 0;
 
 /**
  * Initialize the GPU
