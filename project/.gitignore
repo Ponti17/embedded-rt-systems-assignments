@@ -12,3 +12,5 @@
 !/hls/
 !/hls/src/
 !/hls/src/**
+!/hls/tb/
+!/hls/tb/**

@@ -1,45 +1,32 @@
-/*
- * Copyright 2021 Xilinx, Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-/*
- * This file contains an example for creating an AXI4-master interface in Vivado HLS
- */
-				      
 #include <stdio.h>
 #include <string.h>
+#include <ap_int.h>
+#include "gpu.h"
 
-void gpu(volatile int *a, int length, int value){
-#pragma HLS INTERFACE m_axi port=a depth=50 offset=slave
-#pragma HLS INTERFACE s_axilite port=length
-#pragma HLS INTERFACE s_axilite port=value
-#pragma HLS INTERFACE s_axilite port=return
+#define FB_SIZE 1920*1080
+#define CL_SIZE 512
 
-	int i;
-  int buff[100];
-  
-  //memcpy creates a burst access to memory
-  //multiple calls of memcpy cannot be pipelined and will be scheduled sequentially
-  //memcpy requires a local buffer to store the results of the memory transaction
-  memcpy(buff,(const int*)a,length*sizeof(int));
-  
-  for(i=0; i < length; i++){
-    buff[i] = buff[i] + value;
-  }
-  
-  memcpy((int *)a,buff,length*sizeof(int));
+#define CMD_NONE        0x0000
+#define BLIT_RECT_CMD   0x0001
+#define BLIT_CIRC_CMD   0x0002
+#define BLIT_LINE_CMD   0x0003
+
+void gpu(ap_int<32> frameBuffer[FB_SIZE], ap_int<32> cl[CL_SIZE], ap_int<8> status) {
+#pragma HLS INTERFACE s_axilite port=status
+#pragma HLS INTERFACE m_axi port=frameBuffer offset=slave
+#pragma HLS INTERFACE m_axi port=cl offset=slave
+
+    int i;
+    int cl_buff[CL_SIZE];
+
+    if (status & 1) {
+        for (i = 0; i < CL_SIZE; i++) {
+            cl_buff[i] = cl[i];
+        }
+
+        for (i = 0; i < 64; i++) {
+            ap_int<16> cmd = cl_buff[i] & 0xFFFF;
+            std::cout << "cmd: " << cmd << std::endl;
+        }
+    }
 }
-
-  
