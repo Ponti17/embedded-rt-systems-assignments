@@ -9,3 +9,6 @@
 !vivado/src/**
 !/gaphor/
 !/systemc/
+!/hls/
+!/hls/src/
+!/hls/src/**
