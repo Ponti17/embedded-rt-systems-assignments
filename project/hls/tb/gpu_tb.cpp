@@ -52,13 +52,13 @@ int main()
 
 	/* Print all 32-bit entries in cl_instance.array as 4-byte hex */
 	/* Be vary of leading 0 */
-    for (int i = 0; i < cl_instance.size; ++i) {
+    for (int i = 0; i < cl_instance.cl_size; ++i) {
         std::cout << "Entry " << i << ": 0x" 
                   << std::hex << std::uppercase 
-                  << cl_instance.array[i] << std::endl;
+                  << cl_instance.cl_array[i] << std::endl;
     }
 
-    gpu(fb1->fb_array, cl_instance.array, 1);
+    gpu(fb1->fb_array, cl_instance.cl_array, 1);
 
     /* Delete the cl_instance */
     delete_cl(cl_instance);

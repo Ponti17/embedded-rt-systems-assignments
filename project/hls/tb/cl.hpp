@@ -15,9 +15,9 @@
 #define BLIT_LINE_CMD   0x0003
 
 struct cl_type {
-    ap_uint<32> idx  = 0;
-    ap_uint<32> size = 0;
-    ap_uint<32> *array = nullptr;
+    ap_uint<32> cl_idx  = 0;
+    ap_uint<32> cl_size = 0;
+    ap_uint<32> *cl_array = nullptr;
 };
 
 /**

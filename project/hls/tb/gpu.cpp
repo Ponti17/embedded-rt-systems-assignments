@@ -36,8 +36,8 @@ void submit_cl()
     cl_type& cl = get_bound_cl();
     rewind_cl(cl);
 
-    while (cl.idx < cl.size) {
-        ap_uint<16> cmd = cl.array[cl.idx] & 0xFFFF;
+    while (cl.cl_idx < cl.cl_size) {
+        ap_uint<16> cmd = cl.cl_array[cl.cl_idx] & 0xFFFF;
 
         switch (cmd) {
             case BLIT_RECT_CMD:
@@ -71,7 +71,7 @@ void bind_fb(fb_type* fb)
 
 ap_uint<32> read_cl(cl_type& cl)
 {
-    return cl.array[cl.idx++];
+    return cl.cl_array[cl.cl_idx++];
 }
 
 /**
