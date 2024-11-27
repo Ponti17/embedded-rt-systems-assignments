@@ -29,7 +29,7 @@ void gpu_blit_rect(cl_type& cl);
 void gpu_blit_circ(cl_type& cl);
 void gpu_blit_line(cl_type& cl);
 
-static fb_type* bound_fb = nullptr;
+static fb_type* bound_fb = 0;
 
 void submit_cl()
 {

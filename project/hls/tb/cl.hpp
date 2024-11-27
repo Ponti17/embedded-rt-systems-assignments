@@ -17,7 +17,7 @@
 struct cl_type {
     ap_uint<32> cl_idx  = 0;
     ap_uint<32> cl_size = 0;
-    ap_uint<32> *cl_array = nullptr;
+    ap_uint<32> *cl_array = 0;
 };
 
 /**

@@ -19,7 +19,7 @@ struct fb_type {
     ap_uint<16> stride = 0;
     ap_uint<16> height = 0;
     ap_uint<16> width  = 0;
-    ap_uint<32> *fb_array = nullptr;
+    ap_uint<32> *fb_array = 0;
 };
 
 /**

@@ -76,7 +76,7 @@ void delete_cl(cl_type& cl)
     init_check();
 
     delete[] cl.array;
-    cl.array = nullptr;
+    cl.array = 0;
     cl.size = 0;
     cl.cl_idx = 0;
 }
@@ -101,7 +101,7 @@ void unbind_cl()
     init_check();
     cl_bound_check();
 
-    bound_cl = nullptr;
+    bound_cl = 0;
 }
 
 cl_type& get_bound_cl() {
