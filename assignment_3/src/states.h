@@ -209,22 +209,9 @@ class DispatchQueue {
     std::condition_variable queue_empty;
     
 public:
-    void insert(std::function<void()> operation) {
-        std::lock_guard<std::mutex> lock(queue_lock);
-        queue_operations.push(operation);
-        queue_empty.notify_one();
-    }
+    void insert(std::function<void()> operation);
 
-    std::function<void()> remove() {
-        std::unique_lock<std::mutex> lock(queue_lock);
-        queue_empty.wait(
-            lock,
-            [&] { return !queue_operations.empty();}
-        );
-        std::function<void()> operation = queue_operations.front();
-        queue_operations.pop();
-        return operation;
-    }
+    std::function<void()> remove();
 
 };
 
@@ -236,7 +223,7 @@ private:
     
     RealTimeLoop();
     ~RealTimeLoop();
-    
+
     std::atomic<bool> done;
     std::thread runnable;
     DispatchQueue dispatchQueue;
@@ -264,7 +251,8 @@ public:
     void chMode();
     void changeMode(RealTimeLoopMode* nextMode);
 
-
+    void handleEventX();
+    void stopDispatch();
     void dispatch();
     void eventX();
     

@@ -14,7 +14,8 @@ void Mode1::chMode(RealTimeLoop * realTimeLoop) {
 }
 
 void Mode1::eventX() {
-    std::cout << "Mode1 eventX" << std::endl;
+    std::cout << "Mode1 eventX\n" << std::endl;
+    
 }
 
 void Mode2::chMode(RealTimeLoop * realTimeLoop) {
@@ -22,7 +23,7 @@ void Mode2::chMode(RealTimeLoop * realTimeLoop) {
 }
 
 void Mode2::eventX() {
-    std::cout << "Mode2 eventX" << std::endl;
+    std::cout << "Mode2 eventX\n" << std::endl;
 }
 
 void Mode3::chMode(RealTimeLoop * realTimeLoop) {
@@ -30,5 +31,5 @@ void Mode3::chMode(RealTimeLoop * realTimeLoop) {
 }
 
 void Mode3::eventX() {
-    std::cout << "Mode3 eventX" << std::endl;
+    std::cout << "Mode3 eventX\n" << std::endl;
 }
