@@ -1,0 +1,195 @@
+\documentclass[10pt,a4paper]{article} % Document class
+
+%%% General packages
+\usepackage[normalem]{ulem} % Strike-through text
+\usepackage{makecell} % For making cells in tables
+\usepackage{array} % For tables
+\usepackage{wallpaper} % For adding wallpapers or background
+\usepackage{tocloft} % Custom table of contents
+\usepackage{lipsum} % Dummy text for testing
+\usepackage{wrapfig} % Wrap text around figures
+\usepackage[toc,page]{appendix} % For appendices
+\usepackage{titlesec} % Custom section titles
+\usepackage{fancyhdr} % Custom headers/footers
+\usepackage{lastpage} % For referencing the last page
+\usepackage{pdfpages} % For including PDFs
+\usepackage{layout} % Page layout
+\usepackage{geometry} % Custom page geometry
+\geometry{a4paper, total={170mm,237mm}, left=38mm, right=38mm, top=25.4mm, bottom=25.4mm}
+\usepackage{amssymb} % Black square, symbols
+\usepackage{verbatim} % Multiline comments
+\usepackage{multirow, multicol} % For multi-row and multi-column tables
+\usepackage{tabularx, threeparttable} % For enhanced tables
+\usepackage{amsmath} % For advanced math typesetting
+\usepackage{siunitx} % For SI units
+\usepackage{float} % For forcing float positions
+\usepackage{changepage} % To change page layout within the document
+\usepackage[outputdir=./build]{minted}
+\usepackage[skins,minted]{tcolorbox}
+
+%%% Language and encoding
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc} % Input encoding
+\usepackage[english]{babel} % Language settings
+\usepackage{csquotes} % Proper quoting
+\usepackage[style=ieee]{biblatex} % Bibliography
+\addbibresource{Settings/bibliography.bib}
+
+%%% Plotting and graphics
+\usepackage{pgfplots} % Plot package
+\pgfplotsset{compat=1.18} % PGFPlots compatibility
+\usepackage{graphicx} % For graphics
+\graphicspath{{imgs/}} % Graphics path
+
+%%% Subfiles for modular document
+\usepackage{subfiles}
+
+%%% Circuit drawing and subfigures
+\usepackage{caption}
+\usepackage{subcaption} % For subfigures
+\usepackage{rotating} % For rotated elements
+
+%%% Hyperref for hyperlinks
+\usepackage[hidelinks]{hyperref} % Hide link borders
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    citecolor=black,
+    urlcolor=blue
+}
+
+%%% Headers and footers
+\fancypagestyle{fancy}{
+    \fancyfoot{}
+    \fancyfoot[R]{Page \thepage\ of~\pageref{LastPage}}
+    \fancyfoot[L]{Aarhus University}
+    \fancyhead{}
+    \fancyhead[RO, LE]{\nouppercase\rightmark}
+    \fancyhead[LO, RE]{\nouppercase\leftmark}
+    \renewcommand{\footrulewidth}{0pt}
+}
+
+\fancypagestyle{plain}{%
+  \fancyhf{}%
+  \fancyfoot[R]{Page \thepage\ of~\pageref{LastPage}}
+  \fancyfoot[L]{Aarhus University}
+}
+
+\fancypagestyle{roman}{%
+  \fancyhf{}%
+  \fancyfoot[R]{\thepage}
+  \fancyfoot[L]{Aarhus University}
+}
+
+%%% Table of Contents and Titles
+\AtBeginDocument{\addtocontents{toc}{\protect\thispagestyle{roman}}}
+\renewcommand{\headrulewidth}{0pt}
+
+%%% Equation and figure numbering by section
+\numberwithin{equation}{section}
+\numberwithin{figure}{section}
+
+%%% Itemize spacing
+\usepackage{enumitem}
+\setlist[itemize]{itemsep=1pt, topsep=2pt}
+
+%%% Color and formatting
+\usepackage{color}
+\newcommand{\hsp}{\hspace{20pt}}
+\definecolor{gray75}{gray}{0.75}
+
+%%% Section title formatting
+\titleformat{\section}
+    {\normalfont\Large\bfseries}
+    {\thesection \hspace*{0.5em} \textbullet}
+    {0.5em}
+    {}
+
+\titleformat{\subsection}
+    {\normalfont\normalsize\bfseries}
+    {\thesubsection}
+    {0.5em}
+    {}
+
+%%% Spacing before and after sections
+\titlespacing*{\section}{0pt}{12pt}{12pt}
+\titlespacing*{\subsection}{0pt}{12pt}{12pt}
+
+%%% Captions
+\captionsetup{font={footnotesize, sl}, labelfont=bf}
+\setlength{\abovecaptionskip}{0pt} % Reduce space above captions
+
+%%% Footnotes
+\usepackage[bottom]{footmisc}
+
+%%% No paragraph indentation
+\setlength\parindent{0pt} 
+
+%%% Front page and titling
+\usepackage{titling}
+
+%%% Miscellaneous math and symbols
+\DeclareMathSymbol{*}{\mathbin}{symbols}{"01}
+
+%%% Reference all citations
+\nocite{*}
+
+\definecolor{mintedbackground}{rgb}{0.95,0.95,0.95}
+\definecolor{mintedframe}{rgb}{0.3,0.55,0.55}
+
+\setminted[cpp]{
+    bgcolor=mintedbackground,
+    fontfamily=tt,
+    linenos=true,
+    numberblanklines=true,
+    numbersep=12pt,
+    numbersep=5pt,
+    gobble=0,
+    frame=leftline,
+    framesep=2mm,
+    funcnamehighlighting=true,
+    tabsize=4,
+    obeytabs=false,
+    mathescape=false
+    samepage=false,
+    showspaces=false,
+    texcl=false,
+    baselinestretch=1.2,
+    fontsize=\footnotesize,
+    breaklines=true,
+}
+
+\setminted[text]{
+    bgcolor=mintedbackground,
+    fontfamily=tt,
+    linenos=true,
+    numberblanklines=true,
+    numbersep=12pt,
+    numbersep=5pt,
+    gobble=0,
+    frame=leftline,
+    framesep=2mm,
+    funcnamehighlighting=true,
+    tabsize=4,
+    obeytabs=false,
+    mathescape=false
+    samepage=false,
+    showspaces=false,
+    showtabs =false,
+    texcl=false,
+    baselinestretch=1.2,
+    fontsize=\footnotesize,
+    breaklines=true,
+}
+
+
+\newtcblisting{myminted}[2][]{listing engine=minted, listing only,#1, title=#2, minted language=cpp, colback=mintedbackground}
+
+\newtcblisting{mintedterminal}[2][]{enhanced, listing engine=minted, 
+listing only,#1, title=#2, minted language=text, 
+coltitle=mintedbackground!30!black, 
+fonttitle=\ttfamily\footnotesize,
+sharp corners, top=0mm, bottom=0mm,
+title code={\path[draw=mintedframe,dashed, fill=mintedbackground](title.south west)--(title.south east);},
+frame code={\path[draw=mintedframe, fill=mintedbackground](frame.south west) rectangle (frame.north east);}
+}
