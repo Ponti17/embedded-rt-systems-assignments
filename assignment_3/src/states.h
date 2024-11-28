@@ -13,6 +13,7 @@
 using std::string;
 
 class EmbeddedSystemX;
+class RealTimeLoopMode;
 
 class State {
 
@@ -231,21 +232,17 @@ class RealTimeLoop : public State {
 
 private:
     static RealTimeLoop* instance;
-    static RealTimeLoopMode * state_mode;
-    RealTimeLoop(){};
-    ~RealTimeLoop(){
-        dispatchQueue.insert(
-            [&]() { done = true; }
-        );
-        runnable.join();
-    }
+    static RealTimeLoopMode* state_mode;
+    
+    RealTimeLoop();
+    ~RealTimeLoop();
+    
     std::atomic<bool> done;
     std::thread runnable;
     DispatchQueue dispatchQueue;
 
-    void changeMode(RealTimeLoopMode*);
-
 public:
+
     static RealTimeLoop* getInstance() {
         if(instance == nullptr) {
             
@@ -263,10 +260,14 @@ public:
     void restart(EmbeddedSystemX* context) override;
     void stop(EmbeddedSystemX* context) override;
     void suspend(EmbeddedSystemX* context) override;
+
     void chMode();
+    void changeMode(RealTimeLoopMode* nextMode);
+
 
     void dispatch();
-
+    void eventX();
+    
     DispatchQueue& getDispatchQueue();
 
 };

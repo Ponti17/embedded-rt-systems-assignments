@@ -7,7 +7,9 @@ Initializing* Initializing::instance = nullptr;
 Ready* Ready::instance = nullptr;
 Configuration* Configuration::instance = nullptr;
 RealTimeLoop* RealTimeLoop::instance = nullptr;
+RealTimeLoopMode* RealTimeLoop::state_mode = nullptr;
 Suspended* Suspended::instance = nullptr;
+
 
 void PowerOnSelfTest::selfTestOk(EmbeddedSystemX* context) {
     context->changeState(Initializing::getInstance());
@@ -58,3 +60,39 @@ void Suspended::stop(EmbeddedSystemX* context) {
     context->changeState(Ready::getInstance());
 }
 
+//real time loop
+RealTimeLoop::RealTimeLoop() {
+    done = false;
+    state_mode = Mode1::getInstance();
+    runnable = std::thread([=] {dispatch();});
+} 
+
+void RealTimeLoop::chMode() {
+    state_mode->chMode(this);
+}
+
+void RealTimeLoop::changeMode(RealTimeLoopMode * nextMode) {
+    state_mode = nextMode;
+}
+
+void RealTimeLoop::eventX() {
+    state_mode->eventX();
+}
+
+void RealTimeLoop::dispatch() {
+    while (!done) {
+        auto operation = dispatchQueue.remove();
+        operation();
+    }
+}
+
+RealTimeLoop::~RealTimeLoop() {
+    dispatchQueue.insert(
+        [&]() { done = true; }
+    );
+    runnable.join();
+}
+
+void RealTimeLoop::restart(EmbeddedSystemX* context) {
+    context->changeState(Initializing::getInstance());
+}
