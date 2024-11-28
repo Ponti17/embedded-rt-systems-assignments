@@ -1,7 +1,5 @@
 #include "embeddedSystemX.h"
 
-using namespace states;
-using namespace states::operational;
 
 EmbeddedSystemX::EmbeddedSystemX() {
     state = PowerOnSelfTest::getInstance();
@@ -51,12 +49,12 @@ void EmbeddedSystemX::start() {
 }
 
 void EmbeddedSystemX::stop() {
-    commands::CommandStop req(&(this->state));
+    CommandStop req(&(this->state));
     req.execute();
 }
 
 void EmbeddedSystemX::resume() {
-    commands::CommandResume req(&(this->state));
+    CommandResume req(&(this->state));
     req.execute();
 }
 

@@ -1,8 +1,5 @@
 #include "states.h"
 
-using namespace states;
-using namespace states::operational;
-
 // Singleton instances
 PowerOnSelfTest* PowerOnSelfTest::instance = nullptr;
 Failure* Failure::instance = nullptr;
@@ -60,6 +57,4 @@ void Suspended::resume(EmbeddedSystemX* context) {
 void Suspended::stop(EmbeddedSystemX* context) {
     context->changeState(Ready::getInstance());
 }
-
-
 
