@@ -10,7 +10,6 @@ RealTimeLoop* RealTimeLoop::instance = nullptr;
 RealTimeLoopMode* RealTimeLoop::state_mode = nullptr;
 Suspended* Suspended::instance = nullptr;
 
-
 void PowerOnSelfTest::selfTestOk(EmbeddedSystemX* context) {
     context->changeState(Initializing::getInstance());
 }   
@@ -60,6 +59,24 @@ void Suspended::stop(EmbeddedSystemX* context) {
     context->changeState(Ready::getInstance());
 }
 
+void DispatchQueue::insert(std::function<void()> operation) {
+    {
+        std::lock_guard<std::mutex> lock(queue_lock);
+        queue_operations.push(operation);
+    }
+    queue_empty.notify_one();
+    std::cout << "DispatchQueue: Inserted operation.\n";
+}
+
+std::function<void()> DispatchQueue::remove() {
+    std::unique_lock<std::mutex> lock(queue_lock);
+    queue_empty.wait(lock, [&] { return !queue_operations.empty(); });
+    auto operation = queue_operations.front();
+    queue_operations.pop();
+    std::cout << "DispatchQueue: Removed operation.\n";
+    return operation;
+}
+
 //real time loop
 RealTimeLoop::RealTimeLoop() {
     done = false;
@@ -81,24 +98,6 @@ void RealTimeLoop::eventX() {
         [this]() { handleEventX(); }
     );
 }
-void DispatchQueue::insert(std::function<void()> operation) {
-    {
-        std::lock_guard<std::mutex> lock(queue_lock);
-        queue_operations.push(operation);
-    }
-    queue_empty.notify_one();
-    std::cout << "DispatchQueue: Inserted operation.\n";
-}
-
-std::function<void()> DispatchQueue::remove() {
-    std::unique_lock<std::mutex> lock(queue_lock);
-    queue_empty.wait(lock, [&] { return !queue_operations.empty(); });
-    auto operation = queue_operations.front();
-    queue_operations.pop();
-    std::cout << "DispatchQueue: Removed operation.\n";
-    return operation;
-}
-
 
 void RealTimeLoop::dispatch() {
     std::cout << "Dispatch loop started." << std::endl;
@@ -117,17 +116,12 @@ void RealTimeLoop::dispatch() {
     std::cout << "Dispatch loop exited." << std::endl;
 }
 
-
-
-
 RealTimeLoop::~RealTimeLoop() {
     if (!done) {
-        stopDispatch();  // Call stopDispatch to clean up
+        stopDispatch();  
     }
     std::cout << "RealTimeLoop destructor completed." << std::endl;
 }
-
-
 
 void RealTimeLoop::restart(EmbeddedSystemX* context) {
     context->changeState(PowerOnSelfTest::getInstance());
@@ -142,12 +136,11 @@ void RealTimeLoop::handleEventX() {
     }
 }
 
-
 void RealTimeLoop::stopDispatch() {
-    done = true; // Signal thread to stop
-    dispatchQueue.insert([]() {}); // Insert a dummy task to unblock the thread
+    done = true;
+    dispatchQueue.insert([]() {}); 
     if (runnable.joinable()) {
-        runnable.join(); // Wait for the thread to complete
+        runnable.join();
     }
     std::cout << "Dispatch thread stopped." << std::endl;
 }

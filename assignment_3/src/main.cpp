@@ -26,19 +26,19 @@ int main(int argc, char const *argv[])
 
     std::cout << "Triggering eventX in Mode1..." << std::endl;
     realTimeLoop->eventX();
-    std::this_thread::sleep_for(std::chrono::milliseconds(100)); // Allow dispatch to process
+    std::this_thread::sleep_for(std::chrono::milliseconds(100)); 
 
     std::cout << "Switching to Mode2..." << std::endl;
     realTimeLoop->changeMode(Mode2::getInstance());
     std::cout << "Triggering eventX in Mode2..." << std::endl;
     realTimeLoop->eventX();
-    std::this_thread::sleep_for(std::chrono::milliseconds(100)); // Allow dispatch to process
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
     std::cout << "Switching to Mode3..." << std::endl;
     realTimeLoop->changeMode(Mode3::getInstance());
     std::cout << "Triggering eventX in Mode3..." << std::endl;
     realTimeLoop->eventX();
-    std::this_thread::sleep_for(std::chrono::milliseconds(100)); // Allow dispatch to process
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
     std::cout << "Stopping RealTimeLoop dispatch thread..." << std::endl;
     realTimeLoop->stopDispatch();

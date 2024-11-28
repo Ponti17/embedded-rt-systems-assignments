@@ -3,7 +3,6 @@
 
 #include "states.h"
 
-
 class RealTimeLoop;
 
 class RealTimeLoopMode {
@@ -13,8 +12,6 @@ class RealTimeLoopMode {
     virtual ~RealTimeLoopMode() = default;
 
 };
-
-
 
 class Mode1;
 class Mode2;

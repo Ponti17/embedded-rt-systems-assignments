@@ -3,7 +3,6 @@
 
 #include "states.h"
 
-// Forward declaration of State to resolve dependencies
 class State;
 
 class Command {
@@ -12,7 +11,7 @@ public:
     virtual void execute() = 0;
     virtual ~Command() = default;
 protected:
-    State** _state; // Pointer to the current state pointer
+    State** _state; 
 };
 
 class CommandResume : public Command {
