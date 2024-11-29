@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <ap_int.h>
-#include "gpu.h"
 
 #define FB_SIZE 1920*1080
 #define CL_SIZE 512
@@ -11,7 +10,7 @@
 #define BLIT_CIRC_CMD   0x0002
 #define BLIT_LINE_CMD   0x0003
 
-void gpu(ap_int<32> frameBuffer[FB_SIZE], ap_int<32> cl[CL_SIZE], ap_int<8> status) {
+void gpu(ap_uint<32> frameBuffer[FB_SIZE], ap_uint<32> cl[CL_SIZE], ap_uint<8> status) {
 #pragma HLS INTERFACE s_axilite port=status
 #pragma HLS INTERFACE m_axi port=frameBuffer offset=slave
 #pragma HLS INTERFACE m_axi port=cl offset=slave
@@ -25,7 +24,7 @@ void gpu(ap_int<32> frameBuffer[FB_SIZE], ap_int<32> cl[CL_SIZE], ap_int<8> stat
         }
 
         for (i = 0; i < 64; i++) {
-            ap_int<16> cmd = cl_buff[i] & 0xFFFF;
+            ap_uint<16> cmd = cl_buff[i] & 0xFFFF;
             std::cout << "cmd: " << cmd << std::endl;
         }
     }

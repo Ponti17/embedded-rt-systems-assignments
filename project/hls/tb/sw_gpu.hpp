@@ -6,7 +6,6 @@
 #ifndef GPU_HPP
 #define GPU_HPP
 
-#include "systemc.h"
 #include <iostream>
 #include <string>
 #include "cl.hpp"

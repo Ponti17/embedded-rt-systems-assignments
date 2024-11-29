@@ -6,7 +6,6 @@
 #ifndef FB_HPP
 #define FB_HPP
 
-#include "systemc.h"
 #include <iostream>
 #include <string>
 #include "cl.hpp"

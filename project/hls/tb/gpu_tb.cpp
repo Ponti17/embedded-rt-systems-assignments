@@ -5,9 +5,11 @@
 #include "cl.hpp"
 #include "gpu.hpp"
 #include "fb.hpp"
-#include "gpu.h"
 
-void gpu(ap_int<32> frameBuffer[FB_SIZE], ap_int<32> cl[CL_SIZE], ap_int<8> status);
+#define FB_SIZE 1920*1080
+#define CL_SIZE 512
+
+void gpu(ap_uint<32> frameBuffer[FB_SIZE], ap_uint<32> cl[CL_SIZE], ap_uint<8> status);
 
 int main()
 {
@@ -23,7 +25,7 @@ int main()
     cl_type cl_instance;
 
     /* Create command list of size */
-	int size = 128;
+	int size = CL_SIZE;
     create_cl(cl_instance, size);
 
 	/* Bind command list */
@@ -52,7 +54,7 @@ int main()
 
 	/* Print all 32-bit entries in cl_instance.array as 4-byte hex */
 	/* Be vary of leading 0 */
-    for (int i = 0; i < cl_instance.cl_size; ++i) {
+    for (ap_uint<32> i = 0; i < cl_instance.cl_size; ++i) {
         std::cout << "Entry " << i << ": 0x" 
                   << std::hex << std::uppercase 
                   << cl_instance.cl_array[i] << std::endl;
