@@ -63,6 +63,12 @@ class State {
 };
 \end{myminted}
 
+\subsection{Active Object Pattern}
+
+The \texttt{RealTimeLoop} is treated as an active object. This pattern allows for the creation of request objects for each event (e.g., chMode1, chMode2, chMode3). Each request object calls the corresponding handler method from the source state, enabling asynchronous processing of events.
+
+\newpage
+
 \subsection{Command Pattern}
 
 The events \texttt{Resume} and \texttt{Stop} in the \texttt{Suspended} state are implemented using the command pattern. Each occurence of these events creates a request object.
@@ -74,9 +80,11 @@ void EmbeddedSystemX::resume() {
 }
 \end{myminted}
 
-\subsection{Active Object Pattern}
-
-The \texttt{RealTimeLoop} is treated as an active object. This pattern allows for the creation of request objects for each event (e.g., chMode1, chMode2, chMode3). Each request object calls the corresponding handler method from the source state, enabling asynchronous processing of events.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1.0\textwidth]{command_pattern_class_diagram.png}
+    \caption{Class diagram of Command pattern.}
+\end{figure}
 
 \newpage
 
@@ -151,5 +159,14 @@ Dispatch loop exited.
 Dispatch thread stopped.
 All tests completed.
 \end{mintedterminal}
+
+\newpage
+
+\section{Discussion}
+
+There were several challenges during this assignment. The first and most significant challenge was \textit{decoding} the assignment requirements. It is not immediately clear how and where each of these patterns should be used, leading to a lot of time spent pondering the design. We are also electrical engineers, meaning that we have little to no experience with object oriented programming. In general we found all of this to be little \textit{abstract} :)
+
+\vspace{10pt}
+Some of these patterns were easier to implement than others. The concept of the state and singleton patterns were easy to understand and made good sense in the context of the assignment. The active object pattern was challenging and felt a bit forced in a use case such as this.
 
 \end{document}
