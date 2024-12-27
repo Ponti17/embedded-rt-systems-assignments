@@ -29,10 +29,15 @@ struct fb_type {
 fb_type* allocate_fb(ap_uint<16> width, ap_uint<16> height, ap_uint<8> format);
 void save_fb_as_image(fb_type* fb, const std::string& filename);
 
-void gpu(ap_uint<32> fb_addr, ap_uint<8> status, ap_uint<32> cmd_fifo[256]);
+void gpu(ap_uint<32> fb_addr[FB_SIZE], ap_uint<8> status, ap_uint<32> cmd_fifo[256]);
 
 int main()
 {
+    static int x = 0;
+    static int y = 0;
+    static int w = 0;
+    static int h = 0;
+
 	/* Initialize FB */
     ap_uint<16> RESX = 1920;
 	ap_uint<16> RESY = 1080;
@@ -44,9 +49,26 @@ int main()
     for (int i = 0; i < 256; i++) {
         cmd_fifo[i] = 0;
     }
-    cmd_fifo[0] = (BLIT_RECT_CMD & 0xFFFF) | (0x4321 << 16); // BLIT_RECT_CMD with data 0x4321
-    cmd_fifo[1] = (BLIT_CIRC_CMD & 0xFFFF) | (0x8765 << 16); // BLIT_CIRC_CMD with data 0x8765
-    cmd_fifo[2] = (BLIT_LINE_CMD & 0xFFFF) | (0xCBA9 << 16); // BLIT_LINE_CMD with data 0xCBA9
+
+    /* Red square */
+    x = 100;
+    y = 100;
+    w = 500;
+    h = 500;
+    cmd_fifo[0] = (static_cast<uint32_t>(x) << 16) | (static_cast<uint32_t>(BLIT_RECT_CMD));
+    cmd_fifo[1] = (static_cast<uint32_t>(w) << 16) | (static_cast<uint32_t>(y));
+    cmd_fifo[2] = (static_cast<uint32_t>(0) << 16) | (static_cast<uint32_t>(h));
+    cmd_fifo[3] = 0x0000FFFF;
+
+    /* Blue square */
+    x = 700;
+    y = 800;
+    w = 800;
+    h = 200;
+    cmd_fifo[4] = (static_cast<uint32_t>(x) << 16) | (static_cast<uint32_t>(BLIT_RECT_CMD));
+    cmd_fifo[5] = (static_cast<uint32_t>(w) << 16) | (static_cast<uint32_t>(y));
+    cmd_fifo[6] = (static_cast<uint32_t>(0) << 16) | (static_cast<uint32_t>(h));
+    cmd_fifo[7] = 0xFF0000FF;
 
     // Call the GPU function
     ap_uint<8> status = 1; // Enable processing
