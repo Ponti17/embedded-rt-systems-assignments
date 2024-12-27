@@ -95,19 +95,51 @@ void gpu_blit_rect(
     ap_uint<16> h = arg3;
     ap_uint<32> color = (ap_uint<32>(arg6) << 16) | arg5;
 
-    std::cout << "arg5: " << std::hex << arg5 << std::endl;
-    std::cout << "arg6: " << std::hex << arg6 << std::endl;
-    std::cout << "color: " << std::hex << color << std::endl;
+    ap_uint<8> newB = color.range(31, 24);
+    ap_uint<8> newG = color.range(23, 16);
+    ap_uint<8> newR = color.range(15, 8);
+    ap_uint<8> newA = color.range(7, 0);
 
-    std::cout << "x: " << x << std::endl;
-    std::cout << "y: " << y << std::endl;
-    std::cout << "w: " << w << std::endl;
-    std::cout << "h: " << h << std::endl;
+    std::cout << "newB: " << std::hex << newB << std::endl;
+    std::cout << "newG: " << std::hex << newG << std::endl;
+    std::cout << "newR: " << std::hex << newR << std::endl;
+    std::cout << "newA: " << std::hex << newA << std::endl;
 
     for (int y_idx = y; y_idx < y+h; ++y_idx) {
         int idx = y_idx * 1920;
-        for (int x_idx = x; x_idx < x+w; ++x_idx) { 
-            frameBuffer[idx + x_idx] = color;
+        for (int x_idx = x; x_idx < x+w; ++x_idx) {
+            #pragma HLS PIPELINE II=1
+            int fb_index = idx + x_idx;
+
+            ap_uint<32> oldColor = frameBuffer[fb_index];
+            ap_uint<8> oldB = oldColor.range(31, 24);
+            ap_uint<8> oldG = oldColor.range(23, 16);
+            ap_uint<8> oldR = oldColor.range(15, 8);
+            ap_uint<8> oldA = oldColor.range(7, 0);
+
+            /* If alpha is 100% just overwrite fully */
+            if (newA == 0xFF) {
+                frameBuffer[fb_index] = color;
+            }
+            /* If alpha is 0% do nothing */
+            else if (newA == 0) {
+            }
+            /* Blend */
+            else {
+                ap_uint<16> outB_16 = ( (255 - newA) * oldB + newA * newB ) >> 8;
+                ap_uint<16> outG_16 = ( (255 - newA) * oldG + newA * newG ) >> 8;
+                ap_uint<16> outR_16 = ( (255 - newA) * oldR + newA * newR ) >> 8;
+
+                ap_uint<8> outA = (oldA > newA) ? oldA : newA;
+
+                ap_uint<32> outColor = 
+                    (ap_uint<32>(outA)    << 24) |
+                    (ap_uint<32>(outR_16) << 16) |
+                    (ap_uint<32>(outG_16) << 8)  |
+                    (ap_uint<32>(outB_16) << 0);
+                
+                frameBuffer[fb_index] = outColor;
+            }
         }
     }
 }
