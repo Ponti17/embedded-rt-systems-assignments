@@ -37,8 +37,9 @@ void gpu_blit_rect(
  * A single command takes a fixed size of 4 entries i.e. 128 bits.
  */
 void gpu(ap_uint<32> frameBuffer[FB_SIZE], ap_uint<8> status, ap_uint<32> cmd_fifo[256]) {
-#pragma HLS INTERFACE s_axilite port=status
-#pragma HLS INTERFACE m_axi port=fb_addr offset=slave
+#pragma HLS INTERFACE s_axilite port=return bundle=control
+#pragma HLS INTERFACE s_axilite port=status bundle=control
+#pragma HLS INTERFACE m_axi port=frameBuffer offset=slave
 #pragma HLS INTERFACE ap_fifo port=cmd_fifo depth=256
 
     // Check if processing is enabled via the status flag
@@ -49,7 +50,7 @@ void gpu(ap_uint<32> frameBuffer[FB_SIZE], ap_uint<8> status, ap_uint<32> cmd_fi
             ap_uint<32> dword_1 = cmd_fifo[i*4+1];
             ap_uint<32> dword_2 = cmd_fifo[i*4+2];
             ap_uint<32> dword_3 = cmd_fifo[i*4+3];
-            ap_uint<16> cmd = dword_0 & 0xFFFF;     // Extract command type
+            ap_uint<16> cmd  = dword_0 & 0xFFFF;    // Extract command type
             ap_uint<16> arg0 = dword_0 >> 16;       // Extract arguments
             ap_uint<16> arg1 = dword_1 & 0xFFFF;
             ap_uint<16> arg2 = dword_1 >> 16;
