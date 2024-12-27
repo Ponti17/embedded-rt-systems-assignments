@@ -3,29 +3,52 @@
 #include <ap_int.h>
 
 #define FB_SIZE 1920*1080
-#define CL_SIZE 512
+#define FIFO_SIZE 256
 
 #define CMD_NONE        0x0000
 #define BLIT_RECT_CMD   0x0001
 #define BLIT_CIRC_CMD   0x0002
 #define BLIT_LINE_CMD   0x0003
 
-void gpu(ap_uint<32> frameBuffer[FB_SIZE], ap_uint<32> cl[CL_SIZE], ap_uint<8> status) {
+/**
+ * The GPU function processes commands from the command FIFO.
+ * 
+ * @param fb_addr The address of the framebuffer
+ * @param status The status flag to enable/disable processing
+ * @param cmd_fifo The command FIFO
+ * 
+ * During runtime the CPU will set the address of the framebuffer to be drawn.
+ * The CPU will calculate the scene and send the commands to the GPU.
+ * The status flag will enable/disable processing.
+ */
+void gpu(ap_uint<32> fb_addr, ap_uint<8> status, ap_uint<32> cmd_fifo[256]) {
 #pragma HLS INTERFACE s_axilite port=status
-#pragma HLS INTERFACE m_axi port=frameBuffer offset=slave
-#pragma HLS INTERFACE m_axi port=cl offset=slave
+#pragma HLS INTERFACE m_axi port=fb_addr offset=slave
+#pragma HLS INTERFACE ap_fifo port=cmd_fifo depth=256
 
-    int i;
-    int cl_buff[CL_SIZE];
-
+    // Check if processing is enabled via the status flag
     if (status & 1) {
-        for (i = 0; i < CL_SIZE; i++) {
-            cl_buff[i] = cl[i];
-        }
+        // Process commands from the FIFO
+        for (int i = 0; i < 256; i++) {
+            ap_uint<32> cmd = cmd_fifo[i];
+            ap_uint<16> cmd_type = cmd & 0xFFFF; // Extract command type
+            ap_uint<16> cmd_data = cmd >> 16;   // Extract additional data
 
-        for (i = 0; i < 64; i++) {
-            ap_uint<16> cmd = cl_buff[i] & 0xFFFF;
-            std::cout << "cmd: " << cmd << std::endl;
+            // Handle the command
+            switch (cmd_type) {
+                case BLIT_RECT_CMD:
+                    std::cout << "Processing BLIT_RECT_CMD with data: " << cmd_data << std::endl;
+                    break;
+                case BLIT_CIRC_CMD:
+                    std::cout << "Processing BLIT_CIRC_CMD with data: " << cmd_data << std::endl;
+                    break;
+                case BLIT_LINE_CMD:
+                    std::cout << "Processing BLIT_LINE_CMD with data: " << cmd_data << std::endl;
+                    break;
+                default:
+                    std::cout << "Unknown command: " << cmd_type << std::endl;
+                    break;
+            }
         }
     }
 }
