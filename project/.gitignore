@@ -9,8 +9,13 @@
 !vivado/src/**
 !/gaphor/
 !/systemc/
+
 !/hls/
 !/hls/src/
 !/hls/src/**
 !/hls/tb/
 !/hls/tb/**
+
+!/plots/
+!/plots/*.ipynb
+!/plots/pyproject.toml
