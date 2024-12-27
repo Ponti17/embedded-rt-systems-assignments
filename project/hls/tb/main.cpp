@@ -1,29 +1,40 @@
-/*
- * fb.cpp
- * Date Created: 09/11/24
- * 
- * DESCRIPTION:
- * This file contains the implementation for the frame buffer API.
- * 
- * A frame buffer is a memory buffer that holds the pixel data for a frame.
- * The stride is the number of bytes in a row of pixels.
- * 
- * A helper function is provided to save the frame buffer as an image.
-*/
-
-#include "fb.hpp"
-
-#include <iostream>
-#include <fstream>
-#include <vector>
-#include <cassert>
-#define STB_IMAGE_WRITE_IMPLEMENTATION
-// #define __STDC_LIB_EXT1__
-#include "stb_image_write.h"
+#include <stdio.h>
 #include <ap_int.h>
+#include <iostream>
+#include <string>
+#include <vector>
 
-/* External function prototypes */
-void error_handler(const char* message);
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include "stb_image_write.h"
+
+/* Defines */
+#define FB_SIZE 1920*1080
+#define BGRA8888 0x01
+
+/* Structs */
+struct fb_type {
+    ap_uint<16> stride;
+    ap_uint<16> height;
+    ap_uint<16> width;
+    ap_uint<32> *fb_array;
+};
+
+/* Prototypes */
+fb_type* allocate_fb(ap_uint<16> width, ap_uint<16> height, ap_uint<8> format);
+void save_fb_as_image(fb_type* fb, const std::string& filename);
+
+int main()
+{
+    ap_uint<16> RESX = 1920;
+	ap_uint<16> RESY = 1080;
+	ap_uint<16> STRIDE = RESX * 4;
+
+    fb_type* fb1 = allocate_fb(RESX, RESY, BGRA8888);
+
+    save_fb_as_image(fb1, "framebuffer_image.png");
+
+    return 0;
+}
 
 /**
  * Allocate a frame buffer
@@ -38,9 +49,6 @@ fb_type* allocate_fb(ap_uint<16> width, ap_uint<16> height, ap_uint<8> format)
     switch (format) {
         case BGRA8888:
             fb->stride = width * 4;
-            break;
-        default:
-            error_handler("Unknown format");
             break;
     }
 
