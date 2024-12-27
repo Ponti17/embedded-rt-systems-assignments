@@ -14,8 +14,7 @@
 #define CL_SIZE 		512
 #define CMD_NONE        0x0000
 #define BLIT_RECT_CMD   0x0001
-#define BLIT_CIRC_CMD   0x0002
-#define BLIT_LINE_CMD   0x0003
+#define SET_CLIP_CMD   0x0002
 
 /* Structs */
 struct fb_type {
@@ -60,6 +59,7 @@ int main()
     cmd_fifo[2] = (static_cast<uint32_t>(0) << 16) | (static_cast<uint32_t>(h));
     cmd_fifo[3] = 0x0000FFFF;
 
+    /* Green square alpha compositing */
     x = 350;
     y = 350;
     w = 500;
@@ -69,15 +69,25 @@ int main()
     cmd_fifo[6] = (static_cast<uint32_t>(0) << 16) | (static_cast<uint32_t>(h));
     cmd_fifo[7] = 0x00FF007F;
 
+    /* Set clip */
+    x = 0;
+    y = 0;
+    w = 1500;
+    h = 1080;
+    cmd_fifo[8] = (static_cast<uint32_t>(x) << 16) | (static_cast<uint32_t>(SET_CLIP_CMD));
+    cmd_fifo[9] = (static_cast<uint32_t>(w) << 16) | (static_cast<uint32_t>(y));
+    cmd_fifo[10] = (static_cast<uint32_t>(0) << 16) | (static_cast<uint32_t>(h));
+    cmd_fifo[11] = 0x00000000;
+
     /* Blue square */
     x = 700;
     y = 800;
-    w = 800;
+    w = 2000;
     h = 200;
-    cmd_fifo[8] = (static_cast<uint32_t>(x) << 16) | (static_cast<uint32_t>(BLIT_RECT_CMD));
-    cmd_fifo[9] = (static_cast<uint32_t>(w) << 16) | (static_cast<uint32_t>(y));
-    cmd_fifo[10] = (static_cast<uint32_t>(0) << 16) | (static_cast<uint32_t>(h));
-    cmd_fifo[11] = 0xFF0000FF;
+    cmd_fifo[12] = (static_cast<uint32_t>(x) << 16) | (static_cast<uint32_t>(BLIT_RECT_CMD));
+    cmd_fifo[13] = (static_cast<uint32_t>(w) << 16) | (static_cast<uint32_t>(y));
+    cmd_fifo[14] = (static_cast<uint32_t>(0) << 16) | (static_cast<uint32_t>(h));
+    cmd_fifo[15] = 0xFF0000FF;
 
     // Call the GPU function
     ap_uint<8> status = 1; // Enable processing

@@ -2,13 +2,17 @@
 #include <string.h>
 #include <ap_int.h>
 
+/* Debug */
+#define DEBUG_GPU
+
+/* Defines */
 #define FB_SIZE 1920*1080
 #define FIFO_SIZE 256
 
+/* Commands */
 #define CMD_NONE        0x0000
 #define BLIT_RECT_CMD   0x0001
-#define BLIT_CIRC_CMD   0x0002
-#define BLIT_LINE_CMD   0x0003
+#define SET_CLIP_CMD    0x0002
 
 /* Prototypes */
 void gpu_blit_rect(
@@ -21,6 +25,29 @@ void gpu_blit_rect(
     ap_uint<16> arg5,
     ap_uint<16> arg6
     );
+
+/**
+ * The clipping rectangle is stored in static variables.
+ * Initialized to full screen by default.
+ */
+static ap_uint<16> clip_x = 0;
+static ap_uint<16> clip_y = 0;
+static ap_uint<16> clip_w = 1920;
+static ap_uint<16> clip_h = 1080;
+
+void gpu_set_clip(
+    ap_uint<16> arg0,
+    ap_uint<16> arg1,
+    ap_uint<16> arg2,
+    ap_uint<16> arg3
+    )
+{
+#pragma HLS INLINE off
+    clip_x = arg0;
+    clip_y = arg1;
+    clip_w = arg2;
+    clip_h = arg3;
+}
 
 /**
  * The GPU function processes commands from the command FIFO.
@@ -65,11 +92,9 @@ void gpu(ap_uint<32> frameBuffer[FB_SIZE], ap_uint<8> status, ap_uint<32> cmd_fi
                     std::cout << "Processing BLIT_RECT_CMD" << std::endl;
                     gpu_blit_rect(frameBuffer, arg0, arg1, arg2, arg3, arg4, arg5, arg6);
                     break;
-                case BLIT_CIRC_CMD:
-                    std::cout << "Processing BLIT_CIRC_CMD" << std::endl;
-                    break;
-                case BLIT_LINE_CMD:
-                    std::cout << "Processing BLIT_LINE_CMD" << std::endl;
+                case SET_CLIP_CMD:
+                    std::cout << "Processing SET_CLIP_CMD" << std::endl;
+                    gpu_set_clip(arg0, arg1, arg2, arg3);
                     break;
                 default:
                     std::cout << "Unknown command: " << cmd << std::endl;
@@ -79,7 +104,6 @@ void gpu(ap_uint<32> frameBuffer[FB_SIZE], ap_uint<8> status, ap_uint<32> cmd_fi
     }
 }
 
-#define DEBUG_GPU
 void gpu_blit_rect(
     ap_uint<32> frameBuffer[FB_SIZE],
     ap_uint<16> arg0,
@@ -113,18 +137,32 @@ void gpu_blit_rect(
     std::cout << "newA: " << std::hex << newA << std::endl;
 #endif
 
+    /* Apply clipping */
+    int start_x = (x < clip_x) ? (int)clip_x : (int)x;
+    int start_y = (y < clip_y) ? (int)clip_y : (int)y;
+    int end_x   = ((int)x + (int)w > (int)clip_x + (int)clip_w) ? (int)(clip_x + clip_w) : (int)(x + w);
+    int end_y   = ((int)y + (int)h > (int)clip_y + (int)clip_h) ? (int)(clip_y + clip_h) : (int)(y + h);
+
+    /* If the clipped region is empty, do nothing */
+    if (end_x <= start_x || end_y <= start_y) {
+        return;
+    }
+
     static ap_uint<32> rowBuffer[1920];
     #pragma HLS RESOURCE variable=rowBuffer core=RAM_2P_BRAM
 
-    for (int row = 0; row < h; row++) {
+    int clipped_w = end_x - start_x;
+    int clipped_h = end_y - start_y;
+
+    for (int row = 0; row < clipped_h; row++) {
     #pragma HLS LOOP_TRIPCOUNT max=1080
-        int y_idx = y + row;
-        int row_offset = y_idx * 1920 + x;
+        int y_idx = start_y + row;
+        int row_offset = y_idx * 1920 + start_x;
 
         //=============
         // BURST READ
         //=============
-        READ_ROW: for (int col = 0; col < w; col++) {
+        READ_ROW: for (int col = 0; col < clipped_w; col++) {
         #pragma HLS PIPELINE II=1
             rowBuffer[col] = frameBuffer[row_offset + col];
         }
@@ -132,7 +170,7 @@ void gpu_blit_rect(
         //=============
         // BLEND
         //=============
-        BLEND_ROW: for (int col = 0; col < w; col++) {
+        BLEND_ROW: for (int col = 0; col < clipped_w; col++) {
         #pragma HLS PIPELINE II=1
             ap_uint<32> oldColor = rowBuffer[col];
 
@@ -171,7 +209,7 @@ void gpu_blit_rect(
         //=============
         // BURST WRITE
         //=============
-        WRITE_ROW: for (int col = 0; col < w; col++) {
+        WRITE_ROW: for (int col = 0; col < clipped_w; col++) {
         #pragma HLS PIPELINE II=1
             frameBuffer[row_offset + col] = rowBuffer[col];
         }
