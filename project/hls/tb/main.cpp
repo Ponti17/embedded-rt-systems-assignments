@@ -60,24 +60,24 @@ int main()
     cmd_fifo[2] = (static_cast<uint32_t>(0) << 16) | (static_cast<uint32_t>(h));
     cmd_fifo[3] = 0x0000FFFF;
 
-    x = 100;
-    y = 100;
+    x = 350;
+    y = 350;
     w = 500;
     h = 500;
-    cmd_fifo[0] = (static_cast<uint32_t>(x) << 16) | (static_cast<uint32_t>(BLIT_RECT_CMD));
-    cmd_fifo[1] = (static_cast<uint32_t>(w) << 16) | (static_cast<uint32_t>(y));
-    cmd_fifo[2] = (static_cast<uint32_t>(0) << 16) | (static_cast<uint32_t>(h));
-    cmd_fifo[3] = 0x00FF007F;
+    cmd_fifo[4] = (static_cast<uint32_t>(x) << 16) | (static_cast<uint32_t>(BLIT_RECT_CMD));
+    cmd_fifo[5] = (static_cast<uint32_t>(w) << 16) | (static_cast<uint32_t>(y));
+    cmd_fifo[6] = (static_cast<uint32_t>(0) << 16) | (static_cast<uint32_t>(h));
+    cmd_fifo[7] = 0x00FF007F;
 
     /* Blue square */
     x = 700;
     y = 800;
     w = 800;
     h = 200;
-    cmd_fifo[4] = (static_cast<uint32_t>(x) << 16) | (static_cast<uint32_t>(BLIT_RECT_CMD));
-    cmd_fifo[5] = (static_cast<uint32_t>(w) << 16) | (static_cast<uint32_t>(y));
-    cmd_fifo[6] = (static_cast<uint32_t>(0) << 16) | (static_cast<uint32_t>(h));
-    cmd_fifo[7] = 0xFF0000FF;
+    cmd_fifo[8] = (static_cast<uint32_t>(x) << 16) | (static_cast<uint32_t>(BLIT_RECT_CMD));
+    cmd_fifo[9] = (static_cast<uint32_t>(w) << 16) | (static_cast<uint32_t>(y));
+    cmd_fifo[10] = (static_cast<uint32_t>(0) << 16) | (static_cast<uint32_t>(h));
+    cmd_fifo[11] = 0xFF0000FF;
 
     // Call the GPU function
     ap_uint<8> status = 1; // Enable processing

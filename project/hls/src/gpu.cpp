@@ -105,6 +105,7 @@ void gpu_blit_rect(
     std::cout << "newR: " << std::hex << newR << std::endl;
     std::cout << "newA: " << std::hex << newA << std::endl;
 
+    bool print_once = true;
     for (int y_idx = y; y_idx < y+h; ++y_idx) {
         int idx = y_idx * 1920;
         for (int x_idx = x; x_idx < x+w; ++x_idx) {
@@ -130,13 +131,32 @@ void gpu_blit_rect(
                 ap_uint<16> outG_16 = ( (255 - newA) * oldG + newA * newG ) >> 8;
                 ap_uint<16> outR_16 = ( (255 - newA) * oldR + newA * newR ) >> 8;
 
+                /**
+                 * Set out alpha as the maximum of the two alphas.
+                 * This does not make sense, but it works?
+                 */
                 ap_uint<8> outA = (oldA > newA) ? oldA : newA;
 
                 ap_uint<32> outColor = 
-                    (ap_uint<32>(outA)    << 24) |
-                    (ap_uint<32>(outR_16) << 16) |
-                    (ap_uint<32>(outG_16) << 8)  |
-                    (ap_uint<32>(outB_16) << 0);
+                    (ap_uint<32>(outA)    << 0)   |
+                    (ap_uint<32>(outR_16) << 8)   |
+                    (ap_uint<32>(outG_16) << 16)  |
+                    (ap_uint<32>(outB_16) << 24);
+
+                if (print_once) {
+                    std::cout << "oldB: " << std::hex << oldB << std::endl;
+                    std::cout << "oldG: " << std::hex << oldG << std::endl;
+                    std::cout << "oldR: " << std::hex << oldR << std::endl;
+                    std::cout << "oldA: " << std::hex << oldA << std::endl;
+
+                    std::cout << "outB_16: " << std::hex << outB_16 << std::endl;
+                    std::cout << "outG_16: " << std::hex << outG_16 << std::endl;
+                    std::cout << "outR_16: " << std::hex << outR_16 << std::endl;
+                    std::cout << "outA: " << std::hex << outA << std::endl;
+
+                    std::cout << "outColor: " << std::hex << outColor << std::endl;
+                    print_once = false;
+                }
                 
                 frameBuffer[fb_index] = outColor;
             }
