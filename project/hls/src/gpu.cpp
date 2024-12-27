@@ -79,6 +79,7 @@ void gpu(ap_uint<32> frameBuffer[FB_SIZE], ap_uint<8> status, ap_uint<32> cmd_fi
     }
 }
 
+#define DEBUG_GPU
 void gpu_blit_rect(
     ap_uint<32> frameBuffer[FB_SIZE],
     ap_uint<16> arg0,
@@ -88,78 +89,91 @@ void gpu_blit_rect(
     ap_uint<16> arg4,
     ap_uint<16> arg5,
     ap_uint<16> arg6
-    ) {
+    )
+{
+#pragma HLS INLINE off
+
+    /* Parse arguments */
     ap_uint<16> x = arg0;
     ap_uint<16> y = arg1;
     ap_uint<16> w = arg2;
     ap_uint<16> h = arg3;
     ap_uint<32> color = (ap_uint<32>(arg6) << 16) | arg5;
 
+    /* Extract color channels for blending */
     ap_uint<8> newB = color.range(31, 24);
     ap_uint<8> newG = color.range(23, 16);
     ap_uint<8> newR = color.range(15, 8);
     ap_uint<8> newA = color.range(7, 0);
 
+#ifdef DEBUG_GPU
     std::cout << "newB: " << std::hex << newB << std::endl;
     std::cout << "newG: " << std::hex << newG << std::endl;
     std::cout << "newR: " << std::hex << newR << std::endl;
     std::cout << "newA: " << std::hex << newA << std::endl;
+#endif
 
-    bool print_once = true;
-    for (int y_idx = y; y_idx < y+h; ++y_idx) {
-        int idx = y_idx * 1920;
-        for (int x_idx = x; x_idx < x+w; ++x_idx) {
-            #pragma HLS PIPELINE II=1
-            int fb_index = idx + x_idx;
+    static ap_uint<32> rowBuffer[1920];
+    #pragma HLS RESOURCE variable=rowBuffer core=RAM_2P_BRAM
 
-            ap_uint<32> oldColor = frameBuffer[fb_index];
+    for (int row = 0; row < h; row++) {
+    #pragma HLS LOOP_TRIPCOUNT max=1080
+        int y_idx = y + row;
+        int row_offset = y_idx * 1920 + x;
+
+        //=============
+        // BURST READ
+        //=============
+        READ_ROW: for (int col = 0; col < w; col++) {
+        #pragma HLS PIPELINE II=1
+            rowBuffer[col] = frameBuffer[row_offset + col];
+        }
+
+        //=============
+        // BLEND
+        //=============
+        BLEND_ROW: for (int col = 0; col < w; col++) {
+        #pragma HLS PIPELINE II=1
+            ap_uint<32> oldColor = rowBuffer[col];
+
             ap_uint<8> oldB = oldColor.range(31, 24);
             ap_uint<8> oldG = oldColor.range(23, 16);
             ap_uint<8> oldR = oldColor.range(15, 8);
             ap_uint<8> oldA = oldColor.range(7, 0);
 
-            /* If alpha is 100% just overwrite fully */
-            if (newA == 0xFF) {
-                frameBuffer[fb_index] = color;
+            // If alpha == 100%: overwrite
+            if (newA == 255) {
+                rowBuffer[col] = color;
             }
-            /* If alpha is 0% do nothing */
+            // If alpha == 0%: keep old color
             else if (newA == 0) {
+                // do nothing
             }
-            /* Blend */
+            // Blend otherwise
             else {
-                ap_uint<16> outB_16 = ( (255 - newA) * oldB + newA * newB ) >> 8;
-                ap_uint<16> outG_16 = ( (255 - newA) * oldG + newA * newG ) >> 8;
-                ap_uint<16> outR_16 = ( (255 - newA) * oldR + newA * newR ) >> 8;
+                ap_uint<16> outB_16 = (((255 - newA) * oldB) + (newA * newB)) >> 8;
+                ap_uint<16> outG_16 = (((255 - newA) * oldG) + (newA * newG)) >> 8;
+                ap_uint<16> outR_16 = (((255 - newA) * oldR) + (newA * newR)) >> 8;
 
-                /**
-                 * Set out alpha as the maximum of the two alphas.
-                 * This does not make sense, but it works?
-                 */
+                // Simple alpha strategy: max or other logic
                 ap_uint<8> outA = (oldA > newA) ? oldA : newA;
 
                 ap_uint<32> outColor = 
-                    (ap_uint<32>(outA)    << 0)   |
-                    (ap_uint<32>(outR_16) << 8)   |
-                    (ap_uint<32>(outG_16) << 16)  |
-                    (ap_uint<32>(outB_16) << 24);
+                      (ap_uint<32>(outB_16) << 24)
+                    | (ap_uint<32>(outG_16) << 16)
+                    | (ap_uint<32>(outR_16) <<  8)
+                    | (ap_uint<32>(outA)    <<  0);
 
-                if (print_once) {
-                    std::cout << "oldB: " << std::hex << oldB << std::endl;
-                    std::cout << "oldG: " << std::hex << oldG << std::endl;
-                    std::cout << "oldR: " << std::hex << oldR << std::endl;
-                    std::cout << "oldA: " << std::hex << oldA << std::endl;
-
-                    std::cout << "outB_16: " << std::hex << outB_16 << std::endl;
-                    std::cout << "outG_16: " << std::hex << outG_16 << std::endl;
-                    std::cout << "outR_16: " << std::hex << outR_16 << std::endl;
-                    std::cout << "outA: " << std::hex << outA << std::endl;
-
-                    std::cout << "outColor: " << std::hex << outColor << std::endl;
-                    print_once = false;
-                }
-                
-                frameBuffer[fb_index] = outColor;
+                rowBuffer[col] = outColor;
             }
+        }
+
+        //=============
+        // BURST WRITE
+        //=============
+        WRITE_ROW: for (int col = 0; col < w; col++) {
+        #pragma HLS PIPELINE II=1
+            frameBuffer[row_offset + col] = rowBuffer[col];
         }
     }
 }
