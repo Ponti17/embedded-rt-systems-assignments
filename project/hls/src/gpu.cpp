@@ -7,7 +7,12 @@
 
 /* Defines */
 #define FB_SIZE 1920*1080
-#define FIFO_SIZE 256
+
+/* FIFO */
+#define CMD_FIFO_WRITE_ADDR     0x00
+#define CMD_FIFO_STATUS_ADDR    0x04
+#define FIFO_DEPTH              256
+#define DATA_WIDTH              32
 
 /* Commands */
 #define CMD_NONE        0x0000
@@ -63,21 +68,31 @@ void gpu_set_clip(
  * The CMD FIFO has a depth of 256 with each entry being 32 bits.
  * A single command takes a fixed size of 4 entries i.e. 128 bits.
  */
-void gpu(ap_uint<32> frameBuffer[FB_SIZE], ap_uint<8> status, ap_uint<32> cmd_fifo[256]) {
+void gpu(ap_uint<32> frameBuffer[FB_SIZE], ap_uint<8> status, ap_uint<32> cl[256])
+{
 #pragma HLS INTERFACE s_axilite port=return bundle=control
 #pragma HLS INTERFACE s_axilite port=status bundle=control
 #pragma HLS INTERFACE m_axi port=frameBuffer offset=slave
-#pragma HLS INTERFACE ap_fifo port=cmd_fifo depth=256
+#pragma HLS INTERFACE m_axi port=cl offset=slave
 
     // Check if processing is enabled via the status flag
     if (status & 1) {
+        // Create a buffer to store the commands
+        static ap_uint<32> rowBuffer[256];
+        #pragma HLS RESOURCE variable=rowBuffer core=RAM_2P_BRAM
+        /* Burst read */
+        READ_ROW: for (int i = 0; i < 256; i++) {
+        #pragma HLS PIPELINE II=1
+            rowBuffer[i] = cl[i];
+        }
+
         // Process commands from the FIFO
         for (int i = 0; i < 256/4; i++) {
         #pragma HLS PIPELINE off
-            ap_uint<32> dword_0 = cmd_fifo[i*4];
-            ap_uint<32> dword_1 = cmd_fifo[i*4+1];
-            ap_uint<32> dword_2 = cmd_fifo[i*4+2];
-            ap_uint<32> dword_3 = cmd_fifo[i*4+3];
+            ap_uint<32> dword_0 = rowBuffer[i*4];
+            ap_uint<32> dword_1 = rowBuffer[i*4+1];
+            ap_uint<32> dword_2 = rowBuffer[i*4+2];
+            ap_uint<32> dword_3 = rowBuffer[i*4+3];
             ap_uint<16> cmd  = dword_0 & 0xFFFF;    // Extract command type
             ap_uint<16> arg0 = dword_0 >> 16;       // Extract arguments
             ap_uint<16> arg1 = dword_1 & 0xFFFF;
