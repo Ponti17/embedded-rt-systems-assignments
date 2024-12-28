@@ -2,6 +2,10 @@
 #include "platform.h"
 #include "xil_printf.h"
 #include "xgpu.h"
+#include "xscutimer.h"
+#include "xscugic.h"
+#include "xil_exception.h"
+#include "xil_printf.h"
 
 // Base address for the GPU IP - this should match the address defined in your hardware design
 #define XGPU_DEVICE_ID  XPAR_XGPU_0_DEVICE_ID
@@ -32,16 +36,26 @@ void VerifyResults();
 #define CMD_INDEX_RED_START    0
 #define CMD_INDEX_GREEN_START  4
 
-/**
- * Swap the byte order of a 32-bit integer.
- * Converts from little endian to big endian or vice versa.
- */
-uint32_t swap_byte_order(uint32_t value) {
-    return ((value & 0x000000FF) << 24) |
-           ((value & 0x0000FF00) << 8) |
-           ((value & 0x00FF0000) >> 8) |
-           ((value & 0xFF000000) >> 24);
-}
+/* Function Prototypes */
+int ScuTimerInit(XScuTimer *TimerInstancePtr, u16 TimerDeviceId, u32 TimerCounter);
+int ScuIntrInit(XScuGic *IntcInstancePtr, u16 GicDeviceId);
+int TimerSetupIntr(XScuGic *IntcInstancePtr, XScuTimer *TimerInstancePtr, u16 TimerIntrId);
+
+void TimerStart(XScuTimer *TimerInstancePtr);
+void TimerStop(XScuTimer *TimerInstancePtr);
+void TimerLoad(XScuTimer *TimerInstancePtr, u32 TimerCounter);
+void TimerReinitialize(XScuTimer *TimerInstancePtr, u32 TimerCounter, void (*TimerFunction)(void));
+
+XScuTimer TimerInstance;	/* Cortex A9 Scu Private Timer Instance	*/
+XScuGic IntcInstance;		/* Interrupt Controller Instance 		*/
+
+static void TimerIntrHandler(void *CallBackRef);
+static void TimerDisableIntrSystem(XScuGic *IntcInstancePtr, u16 TimerIntrId);
+
+/* Function pointer for the timer interrupt handler */
+void (*TimerFunctionPtr)(void);
+
+#define MILLISECOND 325000
 
 int main()
 {
@@ -56,13 +70,15 @@ int main()
     memset((void*)cl_array, 0, CL_SIZE);
     memset((void*)fb_array, 0x00000000, FB_SIZE);
 
+    ScuTimerInit(&TimerInstance, XPAR_XSCUTIMER_0_DEVICE_ID, 100*MILLISECOND);
+
     u32 x, y, w, h;
     // --- Red Square ---
     x = 100;
     y = 100;
     w = 500;
     h = 500;
-    cl_array[CMD_INDEX_RED_START + 0] = ((x & 0xFFFF) << 16) | (BLIT_RECT_CMD & 0xFFFF);
+    cl_array[CMD_INDEX_RED_START]     = ((x & 0xFFFF) << 16) | (BLIT_RECT_CMD & 0xFFFF);
     cl_array[CMD_INDEX_RED_START + 1] = ((w & 0xFFFF) << 16) | (y & 0xFFFF);
     cl_array[CMD_INDEX_RED_START + 2] = ((0 & 0xFFFF) << 16) | (h & 0xFFFF);
     cl_array[CMD_INDEX_RED_START + 3] = 0x0000FFFF;
@@ -77,6 +93,25 @@ int main()
     cl_array[CMD_INDEX_RED_START + 6] = ((0 & 0xFFFF) << 16) | (h & 0xFFFF);
     cl_array[CMD_INDEX_RED_START + 7] = 0x00FF007F;
 
+    /* Set clip */
+    x = 0;
+    y = 0;
+    w = 1500;
+    h = 1080;
+    cl_array[CMD_INDEX_RED_START + 8] = ((x & 0xFFFF) << 16) | (SET_CLIP_CMD & 0xFFFF);
+    cl_array[CMD_INDEX_RED_START + 9] = ((w & 0xFFFF) << 16) | (y & 0xFFFF);
+    cl_array[CMD_INDEX_RED_START + 10] = ((0 & 0xFFFF) << 16) | (h & 0xFFFF);
+    cl_array[CMD_INDEX_RED_START + 11] = 0x00000000;
+
+    x = 700;
+    y = 800;
+    w = 2000;
+    h = 200;
+    cl_array[CMD_INDEX_RED_START + 12] = ((x & 0xFFFF) << 16) | (BLIT_RECT_CMD & 0xFFFF);
+    cl_array[CMD_INDEX_RED_START + 13] = ((w & 0xFFFF) << 16) | (y & 0xFFFF);
+    cl_array[CMD_INDEX_RED_START + 14] = ((0 & 0xFFFF) << 16) | (h & 0xFFFF);
+    cl_array[CMD_INDEX_RED_START + 15] = 0xFF0000FF;
+
     // Initialize the GPU instance
     status = InitializeGPU();
     if (status != XST_SUCCESS) {
@@ -89,39 +124,22 @@ int main()
     // Configure the GPU with necessary parameters
     ConfigureGPU();
 
+	volatile u32 start = 0;
+	volatile u32 end = 0;
+
     // Start the GPU operation
+    TimerReinitialize(&TimerInstance, 1000*MILLISECOND, NULL);
+    start = XScuTimer_GetCounterValue(&TimerInstance);
     Xil_DCacheFlushRange((UINTPTR)fb_array, FB_SIZE);
     Xil_DCacheFlushRange((UINTPTR)cl_array, CL_SIZE);
     StartGPU();
-    xil_printf("GPU Operation Started\r\n");
+    //xil_printf("GPU Operation Started\r\n");
 
     // Wait for the GPU to complete its operation
     WaitForCompletion();
+    end = XScuTimer_GetCounterValue(&TimerInstance);
+    xil_printf("Clock cycles: %llu\n", 2 * (start - end));
     xil_printf("GPU Operation Completed\r\n");
-
-    /* Set clip */
-    x = 0;
-    y = 0;
-    w = 1500;
-    h = 1080;
-    cl_array[CMD_INDEX_RED_START + 0] = ((x & 0xFFFF) << 16) | (SET_CLIP_CMD & 0xFFFF);
-    cl_array[CMD_INDEX_RED_START + 1] = ((w & 0xFFFF) << 16) | (y & 0xFFFF);
-    cl_array[CMD_INDEX_RED_START + 2] = ((0 & 0xFFFF) << 16) | (h & 0xFFFF);
-    cl_array[CMD_INDEX_RED_START + 3] = 0x00000000;
-
-    x = 700;
-    y = 800;
-    w = 2000;
-    h = 200;
-    cl_array[CMD_INDEX_RED_START + 4] = ((x & 0xFFFF) << 16) | (BLIT_RECT_CMD & 0xFFFF);
-    cl_array[CMD_INDEX_RED_START + 5] = ((w & 0xFFFF) << 16) | (y & 0xFFFF);
-    cl_array[CMD_INDEX_RED_START + 6] = ((0 & 0xFFFF) << 16) | (h & 0xFFFF);
-    cl_array[CMD_INDEX_RED_START + 7] = 0xFF0000FF;
-
-    Xil_DCacheFlushRange((UINTPTR)fb_array, FB_SIZE);
-    Xil_DCacheFlushRange((UINTPTR)cl_array, CL_SIZE);
-    StartGPU();
-    WaitForCompletion();
 
     // Retrieve and verify the results
     VerifyResults();
@@ -243,4 +261,50 @@ void VerifyResults()
     }
 
     // Add more comprehensive verification based on GPU functionality
+}
+
+int ScuTimerInit(XScuTimer *TimerInstancePtr, u16 TimerDeviceId, u32 TimerCounter)
+{
+	XScuTimer_Config *ConfigPtr;
+	int Status;
+
+	ConfigPtr = XScuTimer_LookupConfig(TimerDeviceId);
+	Status = XScuTimer_CfgInitialize(TimerInstancePtr, ConfigPtr, ConfigPtr->BaseAddr);
+	if (Status != XST_SUCCESS)
+	{
+		xil_printf("Timer init failed.");
+		return XST_FAILURE;
+	}
+
+	/* Enable Auto Reloading of Timer */
+	XScuTimer_EnableAutoReload(TimerInstancePtr);
+
+	/* Load timer counter register with default 1 second */
+	XScuTimer_LoadTimer(TimerInstancePtr, 325000000);
+
+	return XST_SUCCESS;
+}
+
+void TimerStart(XScuTimer *TimerInstancePtr)
+{
+	XScuTimer_Start(TimerInstancePtr);
+}
+
+void TimerStop(XScuTimer *TimerInstancePtr)
+{
+	XScuTimer_Stop(TimerInstancePtr);
+}
+
+void TimerLoad(XScuTimer *TimerInstancePtr, u32 TimerCounter)
+{
+	XScuTimer_LoadTimer(TimerInstancePtr, TimerCounter);
+}
+
+void TimerReinitialize(XScuTimer *TimerInstancePtr, u32 TimerCounter, void (*TimerFunction)(void))
+{
+	TimerStop(TimerInstancePtr);
+	TimerFunctionPtr = TimerFunction;
+	TimerLoad(TimerInstancePtr, TimerCounter);
+	XScuTimer_RestartTimer(TimerInstancePtr);
+	TimerStart(TimerInstancePtr);
 }
