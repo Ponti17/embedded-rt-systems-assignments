@@ -73,6 +73,7 @@ void gpu(ap_uint<32> frameBuffer[FB_SIZE], ap_uint<8> status, ap_uint<32> cmd_fi
     if (status & 1) {
         // Process commands from the FIFO
         for (int i = 0; i < 256/4; i++) {
+        #pragma HLS PIPELINE off
             ap_uint<32> dword_0 = cmd_fifo[i*4];
             ap_uint<32> dword_1 = cmd_fifo[i*4+1];
             ap_uint<32> dword_2 = cmd_fifo[i*4+2];
@@ -85,6 +86,10 @@ void gpu(ap_uint<32> frameBuffer[FB_SIZE], ap_uint<8> status, ap_uint<32> cmd_fi
             ap_uint<16> arg4 = dword_2 >> 16;
             ap_uint<16> arg5 = dword_3 & 0xFFFF;
             ap_uint<16> arg6 = dword_3 >> 16;
+
+            if (cmd == CMD_NONE) {
+                break;
+            }
 
             // Handle the command
             switch (cmd) {
@@ -102,6 +107,7 @@ void gpu(ap_uint<32> frameBuffer[FB_SIZE], ap_uint<8> status, ap_uint<32> cmd_fi
             }
         }
     }
+    status = 0;
 }
 
 void gpu_blit_rect(
