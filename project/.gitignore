@@ -20,3 +20,6 @@
 !/plots/*.ipynb
 !/plots/pyproject.toml
 !/plots/fb_dump.bin
+
+!/sdk/
+!/sdk/*.c
