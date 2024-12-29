@@ -22,4 +22,4 @@
 !/plots/fb_dump.bin
 
 !/sdk/
-!/sdk/*.c
+!/sdk/**
