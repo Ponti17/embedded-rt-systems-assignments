@@ -8,7 +8,9 @@
 !/vivado/src/
 !vivado/src/**
 !/gaphor/
-!/systemc/
+
+!/csimulation/
+!/csimulation/**
 
 !/hls/
 !/hls/src/
