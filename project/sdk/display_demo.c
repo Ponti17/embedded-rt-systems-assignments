@@ -38,7 +38,7 @@
 /*
  * XPAR redefines
  */
-#define DYNCLK_BASEADDR XPAR_AXI_DYNCLK_0_BASEADDR
+#define DYNCLK_BASEADDR XPAR_AXI_DYNCLK_0_S_AXI_LITE_BASEADDR
 #define VGA_VDMA_ID XPAR_AXIVDMA_0_DEVICE_ID
 #define DISP_VTC_ID XPAR_VTC_0_DEVICE_ID
 #define VID_VTC_IRPT_ID XPS_FPGA3_INT_ID
@@ -189,6 +189,18 @@ void DemoRun()
 			DemoInvertFrame(dispCtrl.framePtr[dispCtrl.curFrame], dispCtrl.framePtr[nextFrame], dispCtrl.vMode.width, dispCtrl.vMode.height, dispCtrl.stride);
 			DisplayChangeFrame(&dispCtrl, nextFrame);
 			break;
+		case '7':
+			DemoPrintTest(pFrames[0], dispCtrl.vMode.width, dispCtrl.vMode.height, DEMO_STRIDE, DEMO_PATTERN_0);
+			DemoPrintTest(pFrames[1], dispCtrl.vMode.width, dispCtrl.vMode.height, DEMO_STRIDE, DEMO_PATTERN_0);
+			while (true) {
+				nextFrame = distCtrl.curFrame + 1;
+				if (nextFrame >= DISPLAY_NUM_FRAMES) {
+					nextFrame = 0;
+				}
+				draw_box(dispCtrl.framePtr[dispCtrl.nextFrame], dispCtrl.vMode.width, dispCtrl.vMode.height, dispCtrl.stride);
+				DisplayChangeFrame(&dispCtrl, nextFrame);
+			}
+			break;
 		case 'q':
 			break;
 		default :
@@ -198,6 +210,70 @@ void DemoRun()
 	}
 
 	return;
+}
+
+void draw_box(u8 *frame, u32 width, u32 height, u32 stride)
+{
+    static u32 x = 0;
+    static u32 y = 0;
+    static u32 w = 400;
+    static u32 h = 400;
+    static u8 count_up = 1;
+
+    static u8 r = 0x00;
+    static u8 g = 0x00;
+    static u8 b = 0x00;
+    static u8 a = 0xFF;
+
+    if (x == 0 && y == 0) {
+        x = (width / 2) - (w / 2);
+        y = (height / 2) - (h / 2);
+    }
+
+    if (count_up) {
+    	r += 1;
+    }
+    else {
+    	r -= 1;
+    }
+
+    if (r == 255) {
+    	count_up = 0;
+    }
+    if (r == 0) {
+    	count_up = 1;
+    }
+
+    // Ensure the box stays within frame boundaries
+    if ((x + w) > width) {
+        x = width - w;
+    }
+    if ((y + h) > height) {
+        y = height - h;
+    }
+
+    u32 y_idx;
+    u32 x_idx;
+
+    // Draw the box
+    for (y_idx = y; y_idx < y + h; ++y_idx) {
+        // Calculate the starting index for the current row
+        // Each pixel has 4 bytes (RGBA), so multiply x by 4
+        u32 row_start = y_idx * stride + (x * 4);
+
+        for (x_idx = 0; x_idx < w; ++x_idx) {
+            u32 pixel_idx = row_start + (x_idx * 4);
+
+            // Assign color channels
+            frame[pixel_idx + 0] = b; // Blue
+            frame[pixel_idx + 1] = g; // Green
+            frame[pixel_idx + 2] = r; // Red
+            frame[pixel_idx + 3] = a; // Alpha
+        }
+    }
+
+    // Flush the data cache to ensure frame buffer is updated
+    Xil_DCacheFlushRange((unsigned int)frame, DEMO_MAX_FRAME);
 }
 
 void DemoPrintMenu()
