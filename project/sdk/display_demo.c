@@ -192,12 +192,12 @@ void DemoRun()
 		case '7':
 			DemoPrintTest(pFrames[0], dispCtrl.vMode.width, dispCtrl.vMode.height, DEMO_STRIDE, DEMO_PATTERN_0);
 			DemoPrintTest(pFrames[1], dispCtrl.vMode.width, dispCtrl.vMode.height, DEMO_STRIDE, DEMO_PATTERN_0);
-			while (true) {
-				nextFrame = distCtrl.curFrame + 1;
+			while (1) {
+				nextFrame = dispCtrl.curFrame + 1;
 				if (nextFrame >= DISPLAY_NUM_FRAMES) {
 					nextFrame = 0;
 				}
-				draw_box(dispCtrl.framePtr[dispCtrl.nextFrame], dispCtrl.vMode.width, dispCtrl.vMode.height, dispCtrl.stride);
+				draw_box(dispCtrl.framePtr[nextFrame], dispCtrl.vMode.width, dispCtrl.vMode.height, dispCtrl.stride);
 				DisplayChangeFrame(&dispCtrl, nextFrame);
 			}
 			break;
@@ -567,5 +567,3 @@ void DemoPrintTest(u8 *frame, u32 width, u32 height, u32 stride, int pattern)
 		xil_printf("Error: invalid pattern passed to DemoPrintTest");
 	}
 }
-
-
