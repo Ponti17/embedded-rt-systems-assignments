@@ -146,10 +146,10 @@ void gpu_blit_rect(
     ap_uint<32> color = (ap_uint<32>(arg6) << 16) | arg5;
 
     /* Extract color channels for blending */
-    ap_uint<8> newB = color.range(31, 24);
-    ap_uint<8> newG = color.range(23, 16);
-    ap_uint<8> newR = color.range(15, 8);
-    ap_uint<8> newA = color.range(7, 0);
+    ap_uint<8> newA = color.range(31, 24);
+    ap_uint<8> newR = color.range(23, 16);
+    ap_uint<8> newG = color.range(15, 8);
+    ap_uint<8> newB = color.range(7, 0);
 
 #ifdef DEBUG_GPU
     std::cout << "newB: " << std::hex << newB << std::endl;
@@ -195,10 +195,10 @@ void gpu_blit_rect(
         #pragma HLS PIPELINE II=1
             ap_uint<32> oldColor = rowBuffer[col];
 
-            ap_uint<8> oldB = oldColor.range(31, 24);
-            ap_uint<8> oldG = oldColor.range(23, 16);
-            ap_uint<8> oldR = oldColor.range(15, 8);
-            ap_uint<8> oldA = oldColor.range(7, 0);
+            ap_uint<8> oldA = oldColor.range(31, 24);
+            ap_uint<8> oldR = oldColor.range(23, 16);
+            ap_uint<8> oldG = oldColor.range(15, 8);
+            ap_uint<8> oldB = oldColor.range(7, 0);
 
             // If alpha == 100%: overwrite
             if (newA == 255) {
@@ -218,10 +218,10 @@ void gpu_blit_rect(
                 ap_uint<8> outA = (oldA > newA) ? oldA : newA;
 
                 ap_uint<32> outColor = 
-                      (ap_uint<32>(outB_16) << 24)
-                    | (ap_uint<32>(outG_16) << 16)
-                    | (ap_uint<32>(outR_16) <<  8)
-                    | (ap_uint<32>(outA)    <<  0);
+                      (ap_uint<32>(outA) << 24)
+                    | (ap_uint<32>(outR_16) << 16)
+                    | (ap_uint<32>(outG_16) <<  8)
+                    | (ap_uint<32>(outB_16) <<  0);
 
                 rowBuffer[col] = outColor;
             }

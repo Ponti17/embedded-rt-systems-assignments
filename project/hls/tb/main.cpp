@@ -57,7 +57,7 @@ int main()
     cmd_fifo[0] = (static_cast<uint32_t>(x) << 16) | (static_cast<uint32_t>(BLIT_RECT_CMD));
     cmd_fifo[1] = (static_cast<uint32_t>(w) << 16) | (static_cast<uint32_t>(y));
     cmd_fifo[2] = (static_cast<uint32_t>(0) << 16) | (static_cast<uint32_t>(h));
-    cmd_fifo[3] = 0x0000FFFF;
+    cmd_fifo[3] = 0xFFFF0000;
 
     /* Green square alpha compositing */
     x = 350;
@@ -67,7 +67,7 @@ int main()
     cmd_fifo[4] = (static_cast<uint32_t>(x) << 16) | (static_cast<uint32_t>(BLIT_RECT_CMD));
     cmd_fifo[5] = (static_cast<uint32_t>(w) << 16) | (static_cast<uint32_t>(y));
     cmd_fifo[6] = (static_cast<uint32_t>(0) << 16) | (static_cast<uint32_t>(h));
-    cmd_fifo[7] = 0x00FF007F;
+    cmd_fifo[7] = 0x7F00FF00;
 
     /* Set clip */
     x = 0;
@@ -131,10 +131,10 @@ void save_fb_as_image(fb_type* fb, const std::string& filename)
             ap_uint<32> pixel = fb->fb_array[idx];
 
             // Extract BGRA components from the pixel
-            unsigned char b = static_cast<unsigned char>((pixel >> 24) & 0xFF); // Blue
-            unsigned char g = static_cast<unsigned char>((pixel >> 16) & 0xFF); // Green
-            unsigned char r = static_cast<unsigned char>((pixel >> 8) & 0xFF);  // Red
-            unsigned char a = static_cast<unsigned char>(0xFF); // Alpha
+            unsigned char a = static_cast<unsigned char>(0xFF); // Blue
+            unsigned char r = static_cast<unsigned char>((pixel >> 16) & 0xFF); // Green
+            unsigned char g = static_cast<unsigned char>((pixel >> 8) & 0xFF);  // Red
+            unsigned char b = static_cast<unsigned char>(pixel & 0xFF); // Alpha
 
             // Set the corresponding RGBA value in the image data
             int img_idx = (y * fb->width + x) * 4;
