@@ -37,14 +37,6 @@ XGpu GpuInstance;
 u8  frameBuf[DISPLAY_NUM_FRAMES][DEMO_MAX_FRAME] __attribute__((aligned(0x20)));
 u8 *pFrames[DISPLAY_NUM_FRAMES];
 
-/* Command list for each framebuffer */
-u32 cl[DISPLAY_NUM_FRAMES][256] __attribute__((aligned(0x20)));
-u32 *cl_ptr[DISPLAY_NUM_FRAMES];
-
-/* GPU Commands */
-#define BLIT_RECT_CMD  0x01
-#define SET_CLIP_CMD   0x0002
-
 /* Prototypes */
 void InitGPU();
 void GPU_BindFrameBuffer(u32 frameBufferAddr);
@@ -54,6 +46,7 @@ void GPU_WaitForDone();
 
 void Error_Handler();
 void PrintStartup();
+u32 RainbowRGB();
 
 struct cl_type** cls;
 
@@ -65,10 +58,6 @@ int main(void)
 
     cls = init_cl();
 
-    /* Initialize CLs to all zeros */
-    memset(cl[0], 0, sizeof(cl[0]));
-    memset(cl[1], 0, sizeof(cl[1]));
-
     /* Initialize frame buffers to black */
     memset(frameBuf[0], 0xFF000000, sizeof(frameBuf[0]));
     memset(frameBuf[1], 0xFF000000, sizeof(frameBuf[1]));
@@ -77,7 +66,6 @@ int main(void)
     int i;
     for (i = 0; i < DISPLAY_NUM_FRAMES; i++) {
         pFrames[i] = frameBuf[i];
-        cl_ptr[i] = cl[i];
     }
 
     /* Peripherals */
@@ -126,7 +114,7 @@ int main(void)
         if (nextFrame >= DISPLAY_NUM_FRAMES) {
             nextFrame = 0;
         }
-        gpu_draw(dispCtrl.framePtr[nextFrame]);
+        gpu_draw(dispCtrl.framePtr[nextFrame], nextFrame);
         DisplayChangeFrame(&dispCtrl, nextFrame);
     }
 
@@ -165,14 +153,82 @@ void Error_Handler(const char* caller)
     while (1) {}
 }
 
-void gpu_draw(u8 *frame)
+void gpu_draw(u8 *frame, int frameIndex)
 {
     // Grab the pointer to the command list
-    struct cl_type *myCL = cls[0];
+    struct cl_type *myCL = cls[frameIndex];
+
+    static int square_x = 200;
+    static int square_y = 200;
+    static int x_dir = 2;
+    static int y_dir = 2;
+
+    static int prev_x_0 = 0;
+    static int prev_y_0 = 0;
+    static int prev_x_1 = 0;
+    static int prev_y_1 = 0;
+
+    // Update position
+    square_x += x_dir;
+    square_y += y_dir;
+
+    // Check for collision with display borders and reverse direction if needed
+    if (square_x <= 0) {
+        square_x = 0;
+        x_dir = -x_dir;
+    }
+    else if (square_x + 200 >= 1920) {
+        square_x = 1920 - 200;
+        x_dir = -x_dir;
+    }
+
+    if (square_y <= 0) {
+        square_y = 0;
+        y_dir = -y_dir;
+    }
+    else if (square_y + 200 >= 1080) {
+        square_y = 1080 - 200;
+        y_dir = -y_dir;
+    }
+
+    rewind_cl(myCL);
+    if (frameIndex) {
+    	draw_rect(myCL, prev_x_0, prev_y_0, 200, 200, 0xFF000000);
+    	prev_x_0 = square_x;
+    	prev_y_0 = square_y;
+    } else {
+    	draw_rect(myCL, prev_x_1, prev_y_1, 200, 200, 0xFF000000);
+    	prev_x_1 = square_x;
+    	prev_y_1 = square_y;
+    }
+
+    u32 color = RainbowRGB();
+    draw_rect(myCL, square_x, square_y, 200, 200, color);
+
+    draw_stop(myCL);
 
     /****************************************************/
-    /* 1) Handle the color transitions                  */
+    /* 4) Flush caches, bind, and run the GPU           */
     /****************************************************/
+    Xil_DCacheFlushRange((UINTPTR)frame, DEMO_MAX_FRAME);
+    Xil_DCacheFlushRange((UINTPTR)myCL->array, 256);
+
+    GPU_BindCommandList((u32)myCL->array);
+    XGpu_Set_frameBuffer_V(&GpuInstance, (u32)frame);
+    XGpu_Set_status_V(&GpuInstance, 0xFFFFFFFF);
+    XGpu_Start(&GpuInstance);
+
+    while (!XGpu_IsDone(&GpuInstance)) {
+        // optional wait
+    }
+
+    // Final flush, if needed
+    Xil_DCacheFlushRange((UINTPTR)myCL->array, 256);
+    Xil_DCacheFlushRange((UINTPTR)frame, DEMO_MAX_FRAME);
+}
+
+u32 RainbowRGB()
+{
     static u8 val = 0;
     static u8 r = 0;
     static u8 g = 0;
@@ -205,35 +261,7 @@ void gpu_draw(u8 *frame)
 
     u32 color = (0xFF << 24) | (r << 16) | (g << 8) | b;
 
-    clear_cl(myCL);
-
-    // 1) Red
-    draw_rect(myCL, 100, 100, 500, 500, 0xFFFF0000);
-
-    // 2) Greenish
-    draw_rect(myCL, 350, 350, 500, 500, 0x7F00FF00);
-
-    // 3) The color-changing square
-    draw_rect(myCL, 1000, 500, 600, 400, color);
-
-    /****************************************************/
-    /* 4) Flush caches, bind, and run the GPU           */
-    /****************************************************/
-    Xil_DCacheFlushRange((UINTPTR)frame, DEMO_MAX_FRAME);
-    Xil_DCacheFlushRange((UINTPTR)myCL->array, 256);
-
-    GPU_BindCommandList((u32)myCL->array);
-    XGpu_Set_frameBuffer_V(&GpuInstance, (u32)frame);
-    XGpu_Set_status_V(&GpuInstance, 0xFFFFFFFF);
-    XGpu_Start(&GpuInstance);
-
-    while (!XGpu_IsDone(&GpuInstance)) {
-        // optional wait
-    }
-
-    // Final flush, if needed
-    Xil_DCacheFlushRange((UINTPTR)myCL->array, 256);
-    Xil_DCacheFlushRange((UINTPTR)frame, DEMO_MAX_FRAME);
+    return color;
 }
 
 void PrintStartup()
