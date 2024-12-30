@@ -4,19 +4,22 @@
 /************************************************************************/
 
 /* Includes */
-#include "display_demo.h"
-#include "display_ctrl/display_ctrl.h"
 #include <stdio.h>
-#include "xuartps.h"
 #include "math.h"
 #include <ctype.h>
 #include <stdlib.h>
+
+#include "xuartps.h"
 #include "xil_types.h"
 #include "xil_cache.h"
-#include "timer_ps/timer_ps.h"
 #include "xparameters.h"
 #include "xgpu.h"
+#include "xgpio.h"
+
 #include "cl.h"
+#include "display_demo.h"
+#include "display_ctrl/display_ctrl.h"
+#include "timer_ps/timer_ps.h"
 
 /* XPAR redefines */
 #define DYNCLK_BASEADDR     XPAR_AXI_DYNCLK_0_S_AXI_LITE_BASEADDR
@@ -29,9 +32,10 @@
 #define XGPU_DEVICE_ID      XPAR_XGPU_0_DEVICE_ID
 
 /* Instances */
-DisplayCtrl dispCtrl;
-XAxiVdma vdma;
-XGpu GpuInstance;
+DisplayCtrl dispCtrl;       /* Display Controller Instance          */
+XAxiVdma vdma;              /* VDMA Instance                        */
+XGpu GpuInstance;           /* GPU Instance                         */
+XGpio PushInstance;			/* Push buttons Instance 				*/
 
 /* Framebuffers */
 u8  frameBuf[DISPLAY_NUM_FRAMES][DEMO_MAX_FRAME] __attribute__((aligned(0x20)));
@@ -43,12 +47,17 @@ void GPU_BindFrameBuffer(u32 frameBufferAddr);
 void GPU_BindCommandList(u32 commandListAddr);
 void GPU_Start();
 void GPU_WaitForDone();
+int GpioInit(XGpio *GpioInstancePtr, u16 DeviceId);
 
 void Error_Handler();
 void PrintStartup();
 u32 RainbowRGB();
 
 struct cl_type** cls;
+
+#define STILL 		0x00
+#define MOVE_UP 	0x01
+#define MOVE_DOWN 	0x02
 
 int main(void)
 {
@@ -69,6 +78,8 @@ int main(void)
     }
 
     /* Peripherals */
+    GpioInit(&PushInstance, XPAR_AXI_GPIO_BTN_DEVICE_ID);
+
     TimerInitialize(SCU_TIMER_ID);
 
     vdmaConfig = XAxiVdma_LookupConfig(VGA_VDMA_ID);
@@ -108,13 +119,26 @@ int main(void)
 
     PrintStartup();
 
+    u32 move = STILL;
     int nextFrame = 0;
     while (1) {
         nextFrame = dispCtrl.curFrame + 1;
         if (nextFrame >= DISPLAY_NUM_FRAMES) {
             nextFrame = 0;
         }
-        gpu_draw(dispCtrl.framePtr[nextFrame], nextFrame);
+        int btn_read = XGpio_DiscreteRead(&PushInstance, 1);
+        switch (btn_read) {
+            case 1:
+                move = MOVE_UP;
+                break;
+            case 2:
+                move = MOVE_DOWN;
+                break;
+            default:
+            	move = STILL;
+                break;
+        }
+        gpu_draw(dispCtrl.framePtr[nextFrame], nextFrame, move);
         DisplayChangeFrame(&dispCtrl, nextFrame);
     }
 
@@ -153,7 +177,7 @@ void Error_Handler(const char* caller)
     while (1) {}
 }
 
-void gpu_draw(u8 *frame, int frameIndex)
+void gpu_draw(u8 *frame, int frameIndex, u32 move)
 {
     // Grab the pointer to the command list
     struct cl_type *myCL = cls[frameIndex];
@@ -168,27 +192,11 @@ void gpu_draw(u8 *frame, int frameIndex)
     static int prev_x_1 = 0;
     static int prev_y_1 = 0;
 
-    // Update position
-    square_x += x_dir;
-    square_y += y_dir;
-
-    // Check for collision with display borders and reverse direction if needed
-    if (square_x <= 0) {
-        square_x = 0;
-        x_dir = -x_dir;
+    if (move == MOVE_DOWN && !(square_y + 200 >= 1080)) {
+        square_y += y_dir;
     }
-    else if (square_x + 200 >= 1920) {
-        square_x = 1920 - 200;
-        x_dir = -x_dir;
-    }
-
-    if (square_y <= 0) {
-        square_y = 0;
-        y_dir = -y_dir;
-    }
-    else if (square_y + 200 >= 1080) {
-        square_y = 1080 - 200;
-        y_dir = -y_dir;
+    else if (move == MOVE_UP && !(square_y <= 0)) {
+        square_y -= y_dir;
     }
 
     rewind_cl(myCL);
@@ -212,11 +220,13 @@ void gpu_draw(u8 *frame, int frameIndex)
     /****************************************************/
     // Xil_DCacheFlushRange((UINTPTR)frame, DEMO_MAX_FRAME);
     Xil_DCacheFlushRange((UINTPTR)myCL->array, 256);
+    Xil_DCacheFlushRange((UINTPTR)frame, DEMO_MAX_FRAME);
 
     GPU_BindCommandList((u32)myCL->array);
     GPU_BindFrameBuffer((u32)frame);
     GPU_Start();
-    
+
+    Xil_DCacheFlushRange((UINTPTR)myCL->array, 256);
     Xil_DCacheFlushRange((UINTPTR)frame, DEMO_MAX_FRAME);
 }
 
@@ -266,4 +276,21 @@ void PrintStartup()
     xil_printf("**************************************************\n\r");
     xil_printf("*Display Resolution: %28s*\n\r", dispCtrl.vMode.label);
     printf("*Display Pixel Clock Freq. (MHz): %15.3f*\n\r", dispCtrl.pxlFreq);
+}
+
+/*****************************************************************************/
+/**
+* Initializes a GPIO instance as an input device.
+*
+* @param GpioInstancePtr is a pointer to the instance of XGpio driver.
+* @param DeviceId is the device Id of the GPIO device.
+*
+* @return	XST_SUCCESS if successful, otherwise XST_FAILURE.
+******************************************************************************/
+int GpioInit(XGpio *GpioInstancePtr, u16 DeviceId)
+{
+	XGpio_Initialize(GpioInstancePtr, DeviceId);
+	XGpio_SetDataDirection(GpioInstancePtr, 1, 0xffffffff);
+
+	return XST_SUCCESS;
 }
