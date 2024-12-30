@@ -210,20 +210,13 @@ void gpu_draw(u8 *frame, int frameIndex)
     /****************************************************/
     /* 4) Flush caches, bind, and run the GPU           */
     /****************************************************/
-    Xil_DCacheFlushRange((UINTPTR)frame, DEMO_MAX_FRAME);
+    // Xil_DCacheFlushRange((UINTPTR)frame, DEMO_MAX_FRAME);
     Xil_DCacheFlushRange((UINTPTR)myCL->array, 256);
 
     GPU_BindCommandList((u32)myCL->array);
-    XGpu_Set_frameBuffer_V(&GpuInstance, (u32)frame);
-    XGpu_Set_status_V(&GpuInstance, 0xFFFFFFFF);
-    XGpu_Start(&GpuInstance);
-
-    while (!XGpu_IsDone(&GpuInstance)) {
-        // optional wait
-    }
-
-    // Final flush, if needed
-    Xil_DCacheFlushRange((UINTPTR)myCL->array, 256);
+    GPU_BindFrameBuffer((u32)frame);
+    GPU_Start();
+    
     Xil_DCacheFlushRange((UINTPTR)frame, DEMO_MAX_FRAME);
 }
 
