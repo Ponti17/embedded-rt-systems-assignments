@@ -16,12 +16,13 @@ static struct cl_type* cl_instances_ptr[NUM_OF_CL];
 struct cl_type** init_cl(void)
 {
     /* Zero initialize the CL arrays */
-    for (int i = 0; i < NUM_OF_CL; i++) {
+	int i;
+    for (i = 0; i < NUM_OF_CL; i++) {
         memset(cl[i], 0, CL_SIZE * sizeof(u32));
     }
 
     /* Initialize CL structures */
-    for (int i = 0; i< NUM_OF_CL; i++) {
+    for (i = 0; i< NUM_OF_CL; i++) {
         cl_instances[i].idx = 0;
         cl_instances[i].array = cl[i];
         cl_instances_ptr[i] = &cl_instances[i];

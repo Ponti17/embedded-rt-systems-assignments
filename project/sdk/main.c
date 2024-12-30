@@ -5,7 +5,7 @@
 
 /* Includes */
 #include "display_demo.h"
-#include "display_ctrl.h"
+#include "display_ctrl/display_ctrl.h"
 #include <stdio.h>
 #include "xuartps.h"
 #include "math.h"
@@ -16,7 +16,7 @@
 #include "timer_ps/timer_ps.h"
 #include "xparameters.h"
 #include "xgpu.h"
-#include "cl.hpp"
+#include "cl.h"
 
 /* XPAR redefines */
 #define DYNCLK_BASEADDR     XPAR_AXI_DYNCLK_0_S_AXI_LITE_BASEADDR
