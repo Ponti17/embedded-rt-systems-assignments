@@ -25,3 +25,6 @@
 
 !/sdk/
 !/sdk/**
+
+!/drawio/
+!drawio/**
