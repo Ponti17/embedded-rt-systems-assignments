@@ -2,22 +2,29 @@
 
 Game engine for ERTS 2024-2025 project, second version
 
+This engine supports three different states:
+- Main Menu
+- Playing Game
+- Exit Game
+
+The engine is implemented using the State design pattern. 
+The GameContext class is the context class that holds the current state. 
+The three states are implemented as singletons.
+
 *****************************************************************************************/
 #pragma once
 
 #include <memory>
 #include <iostream>
 #include <vector>
+#include <string>
+using std::string;
 
-// input signal handling abstraction
-template <typename T, typename address>
 struct inputSignal {
-    T signal;
-    address* source;
-    inputSignal(T signal, address* source) : signal(signal), source(source) {};
+    bool* signal;
+    string name;
+    inputSignal(bool* signal, string name) : signal(signal), name(name) {};
 };
-
-
 
 // forward declarations
 class MainMenu;
@@ -135,11 +142,23 @@ class GameContext {
             currentScene = scene;
         };
 
-        void handleInput();
-        void update();
-        void render();
+        void handleInput(){
+            currentScene->handleInput();
+        };
+        void update(){
+            currentScene->update();
+        };
+        void render(){
+            currentScene->render();
+        };
 
     private:
         GameScene * currentScene;
         bool isRunning;
+        std::vector<inputSignal> inputSignals;
 };
+
+class GameObject {
+    public:
+
+}
