@@ -175,6 +175,7 @@ int DisplayStart(DisplayCtrl *dispPtr)
 	XVtc_RegUpdateEnable(&(dispPtr->vtc));
 	XVtc_SetGeneratorTiming(&(dispPtr->vtc), &vtcTiming);
 	XVtc_SetSource(&(dispPtr->vtc), &SourceSelect);
+	XVtc_IntrEnable(&(dispPtr->vtc), XVTC_IXR_FSYNC00_MASK);
     /*
 	 * Enable VTC core, releasing backpressure on VDMA
 	 */
