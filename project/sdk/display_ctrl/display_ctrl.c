@@ -272,7 +272,7 @@ int DisplayInitialize(DisplayCtrl *dispPtr, XAxiVdma *vdma, u16 vtcId, u32 dynCl
 	}
 	dispPtr->state = DISPLAY_STOPPED;
 	dispPtr->stride = stride;
-	dispPtr->vMode = VMODE_640x480;
+	dispPtr->vMode = VMODE_1920x1080;
 
 	ClkFindParams(dispPtr->vMode.freq, &clkMode);
 

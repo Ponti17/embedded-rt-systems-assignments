@@ -36,7 +36,8 @@ void GPU_BindFrameBuffer(u32 frameBufferAddr);
 void GPU_BindCommandList(u32 commandListAddr);
 void GPU_Start();
 void GPU_WaitForDone();
-void Error_Handler();
+void gpu_draw(u8 *frame);
+void Error_Handler(const char* caller);
 void PrintStartup();
 
 #ifdef __cplusplus
