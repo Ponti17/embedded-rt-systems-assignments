@@ -10,7 +10,7 @@
 !repo/
 !sdk/
 !src/
-
+!game_engine_v2/
 #Digilent Added ignore rules for Vivado projects
 
 # sdk exclusions

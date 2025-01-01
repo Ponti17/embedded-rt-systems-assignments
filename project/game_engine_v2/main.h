@@ -1,0 +1,145 @@
+/****************************************************************************************
+
+Game engine for ERTS 2024-2025 project, second version
+
+*****************************************************************************************/
+#pragma once
+
+#include <memory>
+#include <iostream>
+#include <vector>
+
+// input signal handling abstraction
+template <typename T, typename address>
+struct inputSignal {
+    T signal;
+    address* source;
+    inputSignal(T signal, address* source) : signal(signal), source(source) {};
+};
+
+
+
+// forward declarations
+class MainMenu;
+class PlayingGame;
+class ExitGame;
+class GameContext;
+
+class GameScene{
+    public: 
+
+        virtual ~GameScene() = default;
+        virtual void handleInput() = 0;
+        virtual void update() = 0;
+        virtual void render() = 0;
+
+        GameScene(const GameScene&) = delete;
+        GameScene& operator=(const GameScene&) = delete;
+
+        //events that can change state
+        virtual void onStart(GameContext * gameContext) {};
+        virtual void onExit(GameContext * gameContext) {};
+        virtual void onGameOver(GameContext * gameContext) {};
+
+    protected:
+        GameScene() = default;
+};
+
+
+//implementation of the three scenes / game states
+// All must be implemented as singletons
+class MainMenu : public GameScene {
+
+    public:
+        static MainMenu& getInstance() {
+            static MainMenu instance;
+            return instance;
+        }
+
+        void handleInput() override {
+            std::cout << "Main Menu: handleInput" << std::endl;
+        }
+
+        void update() override {
+            std::cout << "Main Menu: update" << std::endl;
+        }
+
+        void render() override {
+            std::cout << "Main Menu: render" << std::endl;
+        }
+
+        MainMenu() = default;
+        ~MainMenu() = default;
+
+};
+
+class PlayingGame : public GameScene {
+
+    public:
+        static PlayingGame& getInstance() {
+            static PlayingGame instance;
+            return instance;
+        }
+
+        void handleInput() override {
+            std::cout << "Playing Game: handleInput" << std::endl;
+        }
+
+        void update() override {
+            std::cout << "Playing Game: update" << std::endl;
+        }
+
+        void render() override {
+            std::cout << "Playing Game: render" << std::endl;
+        }
+
+        PlayingGame() = default;
+        ~PlayingGame() = default;
+
+};
+
+class ExitGame : public GameScene {
+
+    public:
+        static ExitGame& getInstance() {
+            static ExitGame instance;
+            return instance;
+        }
+
+        void handleInput() override {
+            std::cout << "Exit Game: handleInput" << std::endl;
+        }
+
+        void update() override {
+            std::cout << "Exit Game: update" << std::endl;
+        }
+
+        void render() override {
+            std::cout << "Exit Game: render" << std::endl;
+        }
+
+        ExitGame() = default;
+        ~ExitGame() = default;
+
+};
+
+// Game engine context class
+
+class GameContext {
+
+    public:
+        GameContext() : currentScene(nullptr), isRunning(false) {}; 
+        ~GameContext();
+        
+        void setScene(GameScene * scene){
+            currentScene = scene;
+        };
+
+        void handleInput();
+        void update();
+        void render();
+
+    private:
+        GameScene * currentScene;
+        bool isRunning;
+};
