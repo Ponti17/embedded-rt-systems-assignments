@@ -126,6 +126,8 @@ int main(void)
         if (nextFrame >= DISPLAY_NUM_FRAMES) {
             nextFrame = 0;
         }
+
+        DisplayChangeFrame(&dispCtrl, dispCtrl.curFrame);
         int btn_read = XGpio_DiscreteRead(&PushInstance, 1);
         switch (btn_read) {
             case 1:
@@ -138,43 +140,12 @@ int main(void)
             	move = STILL;
                 break;
         }
+
         gpu_draw(dispCtrl.framePtr[nextFrame], nextFrame, move);
-        DisplayChangeFrame(&dispCtrl, nextFrame);
+        dispCtrl.curFrame = nextFrame;
     }
 
     return 0;
-}
-
-void GPU_BindFrameBuffer(u32 frameBufferAddr)
-{
-    XGpu_Set_frameBuffer_V(&GpuInstance, frameBufferAddr);
-}
-
-void GPU_BindCommandList(u32 commandListAddr)
-{
-    XGpu_Set_cl_V(&GpuInstance, commandListAddr);
-}
-
-void GPU_Start()
-{
-    XGpu_Set_status_V(&GpuInstance, 0xFFFFFFFF);
-    XGpu_Start(&GpuInstance);
-}
-
-void GPU_WaitForDone()
-{
-    while (!XGpu_IsDone(&GpuInstance)) {}
-}
-
-void Error_Handler(const char* caller)
-{
-    if (caller != NULL) {
-        xil_printf("Error occured during: %s\r\n", caller);
-    }
-    else {
-    xil_printf("Error occurred.\r\n");
-    }
-    while (1) {}
 }
 
 void gpu_draw(u8 *frame, int frameIndex, u32 move)
@@ -218,7 +189,6 @@ void gpu_draw(u8 *frame, int frameIndex, u32 move)
     /****************************************************/
     /* 4) Flush caches, bind, and run the GPU           */
     /****************************************************/
-    // Xil_DCacheFlushRange((UINTPTR)frame, DEMO_MAX_FRAME);
     Xil_DCacheFlushRange((UINTPTR)myCL->array, 256);
     Xil_DCacheFlushRange((UINTPTR)frame, DEMO_MAX_FRAME);
 
@@ -228,6 +198,38 @@ void gpu_draw(u8 *frame, int frameIndex, u32 move)
 
     Xil_DCacheFlushRange((UINTPTR)myCL->array, 256);
     Xil_DCacheFlushRange((UINTPTR)frame, DEMO_MAX_FRAME);
+}
+
+void GPU_BindFrameBuffer(u32 frameBufferAddr)
+{
+    XGpu_Set_frameBuffer_V(&GpuInstance, frameBufferAddr);
+}
+
+void GPU_BindCommandList(u32 commandListAddr)
+{
+    XGpu_Set_cl_V(&GpuInstance, commandListAddr);
+}
+
+void GPU_Start()
+{
+    XGpu_Set_status_V(&GpuInstance, 0xFFFFFFFF);
+    XGpu_Start(&GpuInstance);
+}
+
+void GPU_WaitForDone()
+{
+    while (!XGpu_IsDone(&GpuInstance)) {}
+}
+
+void Error_Handler(const char* caller)
+{
+    if (caller != NULL) {
+        xil_printf("Error occured during: %s\r\n", caller);
+    }
+    else {
+    xil_printf("Error occurred.\r\n");
+    }
+    while (1) {}
 }
 
 u32 RainbowRGB()
