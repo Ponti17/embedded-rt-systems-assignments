@@ -1,10 +1,14 @@
 /************************************************************************/
-/*	@file vga_modes.hpp													*/
-/*	@created 30/12/24													*/
+/*	@file vga_modes.h													*/
+/*	@created 01/01/24													*/
 /************************************************************************/
 
 #ifndef VGA_MODES_H_
 #define VGA_MODES_H_
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef struct {
 	char label[64]; // Label describing the resolution
@@ -36,5 +40,8 @@ static const VideoMode VMODE_1920x1080 = {
 	.freq = 148.5 //148.57 is close enough
 };
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* VGA_MODES_H_ */

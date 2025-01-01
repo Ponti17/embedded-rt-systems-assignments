@@ -1,71 +1,14 @@
-/******************************************************************************
- * @file dynclk.h
- * Dynamic frequency generation for the axi_dynclk core
- *
- * @author Sam Bobrowicz
- *
- * @date 2015-Nov-25
- *
- * @copyright
- * (c) 2015 Copyright Digilent Incorporated
- * All Rights Reserved
- *
- * This program is free software; distributed under the terms of BSD 3-clause
- * license ("Revised BSD License", "New BSD License", or "Modified BSD License")
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright notice, this
- *    list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
- * 3. Neither the name(s) of the above-listed copyright holder(s) nor the names
- *    of its contributors may be used to endorse or promote products derived
- *    from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
- * @desciption
- * Contains a driver for the Digilent axi_dynclk core. To use this driver:
- *
- * 1) Find the ClkMode struct for the frequency closest to your desired
- *    frequency using ClkFindParams.
- * 2) Pass the ClkMode struct to ClkFindReg to obtain the ClkConfig struct
- *    that contains the necessary register writes that need to be made.
- * 3) Call ClkWriteReg with the ClkConfig struct and the base address of the
- *    axi_dynclk core to configure the hardware to generate the desired
- *    frequency.
- * 4) Call ClkStart to start the clock.
- * 5) If you want to change the frequency, call ClkStop and then repeat steps
- *    1-4.
- *
- * Xilinx XAPP888 was referenced for information on reconfiguring the MMCM or PLL.
- *
- * <pre>
- * MODIFICATION HISTORY:
- *
- * Ver   Who          Date         Changes
- * ----- ------------ -----------  -----------------------------------------------
- * 1.00  Sam Bobrowicz 2015-Nov-25 First Release, separated from display_ctrl
- *
- * </pre>
- *
- *****************************************************************************/
-
+/************************************************************************/
+/*	@file dynclk.h														*/
+/*	@created 01/01/24													*/
+/************************************************************************/
 
 #ifndef DYNCLK_H_
 #define DYNCLK_H_
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /* ------------------------------------------------------------ */
 /*				Include File Definitions						*/
@@ -269,5 +212,8 @@ double ClkFindParams(double freq, ClkMode *bestPick);
 void ClkStart(u32 dynClkAddr);
 void ClkStop(u32 dynClkAddr);
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* DYNCLK_H_ */

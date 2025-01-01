@@ -1,10 +1,14 @@
 /************************************************************************/
-/*	@file cl.hpp        												*/
+/*	@file cl.h        												    */
 /*	@created 30/12/24													*/
 /************************************************************************/
 
 #ifndef CL_H_
 #define CL_H_
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /* GPU Commands */
 #define GPU_STOP_CMD   0x0000
@@ -31,5 +35,9 @@ void draw_rect(struct cl_type *cl, u16 x, u16 y, u16 w, u16 h, u32 color);
 void set_clip(struct cl_type *cl, u16 x, u16 y, u16 w, u16 h);
 
 void draw_stop(struct cl_type *cl);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* CL_H_ */

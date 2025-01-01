@@ -1,26 +1,14 @@
 /************************************************************************/
-/*																		*/
-/*	display_demo.h	--	ZYBO display demonstration 						*/
-/*																		*/
-/************************************************************************/
-/*	Author: Sam Bobrowicz												*/
-/*	Copyright 2016, Digilent Inc.										*/
-/************************************************************************/
-/*  Module Description: 												*/
-/*																		*/
-/*		This file contains code for running a demonstration of the		*/
-/*		HDMI output capabilities on the ZYBO. It is a good	            */
-/*		example of how to properly use the display_ctrl drivers.	    */
-/*																		*/
-/************************************************************************/
-/*  Revision History:													*/
-/* 																		*/
-/*		2/5/2016(SamB): Created											*/
-/*																		*/
+/*	@file cl.h        												    */
+/*	@created 30/12/24													*/
 /************************************************************************/
 
 #ifndef DISPLAY_DEMO_H_
 #define DISPLAY_DEMO_H_
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /* ------------------------------------------------------------ */
 /*				Include File Definitions						*/
@@ -42,16 +30,17 @@
 /*					Procedure Declarations						*/
 /* ------------------------------------------------------------ */
 
-void DemoInitialize();
-void DemoRun();
-void DemoPrintMenu();
-void DemoChangeRes();
-void DemoCRMenu();
-void DemoInvertFrame(u8 *srcFrame, u8 *destFrame, u32 width, u32 height, u32 stride);
-void DemoPrintTest(u8 *frame, u32 width, u32 height, u32 stride, int pattern);
+int main(void);
+void InitGPU();
+void GPU_BindFrameBuffer(u32 frameBufferAddr);
+void GPU_BindCommandList(u32 commandListAddr);
+void GPU_Start();
+void GPU_WaitForDone();
+void Error_Handler();
+void PrintStartup();
 
-/* ------------------------------------------------------------ */
-
-/************************************************************************/
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* DISPLAY_DEMO_H_ */
