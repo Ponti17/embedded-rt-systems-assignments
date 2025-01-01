@@ -242,7 +242,7 @@ class GameContext {
 
 class GameObject {
     public:
-        std::unique_ptr<Shape2D> shape;
+        Shape2D * shape;
         Vec2<float> velocity;
         Vec2<float> acceleration;
 };
