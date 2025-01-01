@@ -20,12 +20,14 @@
 #include "xscutimer.h"
 #include "xscugic.h"
 #include "xil_exception.h"
+#include "xvtc.h"
 
 /* XPAR redefines */
 #define DYNCLK_BASEADDR     XPAR_AXI_DYNCLK_0_S_AXI_LITE_BASEADDR
 #define VGA_VDMA_ID         XPAR_AXIVDMA_0_DEVICE_ID
 #define DISP_VTC_ID         XPAR_VTC_0_DEVICE_ID
-#define VID_VTC_IRPT_ID     XPS_FPGA3_INT_ID
+// #define VID_VTC_IRPT_ID     XPS_FPGA3_INT_ID
+#define VID_VTC_IRPT_ID XPAR_FABRIC_V_TC_0_IRQ_INTR
 #define VID_GPIO_IRPT_ID    XPS_FPGA4_INT_ID
 #define SCU_TIMER_ID        XPAR_SCUTIMER_DEVICE_ID
 #define UART_BASEADDR       XPAR_PS7_UART_1_BASEADDR
@@ -55,7 +57,19 @@ void (*TimerFunctionPtr)(void);
 
 void timerFunction(void)
 {
+	// 0001 0011 0000 0000 0000
     xil_printf("Timer expired.\r\n");
+    u32 pending = XVtc_IntrGetPending(&dispCtrl.vtc);
+    xil_printf("VTC pending: %08x\r\n", pending);
+    XVtc_IntrClear(&dispCtrl.vtc, 0xFFFFFFFF);
+    pending = XVtc_IntrGetPending(&dispCtrl.vtc);
+    xil_printf("VTC pending: %08x\r\n", pending);
+}
+
+static void VtcFrameSyncCallback(void *CallbackRef, u32 Mask)
+{
+	XVtc_IntrClear(&dispCtrl.vtc, 0xFFFFFFFF);
+	xil_printf("Frame Sync Interrupt!\n\r");
 }
 
 int main(void)
@@ -114,6 +128,17 @@ int main(void)
     if (Status != XST_SUCCESS) {
         Error_Handler("XGpu_CfgInitialize");
     }
+
+    XVtc_SetCallBack(
+        &dispCtrl.vtc,
+		VID_VTC_IRPT_ID,
+        (void *)VtcFrameSyncCallback,
+        &dispCtrl.vtc
+    );
+
+    Status = XScuGic_Connect(&IntcInstance, VID_VTC_IRPT_ID, (Xil_ExceptionHandler)VtcFrameSyncCallback, (void *)&dispCtrl.vtc);
+    XScuGic_Enable(&IntcInstance, VID_VTC_IRPT_ID);
+    Xil_ExceptionEnable();
 
     PrintStartup();
 

@@ -57,6 +57,7 @@ void TimerReinitialize(XScuTimer *TimerInstancePtr, u32 TimerCounter, void (*Tim
 
 static void TimerIntrHandler(void *CallBackRef);
 static void TimerDisableIntrSystem(XScuGic *IntcInstancePtr, u16 TimerIntrId);
+static void VtcFrameSyncCallback(void *CallbackRef, u32 Mask);
 
 #ifdef __cplusplus
 }
