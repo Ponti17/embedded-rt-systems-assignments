@@ -115,11 +115,6 @@ int main(void)
         Error_Handler("XGpu_CfgInitialize");
     }
 
-    /* Set resolution to 1920x1080 */
-    DisplayStop(&dispCtrl);
-    DisplaySetMode(&dispCtrl, &VMODE_1920x1080);
-    DisplayStart(&dispCtrl);
-
     PrintStartup();
 
     int nextFrame = 0;
