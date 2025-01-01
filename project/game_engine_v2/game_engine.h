@@ -18,6 +18,7 @@ The three states are implemented as singletons.
 #include <iostream>
 #include <vector>
 #include <string>
+#include <cstdint>
 
 using std::string;
 
@@ -53,11 +54,20 @@ public:
     }
 };
 
+class Shape2D {
+    public:
+        virtual ~Shape2D() = default;
+        virtual void draw() = 0;
+        Vec2<int> position;
+        uint8_t color;
+};
+
 struct inputSignal {
     bool* signal;
     string name;
     inputSignal(bool* signal, string name) : signal(signal), name(name) {};
 };
+
 
 // forward declarations
 class MainMenu;
@@ -95,9 +105,15 @@ class GameScene{
 class MainMenu : public GameScene {
 
     public:
-        static MainMenu& getInstance() {
-            static MainMenu instance;
+        static MainMenu * getInstance() {
+            if(instance == nullptr){
+                instance = new MainMenu();
+            }
             return instance;
+        }
+
+        void onStart(GameContext * gameContext) {
+            gameContext->setScene(PlayingGame::getInstance());
         }
 
         void handleInput() override {
@@ -111,7 +127,8 @@ class MainMenu : public GameScene {
         void render() override {
             std::cout << "Main Menu: render" << std::endl;
         }
-
+    private:
+        static MainMenu * instance;
         MainMenu() = default;
         ~MainMenu() = default;
 
@@ -120,9 +137,15 @@ class MainMenu : public GameScene {
 class PlayingGame : public GameScene {
 
     public:
-        static PlayingGame& getInstance() {
-            static PlayingGame instance;
+        static PlayingGame * getInstance() {
+            if (instance == nullptr){
+                instance = new PlayingGame();
+            }
             return instance;
+        }
+
+        void onGameOver(GameContext * gameContext) {
+            gameContext->setScene(ExitGame::getInstance());
         }
 
         void handleInput() override {
@@ -136,7 +159,8 @@ class PlayingGame : public GameScene {
         void render() override {
             std::cout << "Playing Game: render" << std::endl;
         }
-
+    private:
+        static PlayingGame * instance;
         PlayingGame() = default;
         ~PlayingGame() = default;
 
@@ -145,9 +169,15 @@ class PlayingGame : public GameScene {
 class ExitGame : public GameScene {
 
     public:
-        static ExitGame& getInstance() {
-            static ExitGame instance;
+        static ExitGame * getInstance() {
+            if (instance == nullptr){
+                instance = new ExitGame();
+            }
             return instance;
+        }
+
+        void onExit(GameContext * gameContext) {
+            gameContext->exitGame();
         }
 
         void handleInput() override {
@@ -161,7 +191,8 @@ class ExitGame : public GameScene {
         void render() override {
             std::cout << "Exit Game: render" << std::endl;
         }
-
+    private:
+        static ExitGame * instance;
         ExitGame() = default;
         ~ExitGame() = default;
 
@@ -172,12 +203,24 @@ class ExitGame : public GameScene {
 class GameContext {
 
     public:
-        GameContext() : currentScene(nullptr), isRunning(false) {}; 
+        GameContext() : isRunning(true) {
+            currentScene = MainMenu::getInstance();
+        }; 
         ~GameContext();
         
         void setScene(GameScene * scene){
             currentScene = scene;
         };
+
+        void gameLoop(){
+            while(isRunning){
+
+                handleInput();
+                update();
+                render();
+
+            }
+        }
 
         void handleInput(){
             currentScene->handleInput();
@@ -188,7 +231,9 @@ class GameContext {
         void render(){
             currentScene->render();
         };
-
+        void exitGame(){
+            isRunning = false;
+        };
     private:
         GameScene * currentScene;
         bool isRunning;
@@ -197,6 +242,7 @@ class GameContext {
 
 class GameObject {
     public:
-
-
-}
+        std::unique_ptr<Shape2D> shape;
+        Vec2<float> velocity;
+        Vec2<float> acceleration;
+};
