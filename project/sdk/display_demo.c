@@ -59,17 +59,17 @@ void timerFunction(void)
 {
 	// 0001 0011 0000 0000 0000
     xil_printf("Timer expired.\r\n");
-    u32 pending = XVtc_IntrGetPending(&dispCtrl.vtc);
-    xil_printf("VTC pending: %08x\r\n", pending);
-    XVtc_IntrClear(&dispCtrl.vtc, 0xFFFFFFFF);
-    pending = XVtc_IntrGetPending(&dispCtrl.vtc);
-    xil_printf("VTC pending: %08x\r\n", pending);
 }
 
 static void VtcFrameSyncCallback(void *CallbackRef, u32 Mask)
 {
+	static u32 count = 0;
+	count += 1;
 	XVtc_IntrClear(&dispCtrl.vtc, 0xFFFFFFFF);
-	xil_printf("Frame Sync Interrupt!\n\r");
+	// xil_printf("Frame Sync Interrupt!\n\r");
+    if (count % 60 == 0) {
+        xil_printf("Frame Sync Interrupt!\n\r");
+    }
 }
 
 int main(void)
@@ -128,13 +128,6 @@ int main(void)
     if (Status != XST_SUCCESS) {
         Error_Handler("XGpu_CfgInitialize");
     }
-
-    XVtc_SetCallBack(
-        &dispCtrl.vtc,
-		VID_VTC_IRPT_ID,
-        (void *)VtcFrameSyncCallback,
-        &dispCtrl.vtc
-    );
 
     Status = XScuGic_Connect(&IntcInstance, VID_VTC_IRPT_ID, (Xil_ExceptionHandler)VtcFrameSyncCallback, (void *)&dispCtrl.vtc);
     XScuGic_Enable(&IntcInstance, VID_VTC_IRPT_ID);
