@@ -93,7 +93,7 @@ class GameScene{
         virtual void onGameOver(GameContext * gameContext) {};
 
         //All scenes holds a list of objects that must be implemented by the game
-        std::vector<GameObject> gameObjects;
+        std::vector<GameObject*> gameObjects;
 
     protected:
         GameScene() = default;
