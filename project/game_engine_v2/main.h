@@ -18,7 +18,40 @@ The three states are implemented as singletons.
 #include <iostream>
 #include <vector>
 #include <string>
+
 using std::string;
+
+template <typename T>
+class Vec2 {
+public:
+    T x, y;
+    Vec2() : x(0), y(0) {}
+    Vec2(T x, T y) : x(x), y(y) {}
+
+    Vec2 operator+(const Vec2& other) const {
+        return Vec2(x + other.x, y + other.y);
+    }
+
+    Vec2 operator-(const Vec2& other) const {
+        return Vec2(x - other.x, y - other.y);
+    }
+
+    Vec2 operator*(T scalar) const {
+        return Vec2(x * scalar, y * scalar);
+    }
+
+    bool operator==(const Vec2& other) const {
+        return x == other.x && y == other.y;
+    }
+
+    bool operator!=(const Vec2& other) const {
+        return !(*this == other);
+    }
+
+    Vec2<int> toInt() const {
+        return Vec2<int>(static_cast<int>(std::round(x)), static_cast<int>(std::round(y)));
+    }
+};
 
 struct inputSignal {
     bool* signal;
@@ -31,6 +64,7 @@ class MainMenu;
 class PlayingGame;
 class ExitGame;
 class GameContext;
+class GameObject;
 
 class GameScene{
     public: 
@@ -47,6 +81,9 @@ class GameScene{
         virtual void onStart(GameContext * gameContext) {};
         virtual void onExit(GameContext * gameContext) {};
         virtual void onGameOver(GameContext * gameContext) {};
+
+        //All scenes holds a list of objects that must be implemented by the game
+        std::vector<GameObject> gameObjects;
 
     protected:
         GameScene() = default;
@@ -160,5 +197,6 @@ class GameContext {
 
 class GameObject {
     public:
+
 
 }
