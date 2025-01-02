@@ -2,6 +2,9 @@
 
 #include "game_engine.h"
 
+//Forward declarations
+void initializeGame(void);
+void updateGame(void);
 // Shapes 
 class Paddle2D : public Rectangle2D {};
 class Ball2D : public Rectangle2D {};
