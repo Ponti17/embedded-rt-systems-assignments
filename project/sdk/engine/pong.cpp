@@ -1,10 +1,10 @@
 #include "pong.h"
 #include "cl.h"
 
-static bool upSignal1 = false;
-static bool downSignal1 = false;
-static bool upSignal2 = false;
-static bool downSignal2 = false;
+bool upSignal1 = false;
+bool downSignal1 = false;
+bool upSignal2 = false;
+bool downSignal2 = false;
 
 static PongTheGame* PingPong = nullptr;
 

@@ -21,10 +21,10 @@ public:
         : GameObject({size, position, color}) {}
 
     void update() override {
-        if (upSignal) {
+        if (upSignal && *upSignal) {
             shape.position.y -= 1 * speed;
         }
-        if (downSignal) {
+        if (downSignal && *downSignal) {
             shape.position.y += 1 * speed;
         }
     }

@@ -56,6 +56,11 @@ XScuTimer TimerInstance;	/* Cortex A9 Scu Private Timer Instance	*/
 XScuGic IntcInstance;		/* Interrupt Controller Instance 		*/
 XGpio PushInstance;			/* Push buttons Instance 				*/
 
+extern bool upSignal1;
+extern bool downSignal1;
+extern bool upSignal2;
+extern bool downSignal2;
+
 /* Framebuffers */
 u8  frameBuf[DISPLAY_NUM_FRAMES][DEMO_MAX_FRAME] __attribute__((aligned(0x20)));
 u8 *pFrames[DISPLAY_NUM_FRAMES];
@@ -183,12 +188,18 @@ static void prvAppTask( void *pvParameters )
         switch (read_gpio()) {
             case 1:
                 move = MOVE_UP;
+                upSignal1 = 1;
+                downSignal1 = 0;
                 break;
             case 2:
                 move = MOVE_DOWN;
+                downSignal1 = 1;
+                upSignal1 = 0;
                 break;
             default:
             	move = STILL;
+                downSignal1 = 0;
+                upSignal1 = 0;
                 break;
         }
 
