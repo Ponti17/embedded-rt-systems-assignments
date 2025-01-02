@@ -57,7 +57,7 @@ public:
 
 class Rectangle2D {
 public:
-    Rectangle2D(Vec2<int> size, Vec2<int> position, uint8_t color) 
+    Rectangle2D(Vec2<int> size, Vec2<int> position, uint32_t color) 
         : size(size), position(position), color(color) {}
 
     void draw() {
@@ -68,7 +68,7 @@ public:
 
     Vec2<int> size;
     Vec2<int> position;
-    uint8_t color;
+    uint32_t color;
 };
 
 // forward declarations

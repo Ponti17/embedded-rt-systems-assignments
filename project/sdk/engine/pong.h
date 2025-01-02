@@ -17,7 +17,7 @@ public:
 
     int speed = 1;
 
-    Paddle(Vec2<int> size, Vec2<int> position, uint8_t color) 
+    Paddle(Vec2<int> size, Vec2<int> position, uint32_t color) 
         : GameObject({size, position, color}) {}
 
     void update() override {
@@ -34,7 +34,7 @@ class Ball : public GameObject {
 public:
     Vec2<float> velocity;
     float speed = 1;
-    Ball(Vec2<int> size, Vec2<int> position, uint8_t color, Vec2<float> velocity)
+    Ball(Vec2<int> size, Vec2<int> position, uint32_t color, Vec2<float> velocity)
         : GameObject({size, position, color}), velocity(velocity) {}
 
     void update() override {
