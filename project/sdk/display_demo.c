@@ -62,16 +62,7 @@ u32 *cl_ptr[DISPLAY_NUM_FRAMES];
 #define BLIT_RECT_CMD  0x01
 #define SET_CLIP_CMD   0x0002
 
-/* Prototypes */
-void (*TimerFunctionPtr)(void);
-
 char HWstring[15] = "Hello World";
-
-void timerFunction(void)
-{
-	// 0001 0011 0000 0000 0000
-    xil_printf("Timer expired.\r\n");
-}
 
 void VtcFrameSyncCallback(void *CallbackRef, u32 Mask)
 {
@@ -82,7 +73,6 @@ void VtcFrameSyncCallback(void *CallbackRef, u32 Mask)
     XVtc_IntrClear(&dispCtrl.vtc, 0xFFFFFFFF);
 
     if (count % 60 == 0) {
-        xil_printf("Sending!\r\n");
         xQueueSendFromISR( xQueue, HWstring, &xHigherPriorityTaskWoken );
         portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
     }
@@ -112,8 +102,6 @@ int main(void)
     /* Peripherals */
 	ScuTimerInit(&TimerInstance, XPAR_XSCUTIMER_0_DEVICE_ID, 100*MILLISECOND);
 	ScuIntrInit(&IntcInstance, XPAR_SCUGIC_SINGLE_DEVICE_ID);
-	TimerSetupIntr(&IntcInstance, &TimerInstance, XPAR_SCUTIMER_INTR);
-    TimerReinitialize(&TimerInstance, 1000*MILLISECOND, &timerFunction);
 
     vdmaConfig = XAxiVdma_LookupConfig(VGA_VDMA_ID);
     if (!vdmaConfig) {
@@ -191,6 +179,7 @@ static void prvAppTask( void *pvParameters )
         // swap_buffer()
         // game_engine()
         // task_sleep()
+		xil_printf("Task start!\r\n");
 	}
 }
 
@@ -416,123 +405,4 @@ int ScuIntrInit(XScuGic *IntcInstancePtr, u16 GicDeviceId)
 	Xil_ExceptionRegisterHandler(XIL_EXCEPTION_ID_IRQ_INT, (Xil_ExceptionHandler)XScuGic_InterruptHandler, IntcInstancePtr);
 
 	return XST_SUCCESS;
-}
-
-/*****************************************************************************/
-/**
-* Connects the timer to the interrupt subsystem such that interrupts can occur.
-*
-* @param IntcInstancePtr is a pointer to the instance of XScuGic driver.
-* @param TimerInstancePtr is a pointer to the instance of XScuTimer driver.
-* @param TimerIntrId is the Interrupt Id of the XScuTimer device.
-*
-* @return	XST_SUCCESS if successful, otherwise XST_FAILURE.
-******************************************************************************/
-int TimerSetupIntr(XScuGic *IntcInstancePtr, XScuTimer *TimerInstancePtr, u16 TimerIntrId)
-{
-	int Status;
-
-	Status = XScuGic_Connect(IntcInstancePtr, TimerIntrId, (Xil_ExceptionHandler)TimerIntrHandler, (void *)TimerInstancePtr);
-	if (Status != XST_SUCCESS)
-	{
-		xil_printf("Timer interrupt connect failed.");
-		return XST_FAILURE;
-	}
-
-	XScuGic_Enable(IntcInstancePtr, TimerIntrId);
-
-	XScuTimer_EnableInterrupt(TimerInstancePtr);
-
-	Xil_ExceptionEnable();
-
-	return XST_SUCCESS;
-}
-
-/*****************************************************************************/
-/**
-* Starts the timer.
-*
-* @param TimerInstancePtr is a pointer to the instance of XScuTimer driver.
-* @return None
-******************************************************************************/
-void TimerStart(XScuTimer *TimerInstancePtr)
-{
-	XScuTimer_Start(TimerInstancePtr);
-}
-
-/*****************************************************************************/
-/**
-* Stops the timer.
-*
-* @param TimerInstancePtr is a pointer to the instance of XScuTimer driver.
-* @return None
-******************************************************************************/
-void TimerStop(XScuTimer *TimerInstancePtr)
-{
-	XScuTimer_Stop(TimerInstancePtr);
-}
-
-/*****************************************************************************/
-/**
-* Loads the timer.
-*
-* @param TimerInstancePtr is a pointer to the instance of XScuTimer driver.
-* @param TimerCounter is the value to load into the timer counter register.
-* @return None
-******************************************************************************/
-void TimerLoad(XScuTimer *TimerInstancePtr, u32 TimerCounter)
-{
-	XScuTimer_LoadTimer(TimerInstancePtr, TimerCounter);
-}
-
-/*****************************************************************************/
-/**
-* Reinitializes the timer.
-*
-* @param TimerInstancePtr is a pointer to the instance of XScuTimer driver.
-* @param TimerCounter is the value to load into the timer counter register.
-* @param TimerFunction is the function pointer to the timer interrupt handler.
-* @return None
-******************************************************************************/
-void TimerReinitialize(XScuTimer *TimerInstancePtr, u32 TimerCounter, void (*TimerFunction)(void))
-{
-	TimerStop(TimerInstancePtr);
-	TimerFunctionPtr = TimerFunction;
-	TimerLoad(TimerInstancePtr, TimerCounter);
-	XScuTimer_RestartTimer(TimerInstancePtr);
-	TimerStart(TimerInstancePtr);
-}
-
-/*****************************************************************************/
-/**
-* This function is the Interrupt handler for the Timer interrupt of the
-* Timer device. It is called on the expiration of the timer counter in
-* interrupt context.
-*
-* @param	CallBackRef is a pointer to the callback function.
-*
-* @return	None.
-******************************************************************************/
-static void TimerIntrHandler(void *CallBackRef)
-{
-	XScuTimer *TimerInstancePtr = (XScuTimer *) CallBackRef;
-	XScuTimer_ClearInterruptStatus(TimerInstancePtr);
-
-	if (TimerFunctionPtr != NULL) {
-		TimerFunctionPtr();
-	}
-}
-
-/*****************************************************************************/
-/**
-* This function disables the interrupts that occur for the device.
-*
-* @param IntcInstancePtr is the pointer to the instance of XScuGic driver.
-* @param TimerIntrId is the Interrupt Id for the device.
-*
-* @return	None.
-******************************************************************************/
-static void TimerDisableIntrSystem(XScuGic *IntcInstancePtr, u16 TimerIntrId)
-{
-	XScuGic_Disconnect(IntcInstancePtr, TimerIntrId);
 }
