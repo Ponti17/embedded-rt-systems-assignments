@@ -138,9 +138,6 @@ public:
         GPU_BindCommandList((u32)cls[nextFrame]->array);
         GPU_BindFrameBuffer((u32)dispCtrl.framePtr[nextFrame]);
         GPU_Start();
-
-        Xil_DCacheFlushRange((UINTPTR)cls[nextFrame]->array, 256);
-        Xil_DCacheFlushRange((UINTPTR)dispCtrl.framePtr[nextFrame], DEMO_MAX_FRAME);
     }
 
     std::vector<GameObject*> gameObjects; // Use raw pointers
