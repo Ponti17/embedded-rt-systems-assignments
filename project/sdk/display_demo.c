@@ -22,6 +22,16 @@
 #include "xil_exception.h"
 #include "xvtc.h"
 
+/* FreeRTOS includes. */
+#include "FreeRTOS.h"
+#include "task.h"
+#include "queue.h"
+#include "timers.h"
+
+static void prvAppTask( void *pvParameters );
+static TaskHandle_t xAppTask;
+static QueueHandle_t xQueue = NULL;
+
 /* XPAR redefines */
 #define DYNCLK_BASEADDR     XPAR_AXI_DYNCLK_0_S_AXI_LITE_BASEADDR
 #define VGA_VDMA_ID         XPAR_AXIVDMA_0_DEVICE_ID
@@ -55,20 +65,26 @@ u32 *cl_ptr[DISPLAY_NUM_FRAMES];
 /* Prototypes */
 void (*TimerFunctionPtr)(void);
 
+char HWstring[15] = "Hello World";
+
 void timerFunction(void)
 {
 	// 0001 0011 0000 0000 0000
     xil_printf("Timer expired.\r\n");
 }
 
-static void VtcFrameSyncCallback(void *CallbackRef, u32 Mask)
+void VtcFrameSyncCallback(void *CallbackRef, u32 Mask)
 {
-	static u32 count = 0;
-	count += 1;
-	XVtc_IntrClear(&dispCtrl.vtc, 0xFFFFFFFF);
-	// xil_printf("Frame Sync Interrupt!\n\r");
+    BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+
+    static u32 count = 0;
+    count += 1;
+    XVtc_IntrClear(&dispCtrl.vtc, 0xFFFFFFFF);
+
     if (count % 60 == 0) {
-        xil_printf("Frame Sync Interrupt!\n\r");
+        xil_printf("Sending!\r\n");
+        xQueueSendFromISR( xQueue, HWstring, &xHigherPriorityTaskWoken );
+        portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
     }
 }
 
@@ -129,11 +145,21 @@ int main(void)
         Error_Handler("XGpu_CfgInitialize");
     }
 
-    Status = XScuGic_Connect(&IntcInstance, VID_VTC_IRPT_ID, (Xil_ExceptionHandler)VtcFrameSyncCallback, (void *)&dispCtrl.vtc);
-    XScuGic_Enable(&IntcInstance, VID_VTC_IRPT_ID);
-    Xil_ExceptionEnable();
-
     PrintStartup();
+
+    xTaskCreate(prvAppTask,
+                ( const char * ) "AppTask",
+                configMINIMAL_STACK_SIZE,
+                NULL,
+                tskIDLE_PRIORITY + 1,
+                &xAppTask );
+
+    xQueue = xQueueCreate(1, sizeof(HWstring));
+    configASSERT( xQueue );
+    xQueueSend( xQueue, HWstring, NULL );
+    vTaskStartScheduler();
+
+    for ( ;; );
 
     int nextFrame = 0;
     while (1) {
@@ -146,6 +172,26 @@ int main(void)
     }
 
     return 0;
+}
+
+static void prvAppTask( void *pvParameters )
+{
+    
+    XScuGic_Connect(&IntcInstance, VID_VTC_IRPT_ID, (Xil_ExceptionHandler)VtcFrameSyncCallback, (void *)&dispCtrl.vtc);
+    XScuGic_Enable(&IntcInstance, VID_VTC_IRPT_ID);
+    Xil_ExceptionEnable();
+    char Recdstring[15] = "";
+
+	for( ;; )
+	{
+		xQueueReceive( 	xQueue,				/* The queue being read. */
+						Recdstring,			/* Data is read into this address. */
+						portMAX_DELAY );	/* Wait without a timeout for data. */
+
+        // swap_buffer()
+        // game_engine()
+        // task_sleep()
+	}
 }
 
 void GPU_BindFrameBuffer(u32 frameBufferAddr)
