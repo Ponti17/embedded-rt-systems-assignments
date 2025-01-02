@@ -179,11 +179,10 @@ static void prvAppTask( void *pvParameters )
 						portMAX_DELAY );
 
         if (XGpu_IsIdle(&GpuInstance)) {
+            /* Swap the framebuffers */
             swap_framebuffers();
 
-            updateGame();
-            //gpu_draw(dispCtrl.framePtr[nextFrame], nextFrame, STILL);
-
+            /* Read player input */
             u8 input = read_gpio();
             if (input & 0b00000001) {
                 upSignal1 = 1;
@@ -205,13 +204,11 @@ static void prvAppTask( void *pvParameters )
                 upSignal1 = 0;
                 downSignal1 = 0;
                 upSignal2 = 0;
-                downSignal2 = 0;
+                downSignal2 = 0;s16
             }
+            /* Tick the game engine */
+            updateGame();
         }
-
-        // xil_printf("upSignal1: %d, downSignal1: %d, upSignal2: %d, downSignal2: %d\r\n", upSignal1, downSignal1, upSignal2, downSignal2);
-
-        // gpu_draw(dispCtrl.framePtr[nextFrame], nextFrame, move);
 	}
 }
 
