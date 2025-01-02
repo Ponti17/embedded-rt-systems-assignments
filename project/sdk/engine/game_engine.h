@@ -19,6 +19,7 @@ The three states are implemented as singletons.
 #include <vector>
 #include <string>
 #include <cstdint>
+#include <cmath>
 
 using std::string;
 
@@ -40,7 +41,7 @@ public:
     Vec2 operator*(T scalar) const {
         return Vec2(x * scalar, y * scalar);
     }
-
+    
     bool operator==(const Vec2& other) const {
         return x == other.x && y == other.y;
     }
@@ -54,147 +55,56 @@ public:
     }
 };
 
-class Shape2D {
-    public:
-        virtual ~Shape2D() = default;
-        virtual void draw() = 0;
-        Vec2<int> position;
-        uint8_t color;
-};
+class Rectangle2D {
+public:
+    Rectangle2D(Vec2<int> size, Vec2<int> position, uint8_t color) 
+        : size(size), position(position), color(color) {}
 
-struct inputSignal {
-    bool* signal;
-    string name;
-    inputSignal(bool* signal, string name) : signal(signal), name(name) {};
-};
+    void draw() {
+        std::cout << "Drawing rectangle at (" << position.x << ", " << position.y 
+                  << ") with size (" << size.x << ", " << size.y 
+                  << ") and color " << static_cast<int>(color) << "\n";
+    }
 
+    Vec2<int> size;
+    Vec2<int> position;
+    uint8_t color;
+};
 
 // forward declarations
-class MainMenu;
-class PlayingGame;
-class ExitGame;
+class GameScene;
 class GameContext;
 class GameObject;
+class GameObject {
+public:
+    Rectangle2D shape;
+    Vec2<float> velocity;
+    Vec2<float> acceleration;
+
+    GameObject(Rectangle2D shape) : shape(shape), velocity({0.0f, 0.0f}), acceleration({0.0f, 0.0f}) {}
+
+    virtual void update() = 0;
+    virtual void render() {
+        shape.draw();
+    }
+};
 
 class GameScene{
     public: 
 
-        virtual ~GameScene() = default;
-        virtual void handleInput() = 0;
-        virtual void update() = 0;
-        virtual void render() = 0;
-
-        GameScene(const GameScene&) = delete;
-        GameScene& operator=(const GameScene&) = delete;
-
-        //events that can change state
-        virtual void onStart(GameContext * gameContext) {};
-        virtual void onExit(GameContext * gameContext) {};
-        virtual void onGameOver(GameContext * gameContext) {};
-
-        //All scenes holds a list of objects that must be implemented by the game
-        std::vector<GameObject*> gameObjects;
-
-    protected:
-        GameScene() = default;
-};
-
-
-//implementation of the three scenes / game states
-// All must be implemented as singletons
-class MainMenu : public GameScene {
-
-    public:
-        static MainMenu * getInstance() {
-            if(instance == nullptr){
-                instance = new MainMenu();
-            }
-            return instance;
+    void update() {
+        for (const auto& gameObject : gameObjects) {
+            gameObject->update();
         }
+    }
 
-        void onStart(GameContext * gameContext) {
-            gameContext->setScene(PlayingGame::getInstance());
+    void render() {
+        for (const auto& gameObject : gameObjects) {
+            gameObject->render();
         }
+    }
 
-        void handleInput() override {
-            std::cout << "Main Menu: handleInput" << std::endl;
-        }
-
-        void update() override {
-            std::cout << "Main Menu: update" << std::endl;
-        }
-
-        void render() override {
-            std::cout << "Main Menu: render" << std::endl;
-        }
-    private:
-        static MainMenu * instance;
-        MainMenu() = default;
-        ~MainMenu() = default;
-
-};
-
-class PlayingGame : public GameScene {
-
-    public:
-        static PlayingGame * getInstance() {
-            if (instance == nullptr){
-                instance = new PlayingGame();
-            }
-            return instance;
-        }
-
-        void onGameOver(GameContext * gameContext) {
-            gameContext->setScene(ExitGame::getInstance());
-        }
-
-        void handleInput() override {
-            std::cout << "Playing Game: handleInput" << std::endl;
-        }
-
-        void update() override {
-            std::cout << "Playing Game: update" << std::endl;
-        }
-
-        void render() override {
-            std::cout << "Playing Game: render" << std::endl;
-        }
-    private:
-        static PlayingGame * instance;
-        PlayingGame() = default;
-        ~PlayingGame() = default;
-
-};
-
-class ExitGame : public GameScene {
-
-    public:
-        static ExitGame * getInstance() {
-            if (instance == nullptr){
-                instance = new ExitGame();
-            }
-            return instance;
-        }
-
-        void onExit(GameContext * gameContext) {
-            gameContext->exitGame();
-        }
-
-        void handleInput() override {
-            std::cout << "Exit Game: handleInput" << std::endl;
-        }
-
-        void update() override {
-            std::cout << "Exit Game: update" << std::endl;
-        }
-
-        void render() override {
-            std::cout << "Exit Game: render" << std::endl;
-        }
-    private:
-        static ExitGame * instance;
-        ExitGame() = default;
-        ~ExitGame() = default;
+        std::vector<std::unique_ptr<GameObject>> gameObjects;
 
 };
 
@@ -203,46 +113,17 @@ class ExitGame : public GameScene {
 class GameContext {
 
     public:
-        GameContext() : isRunning(true) {
-            currentScene = MainMenu::getInstance();
-        }; 
-        ~GameContext();
-        
         void setScene(GameScene * scene){
             currentScene = scene;
-        };
-
-        void gameLoop(){
-            while(isRunning){
-
-                handleInput();
-                update();
-                render();
-
-            }
         }
-
-        void handleInput(){
-            currentScene->handleInput();
-        };
         void update(){
             currentScene->update();
-        };
+        }
         void render(){
             currentScene->render();
-        };
-        void exitGame(){
-            isRunning = false;
-        };
+        }
+
     private:
         GameScene * currentScene;
-        bool isRunning;
-        std::vector<inputSignal> inputSignals;
 };
 
-class GameObject {
-    public:
-        Shape2D * shape;
-        Vec2<float> velocity;
-        Vec2<float> acceleration;
-};

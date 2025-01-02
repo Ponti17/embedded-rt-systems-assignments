@@ -1,30 +1,40 @@
 #include "pong.h"
 
-//Singletons definition
-MainMenu * MainMenu::instance = nullptr;
-PlayingGame * PlayingGame::instance = nullptr;
-ExitGame * ExitGame::instance = nullptr;
+static bool upSignal1;
+static bool downSignal1;
+static bool upSignal2;
+static bool downSignal2;
 
-int main(int argc, char** argv) {
+static PongTheGame* PingPong;
 
-    Paddle *player1 = new Paddle();
-    Paddle *player2 = new Paddle();
-    Ball *ball = new Ball();
+void initializeGame() {
 
-    player1->shape->position = {0, 0};
-    player2->shape->position = {0, 0};
+    // Set up game objects
 
-    ball->shape->position = {0, 0};
+    auto PingPong = new PongTheGame();
+    auto paddle1 = new Paddle({10, 50}, {0, 0}, 255);
+    auto paddle2 = new Paddle({10, 50}, {100, 0}, 255);
+    auto ball = new Ball({5, 5}, {50, 50}, 255, {1, 1});
 
-    ball->velocity = {0.0f, 0.0f};
+    auto scene = new GameScene();
+    scene->gameObjects.push_back(std::unique_ptr<GameObject>(paddle1));
+    scene->gameObjects.push_back(std::unique_ptr<GameObject>(paddle2));
+    scene->gameObjects.push_back(std::unique_ptr<GameObject>(ball));
 
+    PingPong->setScene(scene);
 
-    PlayingGame::getInstance()->gameObjects.push_back(player1);
-    PlayingGame::getInstance()->gameObjects.push_back(player2);
-    PlayingGame::getInstance()->gameObjects.push_back(ball);
+    // Set up input signals
+    paddle1->upSignal = &upSignal1;
+    paddle1->downSignal = &downSignal1;
+    paddle2->upSignal = &upSignal2;
+    paddle2->downSignal = &downSignal2;
+
+}
+
+void updateGame() {
+
+    PingPong->update();
+
+    PingPong->render();
     
-    auto PongTheGame = std::make_unique<GameContext>();
-    PongTheGame->gameLoop();
-
-    return 0;
 }
