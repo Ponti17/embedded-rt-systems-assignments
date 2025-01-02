@@ -21,7 +21,15 @@ The three states are implemented as singletons.
 #include <cstdint>
 #include <cmath>
 
+#include "cl.h"
+#include "display_ctrl/display_ctrl.h"
+#include "display_demo.h"
+#include "xil_cache.h"
+
 using std::string;
+
+extern struct cl_type** cls;
+extern DisplayCtrl dispCtrl;
 
 template <typename T>
 class Vec2 {
@@ -61,9 +69,8 @@ public:
         : size(size), position(position), color(color) {}
 
     void draw() {
-        std::cout << "Drawing rectangle at (" << position.x << ", " << position.y 
-                  << ") with size (" << size.x << ", " << size.y 
-                  << ") and color " << static_cast<int>(color) << "\n";
+        u32 nextFrame = dispCtrl.curFrame == 0 ? 1 : 0;
+        draw_rect(cls[nextFrame], position.x, position.y, size.x, size.y, color);
     }
 
     Vec2<int> size;
@@ -98,9 +105,21 @@ public:
     }
 
     void render() {
+        u32 nextFrame = dispCtrl.curFrame == 0 ? 1 : 0;
+        rewind_cl(cls[nextFrame]);
         for (auto gameObject : gameObjects) {
             gameObject->render();
         }
+        draw_stop(cls[nextFrame]);
+        Xil_DCacheFlushRange((UINTPTR)cls[nextFrame]->array, 256);
+        Xil_DCacheFlushRange((UINTPTR)dispCtrl.framePtr[nextFrame], DEMO_MAX_FRAME);
+
+        GPU_BindCommandList((u32)cls[nextFrame]->array);
+        GPU_BindFrameBuffer((u32)dispCtrl.framePtr[nextFrame]);
+        GPU_Start();
+
+        Xil_DCacheFlushRange((UINTPTR)cls[nextFrame]->array, 256);
+        Xil_DCacheFlushRange((UINTPTR)dispCtrl.framePtr[nextFrame], DEMO_MAX_FRAME);
     }
 
     std::vector<GameObject*> gameObjects; // Use raw pointers

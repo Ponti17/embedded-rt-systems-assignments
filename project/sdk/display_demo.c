@@ -30,6 +30,8 @@
 #include "queue.h"
 #include "timers.h"
 
+#include "engine/pong.h"
+
 static void prvAppTask( void *pvParameters );
 static TaskHandle_t xAppTask;
 static QueueHandle_t xQueue = NULL;
@@ -67,10 +69,13 @@ struct cl_type** cls;
 
 void VtcFrameSyncCallback(void *CallbackRef, u32 Mask)
 {
+	static u32 count = 0;
     BaseType_t xHigherPriorityTaskWoken = pdFALSE;
     XVtc_IntrClear(&dispCtrl.vtc, 0xFFFFFFFF);
+	// xil_printf("Task start!\r\n");
 	xQueueSendFromISR( xQueue, HWstring, &xHigherPriorityTaskWoken );
 	portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
+    count += 1;
 }
 
 int main(void)
@@ -158,6 +163,9 @@ static void prvAppTask( void *pvParameters )
     Xil_ExceptionEnable();
     char Recdstring[15] = "";
     u8 move;
+
+    initializeGame();
+
 	for( ;; )
 	{
         /* Wait for Vsync */
@@ -165,8 +173,12 @@ static void prvAppTask( void *pvParameters )
 						Recdstring,
 						portMAX_DELAY );
 
+
         u32 nextFrame = dispCtrl.curFrame == 0 ? 1 : 0;
         swap_framebuffers();
+
+        updateGame();
+        //gpu_draw(dispCtrl.framePtr[nextFrame], nextFrame, STILL);
 
         switch (read_gpio()) {
             case 1:
@@ -180,7 +192,7 @@ static void prvAppTask( void *pvParameters )
                 break;
         }
 
-        gpu_draw(dispCtrl.framePtr[nextFrame], nextFrame, move);
+        // gpu_draw(dispCtrl.framePtr[nextFrame], nextFrame, move);
 	}
 }
 

@@ -1,4 +1,5 @@
 #include "pong.h"
+#include "cl.h"
 
 static bool upSignal1 = false;
 static bool downSignal1 = false;
@@ -12,14 +13,14 @@ void initializeGame() {
     // Set up game objects
 
     PingPong = new PongTheGame();
-    auto paddle1 = new Paddle({10, 50}, {0, 0}, 255);
-    auto paddle2 = new Paddle({10, 50}, {100, 0}, 255);
-    auto ball = new Ball({5, 5}, {50, 50}, 255, {1, 1});
+    auto paddle1 = new Paddle({200, 200}, {200, 200}, 0xFFFF0000);
+    auto paddle2 = new Paddle({200, 200}, {300, 300}, 0x7F0000FF);
+    // auto ball = new Ball({5, 5}, {50, 50}, 255, {1, 1});
 
     auto scene = new GameScene();
     scene->gameObjects.push_back(paddle1);
     scene->gameObjects.push_back(paddle2);
-    scene->gameObjects.push_back(ball);
+    //scene->gameObjects.push_back(ball);
 
     PingPong->setScene(scene);
 

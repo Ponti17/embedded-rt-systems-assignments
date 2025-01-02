@@ -10,6 +10,8 @@
 extern "C" {
 #endif
 
+#include "xil_types.h"
+
 /* GPU Commands */
 #define GPU_STOP_CMD   0x0000
 #define BLIT_RECT_CMD  0x0001
