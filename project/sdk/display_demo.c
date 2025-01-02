@@ -21,6 +21,7 @@
 #include "xscugic.h"
 #include "xil_exception.h"
 #include "xvtc.h"
+#include "cl.h"
 
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
@@ -31,6 +32,7 @@
 static void prvAppTask( void *pvParameters );
 static TaskHandle_t xAppTask;
 static QueueHandle_t xQueue = NULL;
+void swap_framebuffers(void);
 
 /* XPAR redefines */
 #define DYNCLK_BASEADDR     XPAR_AXI_DYNCLK_0_S_AXI_LITE_BASEADDR
@@ -54,28 +56,19 @@ XScuGic IntcInstance;		/* Interrupt Controller Instance 		*/
 u8  frameBuf[DISPLAY_NUM_FRAMES][DEMO_MAX_FRAME] __attribute__((aligned(0x20)));
 u8 *pFrames[DISPLAY_NUM_FRAMES];
 
-/* Command list for each framebuffer */
-u32 cl[DISPLAY_NUM_FRAMES][256] __attribute__((aligned(0x20)));
-u32 *cl_ptr[DISPLAY_NUM_FRAMES];
-
-/* GPU Commands */
-#define BLIT_RECT_CMD  0x01
-#define SET_CLIP_CMD   0x0002
+#define STILL 		0x00
+#define MOVE_UP 	0x01
+#define MOVE_DOWN 	0x02
 
 char HWstring[15] = "Hello World";
+struct cl_type** cls;
 
 void VtcFrameSyncCallback(void *CallbackRef, u32 Mask)
 {
     BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-
-    static u32 count = 0;
-    count += 1;
     XVtc_IntrClear(&dispCtrl.vtc, 0xFFFFFFFF);
-
-    if (count % 60 == 0) {
-        xQueueSendFromISR( xQueue, HWstring, &xHigherPriorityTaskWoken );
-        portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
-    }
+	xQueueSendFromISR( xQueue, HWstring, &xHigherPriorityTaskWoken );
+	portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
 }
 
 int main(void)
@@ -85,8 +78,7 @@ int main(void)
     XGpu_Config 	*gpuConfig;
 
     /* Initialize CLs to all zeros */
-    memset(cl[0], 0, sizeof(cl[0]));
-    memset(cl[1], 0, sizeof(cl[1]));
+    cls = init_cl();
 
     /* Initialize frame buffers to black */
     memset(frameBuf[0], 0xFF000000, sizeof(frameBuf[0]));
@@ -96,11 +88,9 @@ int main(void)
     int i;
     for (i = 0; i < DISPLAY_NUM_FRAMES; i++) {
         pFrames[i] = frameBuf[i];
-        cl_ptr[i] = cl[i];
     }
 
     /* Peripherals */
-	ScuTimerInit(&TimerInstance, XPAR_XSCUTIMER_0_DEVICE_ID, 100*MILLISECOND);
 	ScuIntrInit(&IntcInstance, XPAR_SCUGIC_SINGLE_DEVICE_ID);
 
     vdmaConfig = XAxiVdma_LookupConfig(VGA_VDMA_ID);
@@ -135,6 +125,7 @@ int main(void)
 
     PrintStartup();
 
+    /* Register the application task */
     xTaskCreate(prvAppTask,
                 ( const char * ) "AppTask",
                 configMINIMAL_STACK_SIZE,
@@ -142,29 +133,23 @@ int main(void)
                 tskIDLE_PRIORITY + 1,
                 &xAppTask );
 
+    /* Create queue for starting task from Vsync */
     xQueue = xQueueCreate(1, sizeof(HWstring));
     configASSERT( xQueue );
-    xQueueSend( xQueue, HWstring, NULL );
+
+    /* Start FreeRTOS */
     vTaskStartScheduler();
 
+    /* We should never get here */
     for ( ;; );
-
-    int nextFrame = 0;
-    while (1) {
-        nextFrame = dispCtrl.curFrame + 1;
-        if (nextFrame >= DISPLAY_NUM_FRAMES) {
-            nextFrame = 0;
-        }
-        gpu_draw(dispCtrl.framePtr[nextFrame]);
-        DisplayChangeFrame(&dispCtrl, nextFrame);
-    }
-
-    return 0;
 }
 
 static void prvAppTask( void *pvParameters )
 {
-    
+    /**
+     * Connect the Vsync interrupt to the callback
+     * Do this here since vTaskStartSchedular() resets interrupts
+     */
     XScuGic_Connect(&IntcInstance, VID_VTC_IRPT_ID, (Xil_ExceptionHandler)VtcFrameSyncCallback, (void *)&dispCtrl.vtc);
     XScuGic_Enable(&IntcInstance, VID_VTC_IRPT_ID);
     Xil_ExceptionEnable();
@@ -172,15 +157,73 @@ static void prvAppTask( void *pvParameters )
 
 	for( ;; )
 	{
-		xQueueReceive( 	xQueue,				/* The queue being read. */
-						Recdstring,			/* Data is read into this address. */
-						portMAX_DELAY );	/* Wait without a timeout for data. */
+        /* Wait for Vsync */
+		xQueueReceive( 	xQueue,
+						Recdstring,
+						portMAX_DELAY );
 
-        // swap_buffer()
-        // game_engine()
-        // task_sleep()
-		xil_printf("Task start!\r\n");
+        u32 nextFrame = dispCtrl.curFrame == 0 ? 1 : 0;
+        swap_framebuffers();
+        gpu_draw(dispCtrl.framePtr[nextFrame], nextFrame, STILL);
 	}
+}
+
+void gpu_draw(u8 *frame, int frameIndex, u32 move)
+{
+    // Grab the pointer to the command list
+    struct cl_type *myCL = cls[frameIndex];
+
+    static int square_x = 200;
+    static int square_y = 200;
+    static int x_dir = 2;
+    static int y_dir = 2;
+
+    static int prev_x_0 = 0;
+    static int prev_y_0 = 0;
+    static int prev_x_1 = 0;
+    static int prev_y_1 = 0;
+
+    if (move == MOVE_DOWN && !(square_y + 200 >= 1080)) {
+        square_y += y_dir;
+    }
+    else if (move == MOVE_UP && !(square_y <= 0)) {
+        square_y -= y_dir;
+    }
+
+    rewind_cl(myCL);
+    if (frameIndex) {
+    	draw_rect(myCL, prev_x_0, prev_y_0, 200, 200, 0xFF000000);
+    	prev_x_0 = square_x;
+    	prev_y_0 = square_y;
+    } else {
+    	draw_rect(myCL, prev_x_1, prev_y_1, 200, 200, 0xFF000000);
+    	prev_x_1 = square_x;
+    	prev_y_1 = square_y;
+    }
+
+    u32 color = RainbowRGB();
+    draw_rect(myCL, square_x, square_y, 200, 200, color);
+
+    draw_stop(myCL);
+
+    /****************************************************/
+    /* 4) Flush caches, bind, and run the GPU           */
+    /****************************************************/
+    Xil_DCacheFlushRange((UINTPTR)myCL->array, 256);
+    Xil_DCacheFlushRange((UINTPTR)frame, DEMO_MAX_FRAME);
+
+    GPU_BindCommandList((u32)myCL->array);
+    GPU_BindFrameBuffer((u32)frame);
+    GPU_Start();
+
+    Xil_DCacheFlushRange((UINTPTR)myCL->array, 256);
+    Xil_DCacheFlushRange((UINTPTR)frame, DEMO_MAX_FRAME);
+}
+
+void swap_framebuffers()
+{
+    dispCtrl.curFrame = dispCtrl.curFrame == 0 ? 1 : 0;
+    DisplayChangeFrame(&dispCtrl, dispCtrl.curFrame);
 }
 
 void GPU_BindFrameBuffer(u32 frameBufferAddr)
@@ -204,6 +247,43 @@ void GPU_WaitForDone()
     while (!XGpu_IsDone(&GpuInstance)) {}
 }
 
+u32 RainbowRGB()
+{
+    static u8 val = 0;
+    static u8 r = 0;
+    static u8 g = 0;
+    static u8 b = 0;
+    u8 speed = 16;
+
+    switch (val) {
+        case 0: // Red -> Yellow: Increase G
+            if (g + speed >= 255) { g = 255; val = 1; } else { g += speed; }
+            break;
+        case 1: // Yellow -> Green: Decrease R
+            if (r <= speed) { r = 0; val = 2; } else { r -= speed; }
+            break;
+        case 2: // Green -> Cyan: Increase B
+            if (b + speed >= 255) { b = 255; val = 3; } else { b += speed; }
+            break;
+        case 3: // Cyan -> Blue: Decrease G
+            if (g <= speed) { g = 0; val = 4; } else { g -= speed; }
+            break;
+        case 4: // Blue -> Magenta: Increase R
+            if (r + speed >= 255) { r = 255; val = 5; } else { r += speed; }
+            break;
+        case 5: // Magenta -> Red: Decrease B
+            if (b <= speed) { b = 0; val = 0; } else { b -= speed; }
+            break;
+        default:
+            val = 0;
+            break;
+    }
+
+    u32 color = (0xFF << 24) | (r << 16) | (g << 8) | b;
+
+    return color;
+}
+
 void Error_Handler(const char* caller)
 {
     if (caller != NULL) {
@@ -215,122 +295,6 @@ void Error_Handler(const char* caller)
     while (1) {}
 }
 
-void gpu_draw(u8 *frame)
-{
-    u32 x, y, w, h;
-
-    u8 speed = 16;
-    static u8 val = 0;
-    static u8 r = 0;
-    static u8 g = 0;
-    static u8 b = 0;
-
-    switch (val) {
-        case 0: // Red to Yellow: Increase Green
-            if (g + speed >= 255) {
-                g = 255;
-                val = 1;
-            } else {
-                g += speed;
-            }
-            break;
-
-        case 1: // Yellow to Green: Decrease Red
-            if (r <= speed) {
-                r = 0;
-                val = 2;
-            } else {
-                r -= speed;
-            }
-            break;
-
-        case 2: // Green to Cyan: Increase Blue
-            if (b + speed >= 255) {
-                b = 255;
-                val = 3;
-            } else {
-                b += speed;
-            }
-            break;
-
-        case 3: // Cyan to Blue: Decrease Green
-            if (g <= speed) {
-                g = 0;
-                val = 4;
-            } else {
-                g -= speed;
-            }
-            break;
-
-        case 4: // Blue to Magenta: Increase Red
-            if (r + speed >= 255) {
-                r = 255;
-                val = 5;
-            } else {
-                r += speed;
-            }
-            break;
-
-        case 5: // Magenta to Red: Decrease Blue
-            if (b <= speed) {
-                b = 0;
-                val = 0;
-            } else {
-                b -= speed;
-            }
-            break;
-
-        default:
-            val = 0;
-            break;
-    }
-
-    u32 color = ((u32)0xFF << 24) | ((u32)r << 16) | ((u32)g << 8) | ((u32)b) ;
-
-    // --- Red Square ---
-    x = 100;
-    y = 100;
-    w = 500;
-    h = 500;
-    cl_ptr[0][0] = ((x & 0xFFFF) << 16) | (BLIT_RECT_CMD & 0xFFFF);
-    cl_ptr[0][1] = ((w & 0xFFFF) << 16) | (y & 0xFFFF);
-    cl_ptr[0][2] = ((0 & 0xFFFF) << 16) | (h & 0xFFFF);
-    // BXXA
-    cl_ptr[0][3] = 0xFFFF0000;
-
-    x = 350;
-    y = 350;
-    w = 500;
-    h = 500;
-    cl_ptr[0][4] = ((x & 0xFFFF) << 16) | (BLIT_RECT_CMD & 0xFFFF);
-    cl_ptr[0][5] = ((w & 0xFFFF) << 16) | (y & 0xFFFF);
-    cl_ptr[0][6] = ((0 & 0xFFFF) << 16) | (h & 0xFFFF);
-    cl_ptr[0][7] = 0x7F00FF00;
-
-    x = 1000;
-    y = 500;
-    w = 600;
-    h = 400;
-    cl_ptr[0][8] = ((x & 0xFFFF) << 16) | (BLIT_RECT_CMD & 0xFFFF);
-    cl_ptr[0][9] = ((w & 0xFFFF) << 16) | (y & 0xFFFF);
-    cl_ptr[0][10] = ((0 & 0xFFFF) << 16) | (h & 0xFFFF);
-    cl_ptr[0][11] = color;
-
-    Xil_DCacheFlushRange((UINTPTR)frame, DEMO_MAX_FRAME);
-    Xil_DCacheFlushRange((UINTPTR)cl_ptr[0], 256);
-
-    GPU_BindCommandList((u32)cl_ptr[0]);
-    XGpu_Set_frameBuffer_V(&GpuInstance, (u32)frame);
-    XGpu_Set_status_V(&GpuInstance, 0xFFFFFFFF);
-    XGpu_Start(&GpuInstance);
-
-    while (!XGpu_IsDone(&GpuInstance)) {
-        // Optionally, you can implement a timeout or sleep to reduce CPU usage
-    }
-    Xil_DCacheFlushRange((UINTPTR)cl_ptr, 256);
-    Xil_DCacheFlushRange((unsigned int)frame, DEMO_MAX_FRAME);
-}
-
 void PrintStartup()
 {
     xil_printf("\x1B[H"); 	// Set cursor to top left of terminal
@@ -340,38 +304,6 @@ void PrintStartup()
     xil_printf("**************************************************\n\r");
     xil_printf("*Display Resolution: %28s*\n\r", dispCtrl.vMode.label);
     printf("*Display Pixel Clock Freq. (MHz): %15.3f*\n\r", dispCtrl.pxlFreq);
-}
-
-/*****************************************************************************/
-/**
-* Initializes the timer. The timer is configured to reset on expiration
-*
-* @param TimerInstancePtr is a pointer to the instance of XScuTimer driver.
-* @param TimerDeviceId is the device Id of the XScuTimer device.
-* @param TimerCounter is the value to load into the timer counter register.
-*
-* @return	XST_SUCCESS if successful, otherwise XST_FAILURE.
-******************************************************************************/
-int ScuTimerInit(XScuTimer *TimerInstancePtr, u16 TimerDeviceId, u32 TimerCounter)
-{
-	XScuTimer_Config *ConfigPtr;
-	int Status;
-
-	ConfigPtr = XScuTimer_LookupConfig(TimerDeviceId);
-	Status = XScuTimer_CfgInitialize(TimerInstancePtr, ConfigPtr, ConfigPtr->BaseAddr);
-	if (Status != XST_SUCCESS)
-	{
-		xil_printf("Timer init failed.");
-		return XST_FAILURE;
-	}
-
-	/* Enable Auto Reloading of Timer */
-	XScuTimer_EnableAutoReload(TimerInstancePtr);
-
-	/* Load timer counter register with default 1 second */
-	XScuTimer_LoadTimer(TimerInstancePtr, 325000000);
-
-	return XST_SUCCESS;
 }
 
 /*****************************************************************************/

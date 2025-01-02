@@ -42,9 +42,10 @@ void GPU_BindFrameBuffer(u32 frameBufferAddr);
 void GPU_BindCommandList(u32 commandListAddr);
 void GPU_Start();
 void GPU_WaitForDone();
-void gpu_draw(u8 *frame);
+void gpu_draw(u8 *frame, int frameIndex, u32 move);
 void Error_Handler(const char* caller);
 void PrintStartup();
+u32 RainbowRGB();
 
 int ScuTimerInit(XScuTimer *TimerInstancePtr, u16 TimerDeviceId, u32 TimerCounter);
 int ScuIntrInit(XScuGic *IntcInstancePtr, u16 GicDeviceId);
