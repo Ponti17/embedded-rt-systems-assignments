@@ -89,24 +89,23 @@ public:
     }
 };
 
-class GameScene{
-    public: 
-
+class GameScene {
+public:
     void update() {
-        for (const auto& gameObject : gameObjects) {
+        for (auto gameObject : gameObjects) {
             gameObject->update();
         }
     }
 
     void render() {
-        for (const auto& gameObject : gameObjects) {
+        for (auto gameObject : gameObjects) {
             gameObject->render();
         }
     }
 
-        std::vector<std::unique_ptr<GameObject>> gameObjects;
-
+    std::vector<GameObject*> gameObjects; // Use raw pointers
 };
+
 
 // Game engine context class
 

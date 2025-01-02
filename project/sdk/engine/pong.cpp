@@ -1,25 +1,25 @@
 #include "pong.h"
 
-static bool upSignal1;
-static bool downSignal1;
-static bool upSignal2;
-static bool downSignal2;
+static bool upSignal1 = false;
+static bool downSignal1 = false;
+static bool upSignal2 = false;
+static bool downSignal2 = false;
 
-static PongTheGame* PingPong;
+static PongTheGame* PingPong = nullptr;
 
 void initializeGame() {
 
     // Set up game objects
 
-    auto PingPong = new PongTheGame();
+    PingPong = new PongTheGame();
     auto paddle1 = new Paddle({10, 50}, {0, 0}, 255);
     auto paddle2 = new Paddle({10, 50}, {100, 0}, 255);
     auto ball = new Ball({5, 5}, {50, 50}, 255, {1, 1});
 
     auto scene = new GameScene();
-    scene->gameObjects.push_back(std::unique_ptr<GameObject>(paddle1));
-    scene->gameObjects.push_back(std::unique_ptr<GameObject>(paddle2));
-    scene->gameObjects.push_back(std::unique_ptr<GameObject>(ball));
+    scene->gameObjects.push_back(paddle1);
+    scene->gameObjects.push_back(paddle2);
+    scene->gameObjects.push_back(ball);
 
     PingPong->setScene(scene);
 
@@ -36,5 +36,5 @@ void updateGame() {
     PingPong->update();
 
     PingPong->render();
-    
+
 }

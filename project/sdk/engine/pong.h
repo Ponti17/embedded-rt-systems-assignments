@@ -9,8 +9,8 @@ class Ball2D : public Rectangle2D {};
 class Paddle : public GameObject {
 public:
 
-    bool upSignal;
-    bool downSignal;
+    bool* upSignal;
+    bool* downSignal;
 
     int speed = 1;
 
