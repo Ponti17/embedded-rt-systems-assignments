@@ -184,34 +184,28 @@ static void prvAppTask( void *pvParameters )
             updateGame();
             //gpu_draw(dispCtrl.framePtr[nextFrame], nextFrame, STILL);
 
-            switch (read_gpio()) {
-                case 1:
-                    move = MOVE_UP;
-                    upSignal1 = 1;
-                    downSignal1 = 0;
-                    break;
-                case 2:
-                    move = MOVE_DOWN;
-                    downSignal1 = 1;
-                    upSignal1 = 0;
-                    break;
-                case 4:
-                    move = MOVE_DOWN;
-                    downSignal2 = 1;
-                    upSignal2 = 0;
-                    break;
-                case 8:
-                    move = MOVE_DOWN;
-                    downSignal2 = 0;
-                    upSignal2 = 1;
-                    break;
-                default:
-                    move = STILL;
-                    downSignal1 = 0;
-                    upSignal1 = 0;
-                    downSignal2 = 0;
-                    upSignal2 = 0;
-                    break;
+            u8 input = read_gpio();
+            if (input & 0b00000001) {
+                upSignal1 = 1;
+                downSignal1 = 0;
+            }
+            if (input & 0b00000010) {
+                upSignal1 = 0;
+                downSignal1 = 1;
+            }
+            if (input & 0b00000100) {
+                upSignal2 = 1;
+                downSignal2 = 0;
+            }
+            if (input & 0b00001000) {
+                upSignal2 = 0;
+                downSignal2 = 1;
+            }
+            if (input == 0) {
+                upSignal1 = 0;
+                downSignal1 = 0;
+                upSignal2 = 0;
+                downSignal2 = 0;
             }
         }
 
@@ -225,58 +219,6 @@ u8 read_gpio()
 {
     u32 data = XGpio_DiscreteRead(&PushInstance, 1);
     return (u8)data;
-}
-
-void gpu_draw(u8 *frame, int frameIndex, u32 move)
-{
-    // Grab the pointer to the command list
-    struct cl_type *myCL = cls[frameIndex];
-
-    static int square_x = 200;
-    static int square_y = 200;
-    static int x_dir = 2;
-    static int y_dir = 2;
-
-    static int prev_x_0 = 0;
-    static int prev_y_0 = 0;
-    static int prev_x_1 = 0;
-    static int prev_y_1 = 0;
-
-    if (move == MOVE_DOWN && !(square_y + 200 >= 1080)) {
-        square_y += y_dir;
-    }
-    else if (move == MOVE_UP && !(square_y <= 0)) {
-        square_y -= y_dir;
-    }
-
-    rewind_cl(myCL);
-    if (frameIndex) {
-    	draw_rect(myCL, prev_x_0, prev_y_0, 200, 200, 0xFF000000);
-    	prev_x_0 = square_x;
-    	prev_y_0 = square_y;
-    } else {
-    	draw_rect(myCL, prev_x_1, prev_y_1, 200, 200, 0xFF000000);
-    	prev_x_1 = square_x;
-    	prev_y_1 = square_y;
-    }
-
-    u32 color = RainbowRGB();
-    draw_rect(myCL, square_x, square_y, 200, 200, color);
-
-    draw_stop(myCL);
-
-    /****************************************************/
-    /* 4) Flush caches, bind, and run the GPU           */
-    /****************************************************/
-    Xil_DCacheFlushRange((UINTPTR)myCL->array, 256);
-    Xil_DCacheFlushRange((UINTPTR)frame, DEMO_MAX_FRAME);
-
-    GPU_BindCommandList((u32)myCL->array);
-    GPU_BindFrameBuffer((u32)frame);
-    GPU_Start();
-
-    Xil_DCacheFlushRange((UINTPTR)myCL->array, 256);
-    Xil_DCacheFlushRange((UINTPTR)frame, DEMO_MAX_FRAME);
 }
 
 void swap_framebuffers()
