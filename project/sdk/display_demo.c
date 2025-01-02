@@ -22,6 +22,7 @@
 #include "xil_exception.h"
 #include "xvtc.h"
 #include "cl.h"
+#include "xgpio.h"
 
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
@@ -51,6 +52,7 @@ XAxiVdma vdma;
 XGpu GpuInstance;
 XScuTimer TimerInstance;	/* Cortex A9 Scu Private Timer Instance	*/
 XScuGic IntcInstance;		/* Interrupt Controller Instance 		*/
+XGpio PushInstance;			/* Push buttons Instance 				*/
 
 /* Framebuffers */
 u8  frameBuf[DISPLAY_NUM_FRAMES][DEMO_MAX_FRAME] __attribute__((aligned(0x20)));
@@ -92,6 +94,7 @@ int main(void)
 
     /* Peripherals */
 	ScuIntrInit(&IntcInstance, XPAR_SCUGIC_SINGLE_DEVICE_ID);
+    GpioInit(&PushInstance, XPAR_AXI_GPIO_BTN_DEVICE_ID);
 
     vdmaConfig = XAxiVdma_LookupConfig(VGA_VDMA_ID);
     if (!vdmaConfig) {
@@ -154,7 +157,7 @@ static void prvAppTask( void *pvParameters )
     XScuGic_Enable(&IntcInstance, VID_VTC_IRPT_ID);
     Xil_ExceptionEnable();
     char Recdstring[15] = "";
-
+    u8 move;
 	for( ;; )
 	{
         /* Wait for Vsync */
@@ -164,8 +167,27 @@ static void prvAppTask( void *pvParameters )
 
         u32 nextFrame = dispCtrl.curFrame == 0 ? 1 : 0;
         swap_framebuffers();
-        gpu_draw(dispCtrl.framePtr[nextFrame], nextFrame, STILL);
+
+        switch (read_gpio()) {
+            case 1:
+                move = MOVE_UP;
+                break;
+            case 2:
+                move = MOVE_DOWN;
+                break;
+            default:
+            	move = STILL;
+                break;
+        }
+
+        gpu_draw(dispCtrl.framePtr[nextFrame], nextFrame, move);
 	}
+}
+
+u8 read_gpio()
+{
+    u32 data = XGpio_DiscreteRead(&PushInstance, 1);
+    return (u8)data;
 }
 
 void gpu_draw(u8 *frame, int frameIndex, u32 move)
@@ -335,6 +357,14 @@ int ScuIntrInit(XScuGic *IntcInstancePtr, u16 GicDeviceId)
 	Xil_ExceptionInit();
 
 	Xil_ExceptionRegisterHandler(XIL_EXCEPTION_ID_IRQ_INT, (Xil_ExceptionHandler)XScuGic_InterruptHandler, IntcInstancePtr);
+
+	return XST_SUCCESS;
+}
+
+int GpioInit(XGpio *GpioInstancePtr, u16 DeviceId)
+{
+	XGpio_Initialize(GpioInstancePtr, DeviceId);
+	XGpio_SetDataDirection(GpioInstancePtr, 1, 0xffffffff);
 
 	return XST_SUCCESS;
 }

@@ -29,6 +29,7 @@ extern "C" {
 #include "xscutimer.h"
 #include "xscugic.h"
 #include "xil_exception.h"
+#include "xgpio.h"
 
 #define MILLISECOND 325000
 
@@ -46,6 +47,8 @@ void gpu_draw(u8 *frame, int frameIndex, u32 move);
 void Error_Handler(const char* caller);
 void PrintStartup();
 u32 RainbowRGB();
+int GpioInit(XGpio *GpioInstancePtr, u16 DeviceId);
+u8 read_gpio(void);
 
 int ScuTimerInit(XScuTimer *TimerInstancePtr, u16 TimerDeviceId, u32 TimerCounter);
 int ScuIntrInit(XScuGic *IntcInstancePtr, u16 GicDeviceId);
