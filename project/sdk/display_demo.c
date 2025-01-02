@@ -178,30 +178,44 @@ static void prvAppTask( void *pvParameters )
 						Recdstring,
 						portMAX_DELAY );
 
+        if (XGpu_IsIdle(&GpuInstance)) {
+            swap_framebuffers();
 
-        u32 nextFrame = dispCtrl.curFrame == 0 ? 1 : 0;
-        swap_framebuffers();
+            updateGame();
+            //gpu_draw(dispCtrl.framePtr[nextFrame], nextFrame, STILL);
 
-        updateGame();
-        //gpu_draw(dispCtrl.framePtr[nextFrame], nextFrame, STILL);
-
-        switch (read_gpio()) {
-            case 1:
-                move = MOVE_UP;
-                upSignal1 = 1;
-                downSignal1 = 0;
-                break;
-            case 2:
-                move = MOVE_DOWN;
-                downSignal1 = 1;
-                upSignal1 = 0;
-                break;
-            default:
-            	move = STILL;
-                downSignal1 = 0;
-                upSignal1 = 0;
-                break;
+            switch (read_gpio()) {
+                case 1:
+                    move = MOVE_UP;
+                    upSignal1 = 1;
+                    downSignal1 = 0;
+                    break;
+                case 2:
+                    move = MOVE_DOWN;
+                    downSignal1 = 1;
+                    upSignal1 = 0;
+                    break;
+                case 4:
+                    move = MOVE_DOWN;
+                    downSignal2 = 1;
+                    upSignal2 = 0;
+                    break;
+                case 8:
+                    move = MOVE_DOWN;
+                    downSignal2 = 0;
+                    upSignal2 = 1;
+                    break;
+                default:
+                    move = STILL;
+                    downSignal1 = 0;
+                    upSignal1 = 0;
+                    downSignal2 = 0;
+                    upSignal2 = 0;
+                    break;
+            }
         }
+
+        // xil_printf("upSignal1: %d, downSignal1: %d, upSignal2: %d, downSignal2: %d\r\n", upSignal1, downSignal1, upSignal2, downSignal2);
 
         // gpu_draw(dispCtrl.framePtr[nextFrame], nextFrame, move);
 	}
@@ -298,7 +312,7 @@ u32 RainbowRGB()
     static u8 r = 0;
     static u8 g = 0;
     static u8 b = 0;
-    u8 speed = 16;
+    u8 speed = 32;
 
     switch (val) {
         case 0: // Red -> Yellow: Increase G

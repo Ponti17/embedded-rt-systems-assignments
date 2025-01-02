@@ -68,13 +68,21 @@ public:
     Rectangle2D(Vec2<int> size, Vec2<int> position, uint32_t color) 
         : size(size), position(position), color(color) {}
 
+    void clear() {
+        u32 nextFrame = dispCtrl.curFrame == 0 ? 1 : 0;
+        draw_rect(cls[nextFrame], prev_position[nextFrame].x, prev_position[nextFrame].y, size.x, size.y, 0xFF000000);
+    }
+
     void draw() {
         u32 nextFrame = dispCtrl.curFrame == 0 ? 1 : 0;
+
         draw_rect(cls[nextFrame], position.x, position.y, size.x, size.y, color);
+        prev_position[nextFrame] = position;
     }
 
     Vec2<int> size;
     Vec2<int> position;
+    Vec2<int> prev_position[2];
     uint32_t color;
 };
 
@@ -91,6 +99,9 @@ public:
     GameObject(Rectangle2D shape) : shape(shape), velocity({0.0f, 0.0f}), acceleration({0.0f, 0.0f}) {}
 
     virtual void update() = 0;
+    virtual void clear() {
+        shape.clear();
+    }
     virtual void render() {
         shape.draw();
     }
@@ -107,10 +118,20 @@ public:
     void render() {
         u32 nextFrame = dispCtrl.curFrame == 0 ? 1 : 0;
         rewind_cl(cls[nextFrame]);
+
+        Xil_DCacheFlushRange((UINTPTR)dispCtrl.framePtr[nextFrame], DEMO_MAX_FRAME);
+        Xil_DCacheFlushRange((UINTPTR)cls[nextFrame]->array, 256);
+
+        for (auto gameObject : gameObjects) {
+            gameObject->clear();
+        }
+
         for (auto gameObject : gameObjects) {
             gameObject->render();
         }
+
         draw_stop(cls[nextFrame]);
+
         Xil_DCacheFlushRange((UINTPTR)cls[nextFrame]->array, 256);
         Xil_DCacheFlushRange((UINTPTR)dispCtrl.framePtr[nextFrame], DEMO_MAX_FRAME);
 

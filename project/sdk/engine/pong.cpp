@@ -13,14 +13,14 @@ void initializeGame() {
     // Set up game objects
 
     PingPong = new PongTheGame();
-    auto paddle1 = new Paddle({200, 200}, {200, 200}, 0xFFFF0000);
-    auto paddle2 = new Paddle({200, 200}, {300, 300}, 0x7F0000FF);
-    // auto ball = new Ball({5, 5}, {50, 50}, 255, {1, 1});
+    auto paddle1 = new Paddle({50, 300}, {100, (1080/2)-(300/2)}, 0xFFFF0000);
+    auto paddle2 = new Paddle({50, 300}, {1820, (1080/2)-(300/2)}, 0xFF0000FF);
+    auto ball = new Ball({50, 50}, {1920/2, 1080/2}, 0xFFFFFFFF, {10, 10}, paddle1, paddle2);
 
     auto scene = new GameScene();
     scene->gameObjects.push_back(paddle1);
     scene->gameObjects.push_back(paddle2);
-    //scene->gameObjects.push_back(ball);
+    scene->gameObjects.push_back(ball);
 
     PingPong->setScene(scene);
 
