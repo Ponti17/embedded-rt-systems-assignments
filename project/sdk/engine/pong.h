@@ -64,8 +64,16 @@ public:
     Ball(Vec2<int> size, Vec2<int> position, uint32_t color, Vec2<int> velocity, Paddle* paddle_1, Paddle* paddle_2)
         : GameObject({size, position, color}), velocity(velocity), paddle_1(paddle_1), paddle_2(paddle_2) {}
 
+        bool start = true;
+
     void update() override {
-        // Update position based on velocity
+        static u32 count = 0;
+        if (start && count++ <= 180) {
+            return;
+        } else {
+            count = 0;
+            start = false;
+        }
 
         velocity = velocity * speed;
 
@@ -93,10 +101,12 @@ public:
 
         if (shape.position.x <= 0) {
             shape.position = {1920/2, 1080/2};
+            start = true;
             paddle_2->win = true;
         }
         if (shape.position.x + shape.size.x >= 1920) {
             shape.position = {1920/2, 1080/2};
+            start = true;
             paddle_1->win = true;
         }
     }
